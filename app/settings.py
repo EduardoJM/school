@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.forms',
 
+    'rest_framework',
+
     'image_uploader_widget',
 
     'peoples',
@@ -144,3 +146,24 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
 AUTH_USER_MODEL = 'peoples.User'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        #'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+        #'list.permissions.IsOwnerOrAuthenticatedReadOnly',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 2,
+    'DEFAULT_THROTTLE_CLASSES': (
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ),
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '5/minute',
+        'user': '1/second',
+    },
+}
