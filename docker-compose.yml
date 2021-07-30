@@ -1,0 +1,35 @@
+version: '3.3'
+
+networks:
+    inventare:
+      driver: bridge
+
+services:
+    database:
+        image: mariadb
+        volumes:
+          - ./database/:/var/lib/mysql
+        networks:
+          - inventare
+        environment:
+          MYSQL_DATABASE: inventare
+          MYSQL_ROOT_PASSWORD: root
+
+    web:
+        build: .
+        command: python manage.py runserver 0.0.0.0:8000
+        volumes:
+          - ./:/app/
+        networks:
+            - inventare
+        ports:
+          - 8000:8000
+        environment:
+          - SQL_ENGINE=django.db.backends.mysql
+          - SQL_DATABASE=inventare
+          - SQL_USER=root
+          - SQL_PASSWORD=root
+          - SQL_HOST=database
+          - SQL_PORT=3306
+        depends_on: 
+          - database

@@ -1,0 +1,127 @@
+@import url(./forms/inputs.css);
+@import url(./forms/checkbox.css);
+
+fieldset {
+    border: none;
+}
+
+.form-row {
+    padding: 10px 0;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+.form-row label {
+    font-weight: normal;
+    color: var(--foreground);
+}
+.form-row .required label,
+.form-row label.required {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+.form-row .required label::after,
+.form-row label.required::after {
+    content: " *"
+}
+.form-row .help {
+    flex: 1;
+    width: 100%;
+    margin-top: 10px;
+    color: var(--foreground-muted);
+}
+.form-row input:not([type=checkbox]) {
+    width: 100%;
+}
+.form-row .related-widget-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.form-row > div:not(.related-widget-wrapper) > select {
+    width: 100%;
+}
+.form-row .related-widget-wrapper > select {
+    flex: 1;
+}
+.form-row .related-widget-wrapper > .related-widget-wrapper-link {
+    padding: 10px;
+}
+.form-row .related-widget-wrapper > .related-widget-wrapper-link {
+    color: var(--foreground-muted);
+}
+.form-row .related-widget-wrapper > .related-widget-wrapper-link:link {
+    color: var(--foreground);
+}
+.form-row .checkbox-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.form-row .checkbox-row label {
+    margin-left: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+.submit-row {
+    padding: 10px 0;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.submit-row .fit {
+    flex: 1;
+}
+.submit-row input[type=submit]:not(:last-child) {
+    margin-right: 10px;
+}
+.submit-row a:not(:first-child) {
+    margin-left: 10px;
+}
+
+
+
+
+/* INLINES */
+.empty-form {
+    display: none;
+}
+fieldset h2 {
+    background: var(--inline-group-title-bg);
+    border-bottom: 2px solid var(--inline-group-title-border);
+    margin-bottom: 10px;
+    padding: 5px 15px;
+}
+.inline-related:not(.empty-form) {
+    border-bottom: 2px solid var(--inline-group-title-border);
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+.inline-related h3 a.inline-deletelink {
+    float: right;
+}
+div.add-row {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 0;
+}
+tr.add-row td {
+    padding: 10px 0;
+    text-align: right;
+}
+.inline-related table {
+    width: 100%;
+    margin-bottom: 10px;
+}
+.inline-related table tr th {
+    text-align: left;
+    padding: 5px 0;
+}
+.inline-related table tr th:last-child {
+    width: 64px;
+}
+

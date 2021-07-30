@@ -1,0 +1,37 @@
+{% load dashboard %}
+<li>
+    {% with childs=tag_item.childs.all %}
+        {% random_id as block_id %}
+        <span
+            {% if childs|length > 0 %}
+                data-role="toggle"
+                data-toggle-group="{{ block_id }}"
+                data-toggle-target="tag-tree-{{ block_id }}"
+            {% endif %}
+        >
+            {% if childs|length > 0 %}
+                <i class="material-icons">chevron_right</i>
+            {% else %}
+                <i class="material-icons">label</i>
+            {% endif %}
+            <span>{{ tag_item }}</span>
+            <span class="fit"></span>
+            <a href="{% url 'admin:school_tag_tree_id' tag_item.id %}" class="tag-button no-trigger" title="Ver a partir daqui">
+                <i class="material-icons">format_align_justify</i>
+            </a>
+            <a href="{% url 'admin:school_tag_change' tag_item.id %}" class="tag-button no-trigger" title="Editar">
+                <i class="material-icons">edit</i>
+            </a>
+            <a href="{% url 'admin:school_tag_delete' tag_item.id %}" class="tag-button no-trigger" title="Deletar">
+                <i class="material-icons">delete</i>
+            </a>
+        </span>
+        {% if childs|length > 0 %}
+            <ul id="tag-tree-{{ block_id }}">
+                {% for model in childs %}
+                    {% include 'admin/tag_block.html' with tag_item=model %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+</li>

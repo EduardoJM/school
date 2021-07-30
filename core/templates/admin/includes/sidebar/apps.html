@@ -1,0 +1,13 @@
+<ul class="menu-list">
+    {% include 'admin/includes/sidebar/item_home.html' with disable_links=True %}
+    {% for app in available_apps %}
+        <li class="app-label">{{ app.name }}</li>
+        {% for model in app.models %}
+            {% if model.object_name == 'Tag' %}
+                {% include 'admin/includes/sidebar/item_tags.html'%}
+            {% else %}
+                {% include 'admin/includes/sidebar/item.html'%}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+</ul>

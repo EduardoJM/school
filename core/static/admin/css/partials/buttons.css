@@ -1,0 +1,31 @@
+.btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+
+    border: none;
+    outline: none;
+    cursor: pointer;
+
+    font-family: 'Roboto', sans-serif;
+    text-decoration: none;
+}
+.btn.btn-muted {
+    background: var(--button-muted-background);
+    color: var(--button-muted-foreground);
+    transition: background .5s ease,
+                color .5s ease;
+}
+.btn.btn-muted:hover {
+    background: var(--button-muted-background-hover);
+    color: var(--button-muted-foreground-hover);
+}
+.btn.btn-danger {
+    background: var(--button-danger-background);
+    color: var(--button-danger-foreground);
+    transition: background .5s ease,
+                color .5s ease;
+}
+.btn.btn-danger:hover {
+    background: var(--button-danger-background-hover);
+    color: var(--button-danger-foreground-hover);
+}

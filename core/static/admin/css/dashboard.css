@@ -1,0 +1,444 @@
+@import url(./widgets/apps-grid.css);
+@import url(./partials/messages.css);
+@import url(./partials/buttons.css);
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    --background: #1b1c30;
+    --foreground: #EFEFEF;
+    --foreground-muted: #707483;
+    --link: #5147af;
+    --sidebar-bg: #222339;
+    --sidebar-bg-item-active: rgba(0, 0, 0, 0.2);
+    --sidebar-border: #383952;
+    --sidebar-fg-app-label: #EFEFEF;
+    --sidebar-fg-item: #707483;
+    --sidebar-fg-item-active: #EFEFEF;
+    --sidebar-marker-active: #5147af;
+    --sidebar-marker-hover: #7a75af;
+
+    --breadcrumb-fg-item: #707483;
+    --breadcrumb-fg-item-active: #EFEFEF;
+
+    --navbar-button-background: #26273b;
+    --navbar-button-foreground: #707483;
+    --navbar-button-foreground-hover: #EFEFEF;
+
+    --app-list-panel-bg: #26273b;
+    --app-list-panel-fg: #EFEFEF;
+
+    --input-background: #222339;
+    --input-border: #383952;
+    --input-foreground: #EFEFEF;
+    --input-placeholder-color: #383952;
+
+    --button-muted-background: #26273b;
+    --button-muted-foreground: #707483;
+    --button-muted-background-hover: #1b1c30;
+    --button-muted-foreground-hover: #EFEFEF;
+    --button-danger-background: #fa461c;
+    --button-danger-foreground: #EFEFEF;
+    --button-danger-background-hover: #fa2f00;
+    --button-danger-foreground-hover: #EFEFEF;
+
+    --submit-background: #5046ba;
+    --submit-foreground: #EFEFEF;
+    --submit-background-hover: #3f33ba;
+    --submit-foreground-hover: #EFEFEF;
+
+    --changelist-border: #383952;
+    --changelist-text: #707483;
+    --changelist-text-link: #EFEFEF;
+    --changelist-selected-bg: rgba(255, 255, 255, 0.05);
+    --changelist-action-button-bg: rgba(255, 255, 255, 0.02);
+    --changelist-action-button-bg-hover: rgba(255, 255, 255, 0.05);
+    --changelist-action-button-fg: #EFEFEF;
+    --history-header-background: #26273b;
+    --history-border: #383952;
+    --history-text: #707483;
+
+    --paginator-foreground: #707483;
+    --paginator-foreground-link: #EFEFEF;
+    --paginator-current-background: #222339;
+    --paginator-current-foreground: #707483;
+    --paginator-link-background: transparent;
+    --paginator-link-foreground: #EFEFEF;
+
+    --checkbox-background: #222339;
+    --checkbox-marker: #5147af;
+
+    --message-background: #222339;
+    --message-foreground: #707483;
+    --message-error-marker: #e35539;
+    --message-warning-foreground: #ed6f01;
+    --message-success-foreground: #02a28e;
+
+    --filter-block-bg: #222339;
+    --filter-block-border: #383952;
+    --filter-block-fg: #707483;
+    --filter-block-fg-link: #EFEFEF;
+
+    --recent-actions-icon-bg: rgba(0, 0, 0, 0.2);
+    --recent-actions-icon-fg: #EFEFEF;
+
+    --iuw-background: #222339;
+    --iuw-color: #EFEFEF;
+    --iuw-border-color: #222339;
+    --iuw-item-background-color: #707483;
+    --iuw-item-foreground-color: #222339;
+
+    --rte-border-color: #383952;
+    --rte-background-color: #222339;
+    --rte-text-color: #EFEFEF;
+    --rte-tooltip-border-color: #383952;
+    --rte-tooltip-background-color: #222339;
+    --rte-tooltip-text-color: #707483;
+    --rte-toolbar-button: #707483;
+    --rte-toolbar-button-active: #EFEFEF;
+
+    --inline-group-title-bg: #222339;
+    --inline-group-title-border: #383952;
+
+    background: var(--background);
+    color: var(--foreground);
+    font-family: 'Roboto', sans-serif;
+}
+
+.app {
+    width: 100%;
+    height: 100vh;
+    
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.app > .sidebar {
+    width: 250px;
+    border-right: 2px solid var(--sidebar-border);
+    background: var(--sidebar-bg);
+
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+.app > .sidebar > .logo {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+}
+.app > .sidebar > .logo img {
+    max-width: 100%;
+}
+.app > .sidebar > .menu {
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.app > .sidebar ul.menu-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+.app > .sidebar ul.menu-list > li.app-label {
+    color: var(--sidebar-fg-app-label);
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 0.8em;
+    font-family: 'Noto Sans JP', sans-serif;
+    letter-spacing: 1px;
+    padding: 0 20px;
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+.app > .sidebar ul.menu-list > li:not(.app-label) {
+    position: relative;
+    margin: 4px 0;
+    user-select: none;
+}
+.app > .sidebar ul.menu-list > li:not(.app-label) > a:not(.active):hover::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 6px;
+    height: 35px;
+    background: var(--sidebar-marker-hover);
+    border-radius: 0 5px 5px 0;
+}
+.app > .sidebar ul.menu-list > li:not(.app-label) > a.active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 6px;
+    height: 35px;
+    background: var(--sidebar-marker-active);
+    border-radius: 0 5px 5px 0;
+}
+.app > .sidebar ul.menu-list > li:not(.app-label) a {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 35px;
+    padding: 0 20px;
+    font-size: 1em;
+
+    text-decoration: none;
+    color: var(--sidebar-fg-item);
+}
+.app > .sidebar ul.menu-list > li:not(.app-label) a span {
+    flex: 1;
+    margin-left: 10px;
+}
+.app > .sidebar ul.menu-list > li:not(.app-label) a.active {
+    color: var(--sidebar-fg-item-active);
+    margin-right: 10px;
+    border-radius: 0 10px 10px 0;
+    background: var(--sidebar-bg-item-active);
+}
+.app > .sidebar ul.menu-list > li:not(.app-label) ul {
+    overflow: hidden;
+    max-height: 0;
+    background: transparent;
+    transition: max-height .5s cubic-bezier(0, 1, 0, 1),
+                background .5s cubic-bezier(0, 1, 0, 1);
+}
+.app > .sidebar ul.menu-list > li:not(.app-label) ul.visible {
+    background: var(--sidebar-bg-item-active);
+    margin-right: 20px;
+    border-radius: 0 0 10px 0;
+    max-height: 99em;
+    transition: max-height .5s ease-in-out,
+                background .5s ease-in-out;
+}
+.app > .sidebar ul.menu-list > li:not(.app-label) ul li {
+    opacity: 0;
+    transition: opacity .3s ease;
+}
+.app > .sidebar ul.menu-list > li:not(.app-label) ul.visible li {
+    opacity: 1;
+}
+.app > .sidebar ul.menu-list > li:not(.app-label) ul.visible li a {
+    color: var(--sidebar-fg-item);
+}
+.app > .sidebar ul.menu-list > li:not(.app-label) ul.visible li a.current {
+    color: var(--sidebar-fg-item-active);
+    font-weight: bold;
+}
+.app > .main {
+    padding-left: 250px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.app > .main > .navbar {
+    height: 80px;
+    padding: 0 40px;
+    margin-bottom: 30px;
+
+    display: flex;
+    align-items: center;
+}
+.app > .main > .navbar .breadcrumbs a {
+    text-decoration: none;
+    font-weight: bold;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.9em;
+    letter-spacing: 1px;
+}
+.app > .main > .navbar .breadcrumbs a:not(.active) {
+    color: var(--breadcrumb-fg-item);
+}
+.app > .main > .navbar .breadcrumbs a:not(.active):hover {
+    color: var(--breadcrumb-fg-item-active);
+}
+.app > .main > .navbar .breadcrumbs a.active {
+    padding-bottom: 5px;
+    color: var(--breadcrumb-fg-item-active);
+    border-bottom: 3px solid var(--breadcrumb-fg-item-active);
+}
+.app > .main > .navbar .breadcrumbs a:not(:last-child) {
+    margin-right: 30px;
+}
+.app > .main > .navbar .fit-area {
+    flex: 1;
+}
+.app > .main > .navbar .navbar-button {
+    background: var(--navbar-button-background);
+    color: var(--navbar-button-foreground);
+    text-decoration: none;
+    border-radius: 5px;
+    height: 40px;
+    padding: 8px 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.app > .main > .navbar .navbar-button:hover {
+    color: var(--navbar-button-foreground-hover);
+}
+
+
+
+.app > .main > main {
+    padding: 0 40px;
+}
+
+.app > .main > main > h1 {
+    margin-bottom: 50px;
+}
+.app > .main > main ul:not(.errorlist):not(.messagelist) {
+    list-style-position: inside;
+    list-style-type: square;
+    margin: 10px 0;
+}
+.app > .main > main ul ul {
+    padding-left: 25px;
+}
+.app > .main > main a:not(.btn) {
+    color: var(--foreground);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+
+#change-history {
+    width: 100%;
+    color: var(--history-text);
+}
+#change-history,
+#change-history tr,
+#change-history tr td,
+#change-history tr th {
+    border-collapse: collapse;
+}
+#change-history thead tr th {
+    text-align: left;
+    font-weight: bold;
+    background: var(--history-header-background);
+    border-bottom: 1px solid var(--history-border);
+}
+#change-history tbody tr th {
+    text-align: left;
+}
+#change-history tr td,
+#change-history tr th {
+    padding: 5px;
+    border-bottom: 1px solid var(--history-border);
+}
+
+.delete-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.delete-row .fit { flex: 1; }
+
+.app-list-content {
+    display: flex;
+}
+.app-list-content #content-main {
+    flex: 1 1 auto;
+}
+.app-list-content #content-related {
+    flex: 0 0 300px;
+    order: 1;
+    margin-left: 40px;
+}
+
+#recent-actions-module {
+    background: var(--filter-block-bg);
+    color: var(--filter-block-fg);
+    box-shadow: 2px 2px 4px 1px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 10px;
+}
+#recent-actions-module h2 {
+    color: var(--filter-block-fg-link);
+    margin-bottom: 10px;
+    font-family: 'Noto Sans JP', sans-serif;
+}
+#recent-actions-module h3 {
+    color: var(--filter-block-fg-link);
+    margin-bottom: 20px;
+}
+#recent-actions-module .actionlist {
+    list-style: none;
+}
+#recent-actions-module .actionlist li {
+    display: flex;
+    flex-direction: row;
+    padding: 10px 0;
+}
+#recent-actions-module .actionlist li .icon-container {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--recent-actions-icon-bg);
+    color: var(--recent-actions-icon-fg);
+    margin-right: 10px;
+}
+#recent-actions-module .actionlist li .information {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+@media (max-width: 850px) {
+    .app > .main > .navbar {
+        min-height: 80px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .app > .main > .navbar .breadcrumbs {
+        width: 100%;
+    }
+
+    .app > .sidebar {
+        max-width: 0;
+        overflow: hidden;
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 600;
+        transition: max-width .5s cubic-bezier(0, 1, 0, 1);
+    }
+    .app > .sidebar.visible {
+        max-width: 250px;
+        transition: max-width .5s ease-in-out;
+
+    }
+    .app > .main >.navbar .sidebar-toggle {
+        display: block;
+    }
+}
+
+@media (min-width: 850px) {
+    .app > .main >.navbar .sidebar-toggle {
+        display: none;
+    }
+}

@@ -1,0 +1,65 @@
+input[type=text],
+input[type=password],
+input[type=url] {
+    outline: none;
+    border-radius: 5px;
+    
+    background: var(--input-background);
+    border: 1px solid var(--input-border);
+    color: var(--input-foreground);
+
+    padding: 10px;
+    
+    font-family: 'Roboto', sans-serif;
+}
+input[type=text]::placeholder,
+input[type=password]::placeholder,
+input[type=url]::placeholder {
+    color: var(--input-placeholder-color);
+}
+
+select {
+    outline: none;
+    border-radius: 5px;
+
+    background: var(--input-background);
+    border: 1px solid var(--input-border);
+    color: var(--input-foreground);
+
+    padding: 10px;
+
+    font-family: 'Roboto', sans-serif;
+}
+
+textarea {
+    border-radius: 5px;
+    width: 100%;
+    resize: none;
+    outline: none;
+    font-family: 'Roboto', sans-serif;
+    background: var(--input-background);
+    border: 1px solid var(--input-border);
+    color: var(--input-foreground);
+}
+
+
+input[type=submit].destak,
+button[type=submit].destak {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1em;
+
+    outline: none;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background: var(--submit-background);
+    color: var(--submit-foreground);
+    cursor: pointer;
+    transition: background .5s ease,
+                color .5s ease;
+}
+input[type=submit].destak:hover,
+button[type=submit].destak:hover {
+    background: var(--submit-background-hover);
+    color: var(--submit-foreground-hover);
+}

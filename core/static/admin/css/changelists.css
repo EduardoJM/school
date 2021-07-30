@@ -1,0 +1,238 @@
+@import url(./forms/checkbox.css);
+
+.searchinput-container,
+.action-container {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+
+    border-radius: 5px;
+
+    background: var(--input-background);
+    border: 1px solid var(--input-border);
+    color: var(--input-foreground);
+
+    font-family: 'Roboto', sans-serif;
+    
+    margin-bottom: 10px;
+}
+.action-container > label {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    color: var(--foreground-muted);
+    font-family: 'Roboto', sans-serif;
+}
+.searchinput-container input[type=text],
+.action-container > label select {
+    flex: 1;
+    color: var(--input-foreground);
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 10px;
+
+    font-family: 'Roboto', sans-serif;
+}
+.action-container > label select {
+    background: var(--input-background);
+}
+.searchinput-container button[type=submit],
+.action-container button[type=submit] {
+    background: transparent;
+    color: var(--input-foreground);
+    outline: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.searchinput-container + span,
+.action-container + span {
+    display: block;
+    width: 100%;
+    color: var(--foreground-muted);
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+#changelist {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+#changelist .changelist-form-container {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+#changelist table {
+    width: 100%;
+    font-family: 'Roboto', sans-serif;
+    margin-bottom: 10px;
+}
+#changelist table,
+#changelist table tr,
+#changelist table tr td,
+#changelist table tr th {
+    border-collapse: collapse;
+}
+#changelist table thead th {
+    border-bottom: 2px solid var(--changelist-border);
+    text-align: left;
+    padding: 15px 5px;
+    vertical-align: middle;
+    color: var(--changelist-text);
+    font-weight: bold;
+    
+}
+#changelist table thead th a {
+    text-decoration: none;
+    color: var(--changelist-text-link);
+}
+#changelist table tbody td,
+#changelist table tbody th {
+    text-align: left;
+    padding: 15px 5px;
+    color: var(--changelist-text);
+    font-weight: normal;
+}
+#changelist table tbody tr:last-child td,
+#changelist table tbody tr:last-child th {
+    border-bottom: 2px solid var(--changelist-border);
+}
+#changelist table tbody tr:not(:last-child) td,
+#changelist table tbody tr:not(:last-child) th {
+    border-bottom: 1px solid var(--changelist-border);
+}
+#changelist table tbody td a,
+#changelist table tbody th a {
+    color: var(--changelist-text-link);
+    font-weight: normal;
+    text-decoration: none;
+}
+
+#changelist table tbody tr.selected {
+    background: var(--changelist-selected-bg);
+}
+
+#changelist td.action-checkbox {
+    width: 44px;
+}
+
+#changelist .actions-container {
+    min-width: 160px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+#changelist .actions-container a {
+    height: 32px;
+    padding: 0 5px;
+    border-radius: 5px;
+    margin-left: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--changelist-action-button-bg);
+    color: var(--changelist-action-button-fg);
+    transition: background 0.3s ease;
+}
+#changelist .actions-container a:hover {
+    background: var(--changelist-action-button-bg-hover);
+}
+
+.change-list .hiddenfields { display:none; }
+
+.paginator {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.paginator .this-page {
+    padding: 10px;
+    border-radius: 5px;
+    margin-right: 10px;
+    background: var(--paginator-current-background);
+    color: var(--paginator-current-foreground);
+    font-weight: bold;
+}
+.paginator .paginator-numbers a {
+    padding: 10px;
+    border-radius: 5px;
+    margin-right: 10px;
+    background: var(--paginator-link-background);
+    color: var(--paginator-link-foreground);
+    text-decoration: none;
+    font-weight: bold;
+}
+.paginator .paginator-total {
+    color: var(--paginator-foreground);
+}
+.paginator .paginator-total a {
+    color: var(--paginator-foreground-link);
+    text-decoration: none;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+
+#changelist-filter {
+    flex: 0 0 330px;
+    order: 1;
+    margin: 0 0 0 30px;
+
+    color: var(--filter-block-fg);
+    padding: 15px;
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+#changelist-filter a {
+    color: var(--filter-block-fg-link);
+    text-decoration: none;
+    font-weight: normal;
+}
+
+#changelist-filter a.filter-title {
+    padding: 5px 10px;
+    background: var(--filter-block-bg);
+    border: 1px solid var(--filter-block-border);
+    border-radius: 5px;
+    margin-top: 20px;
+}
+#changelist-filter a.filter-title.active {
+    border-radius: 5px 5px 0 0;
+    border-bottom: none;
+}
+#changelist-filter a.filter-title + div {
+    overflow: hidden;
+    max-height: 0;
+    padding: 10px;
+    background: transparent;
+    transition: max-height .5s cubic-bezier(0, 1, 0, 1),
+                background .5s cubic-bezier(0, 1, 0, 1);
+}
+#changelist-filter a.filter-title + div.visible {
+    border: 1px solid var(--filter-block-border);
+    background: var(--filter-block-bg);
+    border-radius: 0 0 10px 10px;
+    max-height: 99em;
+    transition: max-height .5s ease-in-out,
+                background .5s ease-in-out;
+}
+
+#changelist-filter h2 {
+    color: var(--filter-block-fg-link);
+    font-family: 'Noto Sans JP', sans-serif;
+    margin-bottom: 10px;
+}

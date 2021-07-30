@@ -1,0 +1,45 @@
+@import url(./forms/inputs.css);
+
+.login main {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.login main .login-box {
+    width: 100%;
+    max-width: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+.login main .login-box #login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+.login main .login-box h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    font-family: 'Noto Sans JP', sans-serif;
+}
+.login main .login-box .logo {
+    margin: 0 auto;
+    max-width: 80%;
+    margin-bottom: 50px;
+}
+#login-form .form-row {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 20px;
+}
+#login-form .form-row label {
+    margin-bottom: 5px;
+}
+#login-form .submit-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

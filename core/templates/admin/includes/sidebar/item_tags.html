@@ -1,0 +1,13 @@
+{% extends 'admin/includes/sidebar/item.html' %}
+
+{% block item-links %}
+    {{ block.super }}
+    <li>
+        <a
+            class="{% if '/admin/school/tag/tree' in request.path %} current{% endif %}"
+            href="/admin/school/tag/tree"
+        >
+            Árvore
+        </a>
+    </li>
+{% endblock %}

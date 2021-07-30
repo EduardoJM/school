@@ -1,0 +1,102 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'en-us' }}">
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/css/dashboard.css' %}" />
+    {% block extrastyle %}{% endblock %}
+    {% block extrahead %}{% endblock %}
+    {% block responsive %}
+        <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    {% endblock %}
+    {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE">{% endblock %}
+</head>
+
+<body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}" data-admin-utc-offset="{% now 'Z' %}">
+    
+    <div class="app">
+        {% if not is_popup %}
+            {% block left-menu %}
+                <div id="sidebar" class="sidebar">
+                    <div class="logo">
+                        <a href="{% url 'admin:index' %}">
+                            <img src="{% static 'resources/brand/logo-white.png' %}" alt="CSA Educacional" />
+                        </a>
+                    </div>
+                    <div class="menu">
+                        {% include 'admin/includes/sidebar/apps.html' %}
+                    </div>
+                    <div>
+                        {% if has_permission %}
+                            <ul class="menu-list">
+                                <li class="app-label">Conta</li>
+                                <li>
+                                    <a href="{% url 'admin:logout' %}">
+                                        <i class="material-icons">logout</i>
+                                        <span>Sair</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endblock %}
+        {% endif %}
+
+        <div class="main">
+            {% if not is_popup %}
+                {% block navbar %}
+                    <div class="navbar">
+                        <a class="navbar-button sidebar-toggle" href="#">
+                            <i class="material-icons">menu</i>
+                        </a>
+                        {% block breadcrumbs %}
+                            <div class="breadcrumbs">
+                                <a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+                                {% if title %}
+                                    <a href="#" class="active">{{ title }}</a>
+                                {% endif %}
+                            </div>
+                        {% endblock %}
+                        <div class="fit-area"></div>
+                        {% block object-tools %}
+                        {% endblock %}
+                    </div>
+                {% endblock %}
+            {% endif %}
+
+            {% block messages %}
+                {% if messages %}
+                    <ul class="messagelist">
+                        {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endblock %}
+
+            <main>
+                {% block pretitle %}{% endblock %}
+                {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
+                {% block content_subtitle %}{% if subtitle %}<h2>{{ subtitle }}</h2>{% endif %}{% endblock %}
+                
+                <div class="{% block main-content-classes %}{% endblock %}">
+                    {% block content %}
+                        {{ content }}
+                    {% endblock %}
+                    {% block sidebar %}{% endblock %}
+                </div>
+            </main>
+
+            {% block footer %}{% endblock %}
+        </div>
+    </div>
+
+    <script src="{% static 'admin/js/layout/toggle.js' %}"></script>
+    <script src="{% static 'admin/js/layout/sidebar.js' %}"></script>
+</body>
+</html>
