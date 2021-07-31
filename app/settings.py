@@ -24,16 +24,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-vk#!6b^v&@f!%(45q2ea+n!nx7964#%4x1-nu_-95c-t%+_@_y'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', False)
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    'localhost'
+]
 
 # Application definition
 
 INSTALLED_APPS = [
+    # core app
     'core',
-
+    # django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,13 +43,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.forms',
-
+    # rest_frameworks
     'rest_framework',
-
+    'rest_framework_simplejwt',
+    # components
     'image_uploader_widget',
-
+    # intern apps
     'peoples',
     'school',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -147,23 +151,42 @@ FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
 AUTH_USER_MODEL = 'peoples.User'
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
-        #'rest_framework.authentication.TokenAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-        #'list.permissions.IsOwnerOrAuthenticatedReadOnly',
-    ),
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 2,
-    'DEFAULT_THROTTLE_CLASSES': (
-        'rest_framework.throttling.AnonRateThrottle',
-        'rest_framework.throttling.UserRateThrottle',
-    ),
-    'DEFAULT_THROTTLE_RATES': {
-        'anon': '5/minute',
-        'user': '1/second',
-    },
-}
+if DEBUG:
+    REST_FRAMEWORK = {
+        'DEFAULT_AUTHENTICATION_CLASSES': (
+            'rest_framework.authentication.SessionAuthentication',
+            'rest_framework_simplejwt.authentication.JWTAuthentication',
+        ),
+        'DEFAULT_PERMISSION_CLASSES': (
+            'rest_framework.permissions.IsAuthenticated',
+        ),
+        'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+        'PAGE_SIZE': 2,
+        'DEFAULT_THROTTLE_CLASSES': (
+            'rest_framework.throttling.AnonRateThrottle',
+            'rest_framework.throttling.UserRateThrottle',
+        ),
+        'DEFAULT_THROTTLE_RATES': {
+            'anon': '5/minute',
+            'user': '1/second',
+        },
+    }
+else:
+    REST_FRAMEWORK = {
+        'DEFAULT_AUTHENTICATION_CLASSES': (
+            'rest_framework_simplejwt.authentication.JWTAuthentication',
+        ),
+        'DEFAULT_PERMISSION_CLASSES': (
+            'rest_framework.permissions.IsAuthenticated',
+        ),
+        'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+        'PAGE_SIZE': 2,
+        'DEFAULT_THROTTLE_CLASSES': (
+            'rest_framework.throttling.AnonRateThrottle',
+            'rest_framework.throttling.UserRateThrottle',
+        ),
+        'DEFAULT_THROTTLE_RATES': {
+            'anon': '5/minute',
+            'user': '1/second',
+        },
+    }
