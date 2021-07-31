@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 """
 Django settings for app project.
 
@@ -162,14 +163,6 @@ if DEBUG:
         ),
         'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
         'PAGE_SIZE': 2,
-        'DEFAULT_THROTTLE_CLASSES': (
-            'rest_framework.throttling.AnonRateThrottle',
-            'rest_framework.throttling.UserRateThrottle',
-        ),
-        'DEFAULT_THROTTLE_RATES': {
-            'anon': '5/minute',
-            'user': '1/second',
-        },
     }
 else:
     REST_FRAMEWORK = {
@@ -189,4 +182,19 @@ else:
             'anon': '5/minute',
             'user': '1/second',
         },
+    }
+
+if DEBUG:
+    SIMPLE_JWT = {
+        'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+        'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
+        'UPDATE_LAST_LOGIN': True,
+        'SIGNING_KEY': SECRET_KEY,
+    }
+else:
+    SIMPLE_JWT = {
+        'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+        'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
+        'UPDATE_LAST_LOGIN': True,
+        'SIGNING_KEY': SECRET_KEY,
     }
