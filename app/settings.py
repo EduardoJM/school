@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-vk#!6b^v&@f!%(45q2ea+n!nx7964#%4x1-nu_-95c-t%+_@_y'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', False)
+DEBUG = os.getenv('DEBUG', True)
 
 ALLOWED_HOSTS = [
     'localhost'
@@ -179,7 +179,7 @@ else:
             'rest_framework.throttling.UserRateThrottle',
         ),
         'DEFAULT_THROTTLE_RATES': {
-            'anon': '5/minute',
+            'anon': '15/minute',
             'user': '1/second',
         },
     }
