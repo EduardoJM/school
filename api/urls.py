@@ -9,10 +9,11 @@ from rest_framework_simplejwt.views import (
 )
 from rest_framework.schemas import get_schema_view
 
-from .views import SubjectViewSet
+from .views import SubjectViewSet, QuestionViewSet
 
 router = SimpleRouter()
 router.register('subjects', SubjectViewSet)
+router.register('questions', QuestionViewSet)
 
 urlpatterns = [
     path('auth/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
