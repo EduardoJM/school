@@ -1,0 +1,11 @@
+FROM node:13 as build
+
+ENV PATH /app/node_modules/.bin:$PATH
+ADD package.json /app/package.json
+WORKDIR /app
+RUN npm install
+COPY . /app
+RUN npm run build
+
+FROM nginx:1-alpine
+COPY --from=build /app/build /usr/share/nginx/html

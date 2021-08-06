@@ -36,12 +36,12 @@ services:
       - database
 
   client:
-    build: ./client/
-    volumes:
-      - ./client:/app/
+    build:
+      context: ./client/
+      dockerfile: Dockerfile.prod
     networks:
       - inventare
     ports:
-      - 3000:3000
+      - 3000:80
     depends_on:
       - admin
