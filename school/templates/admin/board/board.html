@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quadro | Questão | {{ question.short_description }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'admin/css/dashboard.css' %}" />
+    <link rel="stylesheet" href="{% static 'admin/css/board.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" />
+</head>
+<body>
+
+    <nav class="top-bar">
+        <a class="back-link" href="{{ back_url }}">
+            <i class="material-icons">arrow_back</i>
+        </a>
+    </nav>
+    <div class="app-bar">
+        <div class="content" id="board">
+            <div id="board-dragger">
+
+                <header class="question-header">
+                    <h1>{{ question.exam }}</h1>
+                    <h2>{{ question.exam.institution }} / {{ question.exam.year }}</h2>
+                    <h3>{{ question.subject }} / {{ question.display_level }}</h3>
+                    <div class="tags">
+                        {% for tag in question.tags.all %}
+                            <span class="tag">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                </header>
+                
+                <main class="question-body">
+                    <div class="question-content">
+                        {{ question.text|safe }}
+                    </div>
+
+                    <ol class="question-alternatives">
+                        {% for alternative in question.alternatives.all %}
+                            <li>{{ alternative|safe }}</li>
+                        {% endfor %}
+                    </ol>
+                </main>
+
+            </div>
+
+        </div>
+        <nav class="toolbar" id="toolbar">
+
+            <button class="toolbar-btn" data-item="drag">
+                <i class="material-icons">pan_tool</i>
+            </button>
+            <button class="toolbar-btn" data-item="pen">
+                <i class="material-icons">edit</i>
+            </button>
+
+        </nav>
+    </div>
+
+    <script src="{% static 'admin/js/board.js' %}"></script>
+</body>
+</html>

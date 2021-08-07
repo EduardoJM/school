@@ -38,10 +38,7 @@ class ResumedQuestionSerializer(serializers.ModelSerializer):
         )
 
     def get_level(self, obj):
-        for lv in QUESTION_LEVEL:
-            if (lv[0] == obj.level):
-                return lv[1]
-        return obj.level
+        return obj.display_level()
 
 class InstitutionSerializer(serializers.ModelSerializer):
     """

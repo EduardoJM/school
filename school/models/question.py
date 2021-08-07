@@ -52,6 +52,13 @@ class Question(ActiveTimestampsMixin, models.Model):
     def __str__(self):
         return self.short_description
 
+    def display_level(self):
+        for lv in QUESTION_LEVEL:
+            if (lv[0] == self.level):
+                return lv[1]
+        return self.level
+    display_level.short_description = 'Nível'
+
     class Meta:
         verbose_name = 'Questão'
         verbose_name_plural = 'Questões'
