@@ -79,6 +79,12 @@ const Board = function() {
             this.svg.setAttribute('height', this.maxY - this.minY);
             this.currentSvgPath.style.transform = 'translate(' + (-this.minX).toString() + 'px, ' + (-this.minY).toString() + 'px)';
         },
+        clearAll: function () {
+            const svgs = Array.from(this.boardDraggerElement.querySelectorAll('svg'));
+            Array.prototype.forEach.call(svgs, function(el) {
+                el.parentElement.removeChild(el);
+            });
+        }
     };
 
     const AppHandler = {
@@ -129,6 +135,10 @@ const Board = function() {
             document.removeEventListener('mousemove', this.documentMouseMove);
         },
         toolbarChangeItem: function(item) {
+            if (item === 'clear') {
+                WriterHandler.clearAll();
+                return;
+            }
             this.tool = item;
             ToolBarHandler.setActiveItem(this.tool);
         },
