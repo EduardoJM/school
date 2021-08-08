@@ -1,6 +1,7 @@
 input[type=text],
 input[type=password],
-input[type=url] {
+input[type=url],
+input[type=number] {
     outline: none;
     border-radius: 5px;
     
@@ -14,7 +15,8 @@ input[type=url] {
 }
 input[type=text]::placeholder,
 input[type=password]::placeholder,
-input[type=url]::placeholder {
+input[type=url]::placeholder,
+input[type=number]::placeholder {
     color: var(--input-placeholder-color);
 }
 
