@@ -239,10 +239,13 @@ body {
     color: var(--sidebar-fg-item-active);
     font-weight: bold;
 }
-.app > .main {
+body:not(.popup) .app > .main {
     padding-left: 250px;
     flex: 1;
     overflow-y: auto;
+}
+body.popup .app > .main {
+    flex: 1;
 }
 
 .app > .main > .navbar {
