@@ -81,9 +81,6 @@ fieldset {
     margin-left: 10px;
 }
 
-
-
-
 /* INLINES */
 .empty-form {
     display: none;
@@ -125,3 +122,19 @@ tr.add-row td {
     width: 64px;
 }
 
+@media (max-width: 850px) {
+    .submit-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .submit-row .fit {
+        display: none;
+    }
+    .submit-row input[type=submit] {
+        margin: 0 !important;
+    }
+    .submit-row input[type=submit],
+    a.btn {
+        margin-bottom: 10px !important;
+    }
+}

@@ -411,6 +411,8 @@ body.popup .app > .main {
 
 @media (max-width: 850px) {
     .app > .main > .navbar {
+        margin: 20px 0;
+        padding: 0 10px;
         min-height: 80px;
         display: flex;
         flex-direction: column;
@@ -437,6 +439,12 @@ body.popup .app > .main {
     }
     .app > .main >.navbar .sidebar-toggle {
         display: block;
+    }
+    body:not(.popup) .app > .main {
+        padding-left: 0;
+    }
+    .app > .main > main {
+        padding: 0 10px;
     }
 }
 

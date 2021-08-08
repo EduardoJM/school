@@ -8,6 +8,10 @@
 
     font-family: 'Roboto', sans-serif;
     text-decoration: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .btn.btn-muted {
     background: var(--button-muted-background);
