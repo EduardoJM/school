@@ -38,7 +38,7 @@ services:
   client:
     build: ./client/
     volumes:
-      - ./client:/app/
+      - ./client/src:/app/src/
     networks:
       - inventare
     ports:

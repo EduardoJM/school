@@ -35,7 +35,7 @@ services:
     depends_on: 
       - database
 
-  client:
+  client_prod:
     build:
       context: ./client/
       dockerfile: Dockerfile.prod
