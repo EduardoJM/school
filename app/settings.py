@@ -27,9 +27,7 @@ SECRET_KEY = 'django-insecure-vk#!6b^v&@f!%(45q2ea+n!nx7964#%4x1-nu_-95c-t%+_@_y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', True)
 
-ALLOWED_HOSTS = [
-    'localhost'
-]
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -45,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.forms',
     # rest_frameworks
+    'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
     # components
@@ -56,6 +55,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -198,3 +198,10 @@ else:
         'UPDATE_LAST_LOGIN': True,
         'SIGNING_KEY': SECRET_KEY,
     }
+
+if DEBUG:
+    CORS_ALLOWED_ORIGINS = [
+        'http://localhost:3000',
+    ]
+else:
+    raise NotImplementedError('TODO: Add CORS ALLOWED ORIGINS FOR PRODUCTION.')

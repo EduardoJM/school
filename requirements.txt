@@ -1,5 +1,6 @@
 asgiref==3.4.1
 Django==3.2.5
+django-cors-headers==3.7.0
 django-image-uploader-widget==0.0.3
 djangorestframework==3.12.4
 djangorestframework-simplejwt==4.4.0
