@@ -35,13 +35,13 @@ services:
     depends_on: 
       - database
 
-#  client:
-#    build: ./client/
-#    volumes:
-#      - ./client:/app/
-#    networks:
-#      - inventare
-#    ports:
-#      - 3000:3000
-#    depends_on:
-#      - admin
+  client:
+    build: ./client/
+    volumes:
+      - ./client:/app/
+    networks:
+      - inventare
+    ports:
+      - 3000:3000
+    depends_on:
+      - admin
