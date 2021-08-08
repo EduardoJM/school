@@ -188,7 +188,9 @@
     order: 1;
     margin: 0 0 0 30px;
 
+    background: var(--filter-block-bg);
     color: var(--filter-block-fg);
+    box-shadow: 2px 2px 4px 1px rgba(0, 0, 0, 0.2);
     padding: 15px;
     border-radius: 10px;
 
@@ -204,31 +206,28 @@
 }
 
 #changelist-filter a.filter-title {
-    padding: 5px 10px;
-    background: var(--filter-block-bg);
-    border: 1px solid var(--filter-block-border);
-    border-radius: 5px;
-    margin-top: 20px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
-#changelist-filter a.filter-title.active {
-    border-radius: 5px 5px 0 0;
-    border-bottom: none;
+#changelist-filter a.filter-title i.material-icons {
+    transform: rotate(0deg);
+    transition: transform 0.3s ease-in-out;
+}
+#changelist-filter a.filter-title.active i.material-icons {
+    transform: rotate(90deg);
 }
 #changelist-filter a.filter-title + div {
     overflow: hidden;
     max-height: 0;
-    padding: 10px;
-    background: transparent;
-    transition: max-height .5s cubic-bezier(0, 1, 0, 1),
-                background .5s cubic-bezier(0, 1, 0, 1);
+    transition: max-height .5s cubic-bezier(0, 1, 0, 1);
+    padding-left: 20px;
 }
 #changelist-filter a.filter-title + div.visible {
-    border: 1px solid var(--filter-block-border);
-    background: var(--filter-block-bg);
     border-radius: 0 0 10px 10px;
     max-height: 99em;
-    transition: max-height .5s ease-in-out,
-                background .5s ease-in-out;
+    transition: max-height .5s ease-in-out;
 }
 
 #changelist-filter h2 {

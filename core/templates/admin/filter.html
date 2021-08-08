@@ -7,7 +7,7 @@
     data-toggle-group="{{ block_id }}"
     data-toggle-target="filter-{{ block_id }}"
 >
-    {% blocktranslate with filter_title=title %} By {{ filter_title }} {% endblocktranslate %}
+    <i class="material-icons">keyboard_arrow_right</i> {% blocktranslate with filter_title=title %} By {{ filter_title }} {% endblocktranslate %}
 </a>
 <div id="filter-{{ block_id }}">
     <ul>
