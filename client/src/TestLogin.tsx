@@ -1,16 +1,19 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch } from 'react-redux';
 import { actions } from './redux';
 
 const TestLogin: React.FC = () => {
     const dispatch = useDispatch();
 
-    useEffect(() => {
+    function handleLogin() {
         dispatch(actions.auth.requestLogin('eduardo', '123456'));
-    }, [dispatch]);
+    };
 
     return (
-        <h1>Testando o Login</h1>
+        <>
+            <h1>Testando o Login</h1>
+            <button onClick={handleLogin}>Try to Login</button>
+        </>
     );
 };
 
