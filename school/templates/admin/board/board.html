@@ -61,6 +61,25 @@
             <button class="toolbar-btn" data-item="pen">
                 <i class="material-icons">edit</i>
             </button>
+            <button class="toolbar-btn btn-line-color">
+                <i class="material-icons">color_lens</i>
+            </button>
+            <button class="toolbar-btn btn-line-weight">
+                <i class="material-icons">line_weight</i>
+                
+                <div class="popup">
+                    <div>
+                        <div class="line" data-width="2" style="height: 2px"></div>
+                        <div class="line" data-width="3" style="height: 3px"></div>
+                        <div class="line" data-width="4" style="height: 4px"></div>
+                        <div class="line" data-width="5" style="height: 5px"></div>
+                        <div class="line" data-width="8" style="height: 8px"></div>
+                        <div class="line" data-width="10" style="height: 10px"></div>
+                        <div class="line" data-width="12" style="height: 12px"></div>
+                        <div class="line" data-width="15" style="height: 15px"></div>
+                    </div>
+                </div>
+            </button>
             <button class="toolbar-btn" data-item="clear">
                 <i class="material-icons">close</i>
             </button>
@@ -68,6 +87,7 @@
         </nav>
     </div>
 
+    <script src="https://unpkg.com/vanilla-picker@2"></script>
     <script src="{% static 'admin/js/board.js' %}"></script>
 </body>
 </html>

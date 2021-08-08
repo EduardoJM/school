@@ -1,42 +1,38 @@
-const Board = function() {
-    const ToolBarHandler = {
-        toolbarElement: document.getElementById('toolbar'),
-        handleChangeActive: null,
-        clearActiveItems: function() {
-            const elements = this.toolbarElement.querySelectorAll('.toolbar-btn');
-            Array.prototype.forEach.call(elements, function(el){
-                el.classList.remove('active');
-            });
-        },
-        setActiveItem: function(tool) {
-            this.clearActiveItems();
-            const el = this.toolbarElement.querySelector('[data-item=' + tool + ']');
-            if (el !== undefined && el !== null) {
-                el.classList.add('active');
-            }
-        },
-        itemClick: function(e) {
-            const button = e.target.closest('[data-item]');
-            if (button === null || button === undefined) {
+const Popup = function(button, popup) {
+    const handler = {
+        button: button,
+        popup: popup,
+        documentClick: function(e) {
+            const modal = e.target.closest('.popup');
+            if (modal !== null && modal !== undefined) {
                 return;
             }
-            const item = button.getAttribute('data-item');
-            if (this.handleChangeActive !== null && this.handleChangeActive !== undefined) {
-                this.handleChangeActive(item);
-            }
+            document.removeEventListener('click', this.documentClick);
+            this.popup.style.display = 'none';
+        },
+        show: function(e) {
+            this.popup.style.display = 'block';
+            setTimeout(function(){
+                document.addEventListener('click', this.documentClick);
+            }.bind(this), 200);
         },
         init: function() {
-            this.itemClick = this.itemClick.bind(this);
-            const elements = this.toolbarElement.querySelectorAll('[data-item]');
-            Array.prototype.forEach.call(elements, function(el){
-                el.addEventListener('click', this.itemClick);
-            }.bind(this));
+            this.documentClick = this.documentClick.bind(this);
+            this.show = this.show.bind(this);
+            this.button.addEventListener('click', this.show);
         }
-    };
+    }
+    handler.init();
+    return handler;
+}
+
+const Board = function() {
 
     const WriterHandler = {
         location: { x: 30, y: 30, },
         boardDraggerElement: document.getElementById('board-dragger'),
+        nextColor: '#FFF',
+        nextStrokeWidth: 2,
 
         begin: function () {
             this.svg = null;
@@ -78,12 +74,68 @@ const Board = function() {
             this.svg.setAttribute('width', this.maxX - this.minX);
             this.svg.setAttribute('height', this.maxY - this.minY);
             this.currentSvgPath.style.transform = 'translate(' + (-this.minX).toString() + 'px, ' + (-this.minY).toString() + 'px)';
+            this.currentSvgPath.style.stroke = this.nextColor;
+            this.currentSvgPath.style.strokeWidth = this.nextStrokeWidth;
         },
         clearAll: function () {
             const svgs = Array.from(this.boardDraggerElement.querySelectorAll('svg'));
             Array.prototype.forEach.call(svgs, function(el) {
                 el.parentElement.removeChild(el);
             });
+        }
+    };
+
+    const ToolBarHandler = {
+        toolbarElement: document.getElementById('toolbar'),
+        handleChangeActive: null,
+        lineWidthPopup: null,
+        clearActiveItems: function() {
+            const elements = this.toolbarElement.querySelectorAll('.toolbar-btn');
+            Array.prototype.forEach.call(elements, function(el){
+                el.classList.remove('active');
+            });
+        },
+        setActiveItem: function(tool) {
+            this.clearActiveItems();
+            const el = this.toolbarElement.querySelector('[data-item=' + tool + ']');
+            if (el !== undefined && el !== null) {
+                el.classList.add('active');
+            }
+        },
+        itemClick: function(e) {
+            const button = e.target.closest('[data-item]');
+            if (button === null || button === undefined) {
+                return;
+            }
+            const item = button.getAttribute('data-item');
+            if (this.handleChangeActive !== null && this.handleChangeActive !== undefined) {
+                this.handleChangeActive(item);
+            }
+        },
+        lineWeightItemClick: function(e) {
+            const width = parseInt(e.target.closest('.line').getAttribute('data-width'), 10);
+            WriterHandler.nextStrokeWidth = width;
+        },
+        init: function() {
+            this.itemClick = this.itemClick.bind(this);
+            this.lineWeightItemClick = this.lineWeightItemClick.bind(this);
+            const elements = this.toolbarElement.querySelectorAll('[data-item]');
+            Array.prototype.forEach.call(elements, function(el){
+                el.addEventListener('click', this.itemClick);
+            }.bind(this));
+            this.lineColorPicker = new Picker(this.toolbarElement.querySelector('.btn-line-color'));
+            this.lineColorPicker.setOptions({
+                popup: 'left',
+                color: '#FFF',
+            });
+            this.lineColorPicker.onChange = function(color) {
+                WriterHandler.nextColor = color.hex;
+            };
+            const lineWeightItems = this.toolbarElement.querySelectorAll('.btn-line-weight .popup .line');
+            Array.prototype.forEach.call(lineWeightItems, function(el){
+                el.addEventListener('click', this.lineWeightItemClick);
+            }.bind(this));
+            this.lineWidthPopup = Popup(this.toolbarElement.querySelector('.btn-line-weight'), this.toolbarElement.querySelector('.btn-line-weight .popup'));
         }
     };
 

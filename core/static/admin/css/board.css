@@ -59,6 +59,39 @@ nav.top-bar a.back-link i.material-icons {
 .app-bar .toolbar .toolbar-btn .material-icons {
     font-size: 22px;
 }
+.app-bar .toolbar .toolbar-btn.btn-line-weight {
+    position: relative;
+}
+.app-bar .toolbar .toolbar-btn.btn-line-weight .popup {
+    position: absolute;
+    right: 100%;
+    top: 0;
+    width: 300px;
+    height: 170px;
+    background: var(--sidebar-bg);
+    border-radius: 5px;
+    border: 1px solid var(--sidebar-border);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    cursor: default;
+
+    display: none;
+}
+.app-bar .toolbar .toolbar-btn.btn-line-weight .popup > div {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+.app-bar .toolbar .toolbar-btn.btn-line-weight .popup .line {
+    margin: 5px 0;
+    background: var(--link);
+    cursor: pointer;
+}
+
+
 
 .app-bar .content {
     flex: 1;
@@ -79,8 +112,8 @@ nav.top-bar a.back-link i.material-icons {
 }
 .app-bar .content svg path {
     fill: none;
-    stroke: #FFF;
-    stroke-width: 2px;
+    stroke-linejoin: round;
+    stroke-linecap: round;
 }
 
 
