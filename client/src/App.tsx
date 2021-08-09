@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from "react-redux";
 import store from './redux/stores';
-import { GlobalDisplays } from './components/global';
+import { GlobalDisplays, MessageHub } from './components/global';
 import TestLogin from './TestLogin';
 
 function App() {
@@ -10,6 +10,7 @@ function App() {
             <TestLogin />
             
             <GlobalDisplays />
+            <MessageHub />
         </Provider>
     );
 }
