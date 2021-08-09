@@ -2,12 +2,13 @@ import React from 'react';
 import { Provider } from "react-redux";
 import store from './redux/stores';
 import { GlobalDisplays, MessageHub } from './components/global';
-import TestLogin from './TestLogin';
+
+import { Login } from './pages';
 
 function App() {
     return (
         <Provider store={store}>
-            <TestLogin />
+            <Login />
             
             <GlobalDisplays />
             <MessageHub />
