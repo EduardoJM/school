@@ -5,11 +5,14 @@ from django.views.generic.base import TemplateView
 from rest_framework.routers import SimpleRouter
 from rest_framework.schemas import get_schema_view
 
-from .views import SubjectViewSet, QuestionViewSet, TokenObtainPairView
+from .views import (
+    SubjectViewSet, QuestionViewSet, UserRetrieveViewSet, TokenObtainPairView
+)
 
 router = SimpleRouter()
 router.register('subjects', SubjectViewSet)
 router.register('questions', QuestionViewSet)
+router.register('auth/user', UserRetrieveViewSet)
 
 urlpatterns = [
     path('auth/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
