@@ -4,8 +4,10 @@ from rest_framework import generics
 from rest_framework import viewsets
 from rest_framework import mixins
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import views
 from rest_framework_simplejwt.views import TokenObtainPairView as BaseTokenObtainPairView
 
 from peoples.models import User
@@ -14,8 +16,6 @@ from .serializers import (
     CompleteQuestionSerializer, SubjectSerializer, ResumedQuestionSerializer,
     TokenObtainSerializer, UserSerializer
 )
-
-from .permissions import IsTheUser
 
 class QuestionViewSet(
     mixins.RetrieveModelMixin,
@@ -101,17 +101,7 @@ class SubjectViewSet(
 class TokenObtainPairView(BaseTokenObtainPairView):
     serializer_class = TokenObtainSerializer
 
-class UserRetrieveViewSet(
-    mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet
-):
-    queryset = User.objects.filter(is_active = True)
-    serializer_class = UserSerializer
-    permission_classes = [
-        IsTheUser
-    ]
-
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
+class AuthenticatedUserRetrieveView(views.APIView):
+    def get(self, request):
+        serializer = UserSerializer(request.user)
         return Response(serializer.data)

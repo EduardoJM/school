@@ -6,16 +6,16 @@ from rest_framework.routers import SimpleRouter
 from rest_framework.schemas import get_schema_view
 
 from .views import (
-    SubjectViewSet, QuestionViewSet, UserRetrieveViewSet, TokenObtainPairView
+    SubjectViewSet, QuestionViewSet, AuthenticatedUserRetrieveView, TokenObtainPairView
 )
 
 router = SimpleRouter()
 router.register('subjects', SubjectViewSet)
 router.register('questions', QuestionViewSet)
-router.register('auth/user', UserRetrieveViewSet)
 
 urlpatterns = [
     path('auth/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('auth/user/', AuthenticatedUserRetrieveView.as_view(), name='retrieve_authenticated_user'),
     path('docs/openapi/', get_schema_view(
         title="Your Project",
         description="API for all things...",
