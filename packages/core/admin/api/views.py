@@ -6,10 +6,12 @@ from rest_framework import mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework_simplejwt.views import TokenObtainPairView as BaseTokenObtainPairView
 
 from school.models import Subject, Question, Tag
 from .serializers import (
-    CompleteQuestionSerializer, SubjectSerializer, ResumedQuestionSerializer
+    CompleteQuestionSerializer, SubjectSerializer, ResumedQuestionSerializer,
+    TokenObtainSerializer,
 )
 
 class QuestionViewSet(
@@ -92,3 +94,6 @@ class SubjectViewSet(
 
         serializer = ResumedQuestionSerializer(questions, many = True)
         return Response(serializer.data)
+
+class TokenObtainPairView(BaseTokenObtainPairView):
+    serializer_class = TokenObtainSerializer

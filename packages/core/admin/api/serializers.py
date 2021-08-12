@@ -1,5 +1,8 @@
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainSerializer as BaseTokenObtainSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
 
+from peoples.models import User
 from school.models import (
     Subject, Question, Tag, QUESTION_LEVEL,
     Institution, QuestionAlternative, Exam,
@@ -91,3 +94,21 @@ class CompleteQuestionSerializer(ResumedQuestionSerializer):
     
     def get_resolutions_count(self, obj):
         return obj.resolutions.count()
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'is_staff']
+
+class TokenObtainSerializer(BaseTokenObtainSerializer):
+    @classmethod
+    def get_token(cls, user):
+        return RefreshToken.for_user(user)
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        refresh = self.get_token(self.user)
+        data['token'] = str(refresh.access_token)
+        data['user'] = UserSerializer(self.user).data
+        return data
+

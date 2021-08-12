@@ -3,13 +3,9 @@ from django.urls import path, include
 from django.views.generic.base import TemplateView
 
 from rest_framework.routers import SimpleRouter
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
 from rest_framework.schemas import get_schema_view
 
-from .views import SubjectViewSet, QuestionViewSet
+from .views import SubjectViewSet, QuestionViewSet, TokenObtainPairView
 
 router = SimpleRouter()
 router.register('subjects', SubjectViewSet)
@@ -17,8 +13,7 @@ router.register('questions', QuestionViewSet)
 
 urlpatterns = [
     path('auth/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('docs/openapi', get_schema_view(
+    path('docs/openapi/', get_schema_view(
         title="Your Project",
         description="API for all things...",
         version="1.0.0"
@@ -30,5 +25,5 @@ urlpatterns = [
 ]
 if settings.DEBUG:
     urlpatterns += [
-        path('/auth/session', include('rest_framework.urls'))
+        path('/auth/session/', include('rest_framework.urls'))
     ]
