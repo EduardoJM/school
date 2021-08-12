@@ -16,10 +16,8 @@ services:
       MYSQL_ROOT_PASSWORD: root
 
   admin_migration:
-    build: ./backend/
+    build: ./packages/core/admin/
     command: python manage.py migrate --noinput
-    volumes:
-      - ./backend:/app/
     networks:
       - inventare
     environment:
@@ -33,7 +31,7 @@ services:
       - database
 
   admin:
-    build: .
+    build: ./packages/core/admin/
     command: python manage.py runserver 0.0.0.0:8000
     networks:
       - inventare
@@ -53,8 +51,8 @@ services:
 
   client_prod:
     build:
-      context: ./client/
-      dockerfile: Dockerfile.prod
+      context: ./packages/core/client/
+      dockerfile: Dockerfile
     networks:
       - inventare
     ports:

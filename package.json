@@ -1,0 +1,16 @@
+{
+  "name": "inventare",
+  "version": "0.0.1",
+  "repository": "https://github.com/EduardoJM/school.git",
+  "author": "Eduardo Oliveira <eduardo_y05@outlook.com>",
+  "license": "MIT",
+  "private": "true",
+  "workspaces": {
+    "packages": [
+      "packages/**/*"
+    ]
+  },
+  "devDependencies": {
+    "typescript": "^4.3.5"
+  }
+}

@@ -16,10 +16,10 @@ services:
       MYSQL_ROOT_PASSWORD: root
 
   admin_migration:
-    build: ./backend/
+    build: ./packages/core/admin/
     command: python manage.py migrate --noinput
     volumes:
-      - ./backend:/app/
+      - ./packages/core/admin:/app/
     networks:
       - inventare
     environment:
@@ -33,10 +33,10 @@ services:
       - database
 
   admin:
-    build: ./backend/
+    build: ./packages/core/admin/
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./backend:/app/
+      - ./packages/core/admin:/app/
     networks:
       - inventare
     ports:
@@ -54,9 +54,10 @@ services:
       - admin_migration
 
   client:
-    build: ./client/
+    build: ./packages/core/client/
     volumes:
-      - ./client/src:/app/src/
+      - ./packages/core/client/src:/app/src/
+      - ./packages/core/client/public:/app/public/
     networks:
       - inventare
     ports:
