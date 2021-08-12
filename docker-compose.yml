@@ -15,11 +15,28 @@ services:
       MYSQL_DATABASE: inventare
       MYSQL_ROOT_PASSWORD: root
 
+  admin_migration:
+    build: ./backend/
+    command: python manage.py migrate --noinput
+    volumes:
+      - ./backend:/app/
+    networks:
+      - inventare
+    environment:
+      - SQL_ENGINE=django.db.backends.mysql
+      - SQL_DATABASE=inventare
+      - SQL_USER=root
+      - SQL_PASSWORD=root
+      - SQL_HOST=database
+      - SQL_PORT=3306
+    depends_on:
+      - database
+
   admin:
-    build: .
+    build: ./backend/
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./:/app/
+      - ./backend:/app/
     networks:
       - inventare
     ports:
@@ -34,6 +51,7 @@ services:
       - DEBUG=true
     depends_on: 
       - database
+      - admin_migration
 
   client:
     build: ./client/
