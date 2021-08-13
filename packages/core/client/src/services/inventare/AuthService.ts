@@ -2,20 +2,21 @@ import axios from './axios';
 import {
     AuthRequestBody,
     AuthResponseBody,
-    AuthRefreshRequestBody,
-    AuthRefreshResponseBody,
+    User,
  } from '../../types/inventare';
 
-export default class AuthService {
-    static async auth(data: AuthRequestBody): Promise<AuthResponseBody> {
+const AuthService = {
+    auth: async function(data: AuthRequestBody): Promise<AuthResponseBody> {
         return axios
             .post<AuthResponseBody>('auth/', data)
             .then((response) => response.data);
-    }
+    },
 
-    static async refreshAuth(data: AuthRefreshRequestBody): Promise<AuthRefreshResponseBody> {
+    retrieveAuthenticatedUserData: async function(): Promise<User> {
         return axios
-            .post<AuthRefreshResponseBody>('auth/refresh/', data)
+            .get<User>('auth/user/')
             .then((response) => response.data);
-    }
-}
+    },
+};
+
+export default AuthService;

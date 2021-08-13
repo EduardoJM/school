@@ -27,7 +27,9 @@ SECRET_KEY = 'django-insecure-vk#!6b^v&@f!%(45q2ea+n!nx7964#%4x1-nu_-95c-t%+_@_y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '*'
+]
 
 # Application definition
 
@@ -201,7 +203,7 @@ else:
 
 if DEBUG:
     CORS_ALLOWED_ORIGINS = [
-        'http://localhost:3000',
+        'http://localhost:3000'
     ]
 else:
     raise NotImplementedError('TODO: Add CORS ALLOWED ORIGINS FOR PRODUCTION.')
