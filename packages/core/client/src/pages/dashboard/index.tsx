@@ -2,6 +2,7 @@ import type { GetServerSideProps, NextPage } from 'next'
 import { redirect } from 'next/dist/server/api-utils';
 import { parseCookies } from 'nookies';
 import { useAuth } from '../../hooks';
+import { SubjectsService } from '../../services/inventare';
 import { getAPIClient } from '../../services/inventare/APIClient';
 
 const Dashboard: NextPage = ({ subjects }) => {
@@ -30,10 +31,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const apiClient = getAPIClient(context, 'http://admin:8000/api/v1');
   try {
-    const subjects = await apiClient.get<any>('/subjects');
+    const subjects = await SubjectsService.retrieveSubjects(1, apiClient);
     return {
       props: {
-        subjects: subjects.data,
+        subjects,
       },
     }
   } catch(err) {
