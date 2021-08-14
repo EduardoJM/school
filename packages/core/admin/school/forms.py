@@ -1,15 +1,15 @@
 from django import forms
-from django.contrib.admin.widgets import FilteredSelectMultiple
 
 from image_uploader_widget.widgets import ImageUploaderWidget
 
-from core.widgets import RichTextEditor
+from core.widgets import RichTextEditor, ReactRichTextEditor, RenderedByOtherWidget
 from school.models import Tag
 
 class QuestionForm(forms.ModelForm):
     class Meta:
         widgets = {
-            'text': RichTextEditor(),
+            'text': ReactRichTextEditor(),
+            'text_rendered': RenderedByOtherWidget(),
         }
 
 class QuestionAlternativeForm(forms.ModelForm):

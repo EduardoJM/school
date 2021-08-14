@@ -15,3 +15,22 @@ class RichTextEditor(forms.Widget):
                 'admin/css/quill.inventare.css',
             ]
         }
+
+class ReactRichTextEditor(forms.Widget):
+    template_name = 'widgets/react-rte.html'
+
+    class Media:
+        js = [
+            'https://unpkg.com/react@17.0.2/umd/react.development.js',
+            'https://unpkg.com/react-dom@17/umd/react-dom.development.js',
+            'admin/js/rich-text-editor.min.js',
+        ]
+        css = {
+            'all': [
+                'admin/css/rich-text-editor.css',
+            ]
+        }
+
+class RenderedByOtherWidget(forms.widgets.HiddenInput):
+    template_name = 'widgets/rendered-field.html'
+    

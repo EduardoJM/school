@@ -1,0 +1,36 @@
+{
+  "name": "@inventare/rich-text-editor",
+  "version": "0.0.1",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "webpack",
+    "styles": "sass ./src/styles/rich-text-editor.scss:../../admin/core/static/admin/css/rich-text-editor.css"
+  },
+  "peerDependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.0",
+    "@babel/preset-env": "^7.15.0",
+    "@babel/preset-react": "^7.14.5",
+    "@babel/preset-typescript": "^7.15.0",
+    "@types/draft-js": "^0.11.4",
+    "@types/react": "^17.0.17",
+    "@types/react-dom": "^17.0.9",
+    "babel-loader": "^8.2.2",
+    "typescript": "^4.3.5",
+    "webpack": "^5.50.0",
+    "webpack-cli": "^4.7.2"
+  },
+  "dependencies": {
+    "@draft-js-plugins/alignment": "^5.0.1",
+    "@draft-js-plugins/editor": "^4.1.0",
+    "@draft-js-plugins/focus": "^4.1.2",
+    "@draft-js-plugins/image": "^4.1.2",
+    "@draft-js-plugins/resizeable": "^5.0.2",
+    "draft-js": "^0.11.7",
+    "draft-js-export-html": "^1.4.1"
+  }
+}

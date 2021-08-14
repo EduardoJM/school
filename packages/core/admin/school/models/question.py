@@ -28,6 +28,7 @@ class Question(ActiveTimestampsMixin, models.Model):
         verbose_name = 'Enunciado',
         help_text = 'Escreva o enunciado da questão.'
     )
+    text_rendered = models.TextField()
     level = models.CharField(
         verbose_name = 'Nível',
         max_length = 50,

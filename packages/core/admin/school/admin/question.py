@@ -39,7 +39,7 @@ class QuestionAdmin(ModelAdminToggleViewMixin, admin.ModelAdmin):
     search_fields = ['text']
     fieldsets = (
         (None, {
-            'fields': ('short_description', 'exam', 'active', 'text')
+            'fields': ('short_description', 'exam', 'active', 'text', 'text_rendered')
         }),
         ('Informações', {
             'fields': ('level', 'subject')
