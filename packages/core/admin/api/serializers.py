@@ -13,14 +13,11 @@ class SubjectSerializer(serializers.ModelSerializer):
     """
     A class that provides a serializer for Subject model.
     """
-    icon = serializers.SerializerMethodField()
+    icon = serializers.ImageField(use_url = False)
 
     class Meta:
         model = Subject
         fields = ('id', 'name', 'icon')
-    
-    def get_icon(self, obj):
-        return obj.icon.url
 
 class TagSerializer(serializers.ModelSerializer):
     """
@@ -114,14 +111,11 @@ class QuestionImageSerializer(serializers.ModelSerializer):
     """
     A class that provides a serializer for QuestionImage model.
     """
-    image = serializers.SerializerMethodField()
+    image = serializers.ImageField(use_url = False)
 
     class Meta:
         model = QuestionImage
         fields = ('id', 'image', 'title')
-    
-    def get_image(self, obj):
-        return obj.image.url
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
