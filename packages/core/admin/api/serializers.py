@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainSerializer as BaseTokenObtainSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from resources.models import QuestionImage
 from peoples.models import User
 from school.models import (
     Subject, Question, Tag, QUESTION_LEVEL,
@@ -108,6 +109,19 @@ class CompleteQuestionSerializer(ResumedQuestionSerializer):
     
     def get_text(self, obj):
         return obj.text_rendered
+
+class QuestionImageSerializer(serializers.ModelSerializer):
+    """
+    A class that provides a serializer for QuestionImage model.
+    """
+    image = serializers.SerializerMethodField()
+
+    class Meta:
+        model = QuestionImage
+        fields = ('id', 'image', 'title')
+    
+    def get_image(self, obj):
+        return obj.image.url
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

@@ -12,9 +12,10 @@ from rest_framework_simplejwt.views import TokenObtainPairView as BaseTokenObtai
 
 from peoples.models import User
 from school.models import Subject, Question, Tag
+from resources.models import QuestionImage
 from .serializers import (
     CompleteQuestionSerializer, SubjectSerializer, ResumedQuestionSerializer,
-    TokenObtainSerializer, UserSerializer
+    TokenObtainSerializer, UserSerializer, QuestionImageSerializer
 )
 
 class QuestionViewSet(
@@ -105,3 +106,11 @@ class AuthenticatedUserRetrieveView(views.APIView):
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
+
+class QuestionImageViewset(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
+    queryset = QuestionImage.objects.all()
+    serializer_class = QuestionImageSerializer

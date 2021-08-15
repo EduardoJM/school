@@ -6,12 +6,13 @@ from rest_framework.routers import SimpleRouter
 from rest_framework.schemas import get_schema_view
 
 from .views import (
-    SubjectViewSet, QuestionViewSet, AuthenticatedUserRetrieveView, TokenObtainPairView
+    QuestionImageViewset, SubjectViewSet, QuestionViewSet, AuthenticatedUserRetrieveView, TokenObtainPairView
 )
 
 router = SimpleRouter()
 router.register('subjects', SubjectViewSet)
 router.register('questions', QuestionViewSet)
+router.register('image_list', QuestionImageViewset)
 
 urlpatterns = [
     path('auth/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
