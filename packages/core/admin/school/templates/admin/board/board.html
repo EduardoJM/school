@@ -43,7 +43,7 @@
 
                     <ol class="question-alternatives">
                         {% for alternative in question.alternatives.all %}
-                            <li>{{ alternative|safe }}</li>
+                            <li>{{ alternative.text_rendered|safe }}</li>
                         {% endfor %}
                     </ol>
                 </main>

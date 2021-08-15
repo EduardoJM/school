@@ -17,7 +17,7 @@ from school.filters import ExamFilter, TagFilter, TeacherFilter, QuestionFilter
 class QuestionAlternativeInlineAdmin(admin.StackedInline):
     model = QuestionAlternative
     form = QuestionAlternativeForm
-    fields = ['text', 'correct']
+    fields = ['text', 'text_rendered', 'correct']
     extra = 0
 
 class QuestionTagInlineAdmin(admin.TabularInline):
