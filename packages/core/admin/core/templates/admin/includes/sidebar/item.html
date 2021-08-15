@@ -1,45 +1,45 @@
 {% load dashboard %}
 {% random_id as block_id %}
-    <li>
-        <a
-            href="{% block item-root-link %}#{% endblock %}"
-            {% block item-active-class %}{% if  model.admin_url in request.get_full_path %} class="active"{% endif %}{% endblock %}
-            {% if not disable_links %}
-                data-role="toggle"
-                data-toggle-group="sidebar"
-                data-toggle-target="menu-{{ block_id }}"
-            {% endif %}
-        >
-            {% block item-icon %}
-                {% include 'admin/includes/sidebar/icon.html' with app=model.object_name %}
-            {% endblock %}
-            <span>{% block item-name %}{{ model.name }}{% endblock %}</span>
-        </a>
+<li>
+    <a
+        href="{% block item-root-link %}#{% endblock %}"
+        {% block item-active-class %}{% if  model.admin_url in request.get_full_path %} class="active"{% endif %}{% endblock %}
         {% if not disable_links %}
-            <ul
-                id="menu-{{ block_id }}"
-                {% block item-visible-class %}{% if  model.admin_url in request.get_full_path %} class="visible"{% endif %}{% endblock %}
-            >
-                {% block item-links %}
-                    {% if model.add_url %}
-                        <li>
-                            <a
-                                class="{% if model.add_url == request.path %} current{% endif %}"
-                                href="{{model.add_url}}"
-                            >
-                                Novo
-                            </a>
-                        </li>
-                    {% endif %}
+            data-role="toggle"
+            data-toggle-group="sidebar"
+            data-toggle-target="menu-{{ block_id }}"
+        {% endif %}
+    >
+        {% block item-icon %}
+            {% include 'admin/includes/sidebar/icon.html' with app=model.object_name %}
+        {% endblock %}
+        <span>{% block item-name %}{{ model.name }}{% endblock %}</span>
+    </a>
+    {% if not disable_links %}
+        <ul
+            id="menu-{{ block_id }}"
+            {% block item-visible-class %}{% if  model.admin_url in request.get_full_path %} class="visible"{% endif %}{% endblock %}
+        >
+            {% block item-links %}
+                {% if model.add_url %}
                     <li>
                         <a
-                            class="{% if  model.admin_url == request.path %} current{%endif %}"
-                            href="{{model.admin_url}}"
+                            class="{% if model.add_url == request.path %} current{% endif %}"
+                            href="{{model.add_url}}"
                         >
-                            Gerenciar
+                            Novo
                         </a>
                     </li>
-                {% endblock %}
-            </ul>
-        {% endif %}
-    </li>
+                {% endif %}
+                <li>
+                    <a
+                        class="{% if  model.admin_url == request.path %} current{%endif %}"
+                        href="{{model.admin_url}}"
+                    >
+                        Gerenciar
+                    </a>
+                </li>
+            {% endblock %}
+        </ul>
+    {% endif %}
+</li>

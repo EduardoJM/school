@@ -5,10 +5,12 @@ from django.urls.base import reverse
 from django.http.response import HttpResponseRedirect
 from django.contrib.admin.options import csrf_protect_m
 
-app_orders = ['peoples', 'school']
+app_orders = ['peoples', 'resources', 'school']
 models_orders = [
     # peoples
     'Group', 'Teacher',
+    # resources
+    'QuestionImage',
     # school
     'Subject', 'Tag', 'Institution', 'Exam', 'Question', 'QuestionResolution'
 ]

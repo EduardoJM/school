@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     # components
     'image_uploader_widget',
     # intern apps
+    'resources',
     'peoples',
     'school',
     'api',
