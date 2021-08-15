@@ -65,9 +65,14 @@ class QuestionAlternativeSerializer(serializers.ModelSerializer):
     """
     A class that provides a serializer for QuestionAlternative model.
     """
+    text = serializers.SerializerMethodField()
+
     class Meta:
         model = QuestionAlternative
         fields = ('text', 'correct')
+
+    def get_text(self, obj):
+        return obj.text_rendered
 
 class CompleteQuestionSerializer(ResumedQuestionSerializer):
     """
@@ -77,6 +82,7 @@ class CompleteQuestionSerializer(ResumedQuestionSerializer):
     subject = SubjectSerializer()
     resolutions_count = serializers.SerializerMethodField()
     exam = ExamSerializer()
+    text = serializers.SerializerMethodField()
 
     class Meta:
         model = Question
@@ -94,6 +100,9 @@ class CompleteQuestionSerializer(ResumedQuestionSerializer):
     
     def get_resolutions_count(self, obj):
         return obj.resolutions.count()
+    
+    def get_text(self, obj):
+        return obj.text_rendered
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
