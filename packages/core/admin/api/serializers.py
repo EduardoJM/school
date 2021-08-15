@@ -12,9 +12,14 @@ class SubjectSerializer(serializers.ModelSerializer):
     """
     A class that provides a serializer for Subject model.
     """
+    icon = serializers.SerializerMethodField()
+
     class Meta:
         model = Subject
-        fields = ('id', 'name', 'icon', )
+        fields = ('id', 'name', 'icon')
+    
+    def get_icon(self, obj):
+        return obj.icon.url
 
 class TagSerializer(serializers.ModelSerializer):
     """
