@@ -94,6 +94,7 @@ class QuestionAlternative(models.Model):
         verbose_name = 'Texto',
         help_text='Escreva o texto da alternativa.'
     )
+    text_rendered = models.TextField()
     correct = models.BooleanField(
         verbose_name = 'Alternativa Correta',
         default = False,
@@ -133,11 +134,12 @@ class QuestionResolution(ActiveTimestampsMixin, models.Model):
         choices = RESOLUTION_TYPE,
     )
     text = models.TextField(
-        verbose_name = 'Enunciado',
-        help_text = 'Escreva o enunciado da questão.',
+        verbose_name = 'Texto da Resolução',
+        help_text = 'Escreva o texto da resolução.',
         blank = True,
         default = ''
     )
+    text_rendered = models.TextField()
     video_url = models.URLField(
         verbose_name = 'Vídeo da Resolução',
         max_length = 250,

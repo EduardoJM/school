@@ -2,26 +2,27 @@ from django import forms
 
 from image_uploader_widget.widgets import ImageUploaderWidget
 
-from core.widgets import RichTextEditor, ReactRichTextEditor, RenderedByOtherWidget
-from school.models import Tag
+from core.widgets import RichTextEditor, RenderedByOtherWidget
 
 class QuestionForm(forms.ModelForm):
     class Meta:
         widgets = {
-            'text': ReactRichTextEditor(),
+            'text': RichTextEditor(),
             'text_rendered': RenderedByOtherWidget(),
         }
 
 class QuestionAlternativeForm(forms.ModelForm):
     class Meta:
         widgets = {
-            'text': ReactRichTextEditor(),
+            'text': RichTextEditor(),
+            'text_rendered': RenderedByOtherWidget(),
         }
 
 class QuestionResolutionForm(forms.ModelForm):
     class Meta:
         widgets = {
-            'text': ReactRichTextEditor(),
+            'text': RichTextEditor(),
+            'text_rendered': RenderedByOtherWidget(),
             'cover_image': ImageUploaderWidget('Clique para selecionar um arquivo!'),
         }
 
