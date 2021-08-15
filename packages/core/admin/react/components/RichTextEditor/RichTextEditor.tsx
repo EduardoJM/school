@@ -6,8 +6,11 @@ import createAlignmentPlugin from '@draft-js-plugins/alignment';
 import createFocusPlugin from '@draft-js-plugins/focus';
 import createResizeablePlugin from '@draft-js-plugins/resizeable';
 import { stateToHTML } from 'draft-js-export-html';
+import { QueryClient, QueryClientProvider } from 'react-query'
+
 import ToolBar from './ToolBar';
 import ToolBarButton from './ToolBarButton';
+import ImageList from './ImageList';
 
 const focusPlugin = createFocusPlugin();
 const resizeablePlugin = createResizeablePlugin();
@@ -27,6 +30,8 @@ const plugins = [
     resizeablePlugin,
     imagePlugin,
 ];
+
+const queryClient = new QueryClient()
 
 interface RichTextEditorProps {
     name: string;
@@ -131,6 +136,9 @@ const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
                 <AlignmentTool />
                 <div className="clear"></div>
             </div>
+            <QueryClientProvider client={queryClient}>
+                <ImageList opened={true} />
+            </QueryClientProvider>
             <input name={name} type="hidden" value={JSON.stringify(rawContentState)} />
             <input name={`${name}_rendered`} type="hidden" value={htmlEditorState} />
         </>
