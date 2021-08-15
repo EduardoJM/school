@@ -40,7 +40,11 @@ const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
         if (!initialValue) {
             return EditorState.createEmpty();
         }
-        return EditorState.createWithContent(convertFromRaw(initialValue as RawDraftContentState));
+        try {
+            return EditorState.createWithContent(convertFromRaw(initialValue as RawDraftContentState));
+        } catch {
+            return EditorState.createEmpty();
+        }
     });
     const currentInlineStyle = useMemo(() => {
         return editorState.getCurrentInlineStyle();

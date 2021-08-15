@@ -23,14 +23,13 @@ class ReactRichTextEditor(forms.Widget):
         js = [
             'https://unpkg.com/react@17.0.2/umd/react.development.js',
             'https://unpkg.com/react-dom@17/umd/react-dom.development.js',
-            'admin/js/rich-text-editor.min.js',
+            'modules/rich-text-editor/rte.min.js',
         ]
         css = {
             'all': [
-                'admin/css/rich-text-editor.css',
+                'modules/rich-text-editor/rte.min.css',
             ]
         }
 
 class RenderedByOtherWidget(forms.widgets.HiddenInput):
     template_name = 'widgets/rendered-field.html'
-    

@@ -15,13 +15,13 @@ class QuestionForm(forms.ModelForm):
 class QuestionAlternativeForm(forms.ModelForm):
     class Meta:
         widgets = {
-            'text': RichTextEditor(),
+            'text': ReactRichTextEditor(),
         }
 
 class QuestionResolutionForm(forms.ModelForm):
     class Meta:
         widgets = {
-            'text': RichTextEditor(),
+            'text': ReactRichTextEditor(),
             'cover_image': ImageUploaderWidget('Clique para selecionar um arquivo!'),
         }
 

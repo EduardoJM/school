@@ -5,3 +5,4 @@ media
 *.min.js.LICENSE.txt
 *.css.map
 .sass-cache
+core/static/modules
