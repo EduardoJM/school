@@ -10,7 +10,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 
 import ToolBar from './ToolBar';
 import ToolBarButton from './ToolBarButton';
-import ImageList from './ImageList';
+import ImageListModal from './ImageListModal';
 
 const focusPlugin = createFocusPlugin();
 const resizeablePlugin = createResizeablePlugin();
@@ -60,6 +60,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
                 const entityType = entity.get('type').toLowerCase();
                 if (entityType === 'image') {
                     const data = entity.getData();
+                    console.log(data);
                     let style = {
                         display: 'block',
                     };
@@ -90,6 +91,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
         return convertToRaw(editorState.getCurrentContent());
     }, [editorState]);
     const editorRef = useRef<Editor>();
+    const [addImageModal, setAddImageModal] = useState(false);
 
     function handleEditorContainerClick() {
         if (editorRef.current) {
@@ -99,6 +101,24 @@ const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
 
     function handleApplyInlineStyle(style: string) {
         setEditorState(RichUtils.toggleInlineStyle(editorState, style));
+    }
+
+    function handleAddImage(id: number, url: string, title: string) {
+        setEditorState((state) => {
+            return imagePlugin.addImage(state, url, {
+                alt: title,
+                image_id: id,
+            });
+        });
+        setAddImageModal(false);
+    }
+
+    function handleCloseImageModal() {
+        setAddImageModal(false);
+    }
+
+    function handleShowImageModal() {
+        setAddImageModal(true);
     }
 
     return (
@@ -125,6 +145,12 @@ const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
                 >
                     <i className="material-icons">format_underlined</i>
                 </ToolBarButton>
+                <ToolBarButton
+                    type='clickable'
+                    onClick={handleShowImageModal}
+                >
+                    <i className="material-icons">photo</i>
+                </ToolBarButton>
             </ToolBar>
             <div className="rte-editor-container" onClick={handleEditorContainerClick}>
                 <Editor
@@ -137,7 +163,11 @@ const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
                 <div className="clear"></div>
             </div>
             <QueryClientProvider client={queryClient}>
-                <ImageList opened={true} />
+                <ImageListModal
+                    opened={addImageModal}
+                    handleAddImage={handleAddImage}
+                    handleClose={handleCloseImageModal}
+                />
             </QueryClientProvider>
             <input name={name} type="hidden" value={JSON.stringify(rawContentState)} />
             <input name={`${name}_rendered`} type="hidden" value={htmlEditorState} />

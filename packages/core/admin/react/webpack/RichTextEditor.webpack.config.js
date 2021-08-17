@@ -7,7 +7,10 @@ module.exports = {
         extensions: ['.tsx', '.ts', '.js'],
         mainFields: ['main', 'module', 'browser'],
     },
-    entry: path.resolve(__dirname, '..', 'components', 'RichTextEditor', 'browser.tsx'),
+    entry: [
+        'babel-polyfill',
+        path.resolve(__dirname, '..', 'components', 'RichTextEditor', 'browser.tsx'),
+    ],
     output: {
         path: path.resolve(__dirname, '..', '..', 'core', 'static', 'modules', 'rich-text-editor'),
         filename: 'rte.min.js',

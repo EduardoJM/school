@@ -83,7 +83,67 @@
             max-width: 550px;
             height: 400px;
             
-            background: #FFF;
+            background: var(--modal-bg);
+            border: 1px solid var(--modal-border);
+            color: var(--modal-fg);
+
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+
+            .content-top {
+                flex: 1;
+                padding: 10px;
+                overflow-x: hidden;
+                overflow-y: auto;
+            }
+
+            .loading-container,
+            .error-container {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .content-footer {
+                padding: 10px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-end;
+                
+                .btn-muted {
+                    margin-right: 10px;
+                }
+            }
+
+            .image-list {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                grid-gap: 10px;
+
+                .image-item {
+                    aspect-ratio: 1;
+                    border: 2px solid transparent;
+                    cursor: pointer;
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                    background-position: center;
+
+                    &.load-item {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    &.current {
+                        border-color: var(--modal-image-selected);
+                    }
+                }
+            }
         }
     }
 }
