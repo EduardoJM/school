@@ -2,6 +2,9 @@
   "name": "@inventare/admin",
   "version": "0.0.1",
   "license": "MIT",
+  "scripts": {
+    "rte": "webpack -c ./react/webpack/RichTextEditor.webpack.config.js"
+  },
   "devDependencies": {
     "@babel/core": "^7.15.0",
     "@babel/preset-env": "^7.15.0",
