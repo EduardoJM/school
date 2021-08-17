@@ -1,12 +1,18 @@
-import React, { useRef, useMemo, useState } from 'react';
-import { convertFromRaw, convertToRaw, EditorState, RawDraftContentState, RichUtils } from 'draft-js';
+import React, { useMemo, useState } from 'react';
+import {
+    convertFromRaw,
+    convertToRaw,
+    EditorState,
+    RawDraftContentState,
+    RichUtils,
+} from 'draft-js';
 import Editor, { composeDecorators } from '@draft-js-plugins/editor';
 import createImagePlugin from '@draft-js-plugins/image';
 import createAlignmentPlugin from '@draft-js-plugins/alignment';
 import createFocusPlugin from '@draft-js-plugins/focus';
 import createResizeablePlugin from '@draft-js-plugins/resizeable';
 import { stateToHTML } from 'draft-js-export-html';
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import ToolBar from './ToolBar';
 import ToolBarButton from './ToolBarButton';
@@ -18,9 +24,9 @@ const alignmentPlugin = createAlignmentPlugin();
 const { AlignmentTool } = alignmentPlugin;
 
 const decorator = composeDecorators(
-  resizeablePlugin.decorator,
-  alignmentPlugin.decorator,
-  focusPlugin.decorator,
+    resizeablePlugin.decorator,
+    alignmentPlugin.decorator,
+    focusPlugin.decorator,
 );
 const imagePlugin = createImagePlugin({ decorator });
 
@@ -31,7 +37,7 @@ const plugins = [
     imagePlugin,
 ];
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 interface RichTextEditorProps {
     name: string;
@@ -46,70 +52,59 @@ const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
             return EditorState.createEmpty();
         }
         try {
-            return EditorState.createWithContent(convertFromRaw(initialValue as RawDraftContentState));
+            return EditorState.createWithContent(
+                convertFromRaw(initialValue as RawDraftContentState),
+            );
         } catch {
             return EditorState.createEmpty();
         }
     });
-    const currentInlineStyle = useMemo(() => {
-        return editorState.getCurrentInlineStyle();
-    }, [editorState]);
-    const htmlEditorState = useMemo(() => {
-        return stateToHTML(editorState.getCurrentContent(), {
-            entityStyleFn: (entity: any) => {
-                const entityType = entity.get('type').toLowerCase();
-                if (entityType === 'image') {
-                    const data = entity.getData();
-                    console.log(data);
-                    let style = {
-                        display: 'block',
-                    };
-                    if (data.alignment === 'center') {
-                        style['margin-left'] = 'auto';
-                        style['margin-right'] = 'auto';
-                    } else if (data.alignment === 'left') {
-                        style['float'] = 'left';
-                    } else if (data.alignment === 'right') {
-                        style['float'] = 'right';
-                    }
-                    if (data.width !== undefined && data.width !== 0) {
-                        style['width'] = `${data.width}%`;
-                        style['height'] = 'auto'
-                    }
-                    return {
-                        element: 'img',
-                        attributes: {
-                            src: data.src,
-                        },
-                        style,
-                    };
+    const currentInlineStyle = useMemo(() => editorState.getCurrentInlineStyle(), [editorState]);
+    const htmlEditorState = useMemo(() => stateToHTML(editorState.getCurrentContent(), {
+        entityStyleFn: (entity: any) => {
+            const entityType = entity.get('type').toLowerCase();
+            if (entityType === 'image') {
+                const data = entity.getData();
+                const style: Record<string, any> = {
+                    display: 'block',
+                };
+                if (data.alignment === 'center') {
+                    style['margin-left'] = 'auto';
+                    style['margin-right'] = 'auto';
+                } else if (data.alignment === 'left') {
+                    style.float = 'left';
+                } else if (data.alignment === 'right') {
+                    style.float = 'right';
                 }
-            },                      
-        });
-    }, [editorState]);
-    const rawContentState = useMemo(() => {
-        return convertToRaw(editorState.getCurrentContent());
-    }, [editorState]);
-    const editorRef = useRef<Editor>();
+                if (data.width !== undefined && data.width !== 0) {
+                    style.width = `${data.width}%`;
+                    style.height = 'auto';
+                }
+                return {
+                    element: 'img',
+                    attributes: {
+                        src: data.src,
+                    },
+                    style,
+                };
+            }
+            return undefined;
+        },
+    }), [editorState]);
+    const rawContentState = useMemo(() => convertToRaw(
+        editorState.getCurrentContent(),
+    ), [editorState]);
     const [addImageModal, setAddImageModal] = useState(false);
-
-    function handleEditorContainerClick() {
-        if (editorRef.current) {
-            editorRef.current.focus();
-        }
-    }
 
     function handleApplyInlineStyle(style: string) {
         setEditorState(RichUtils.toggleInlineStyle(editorState, style));
     }
 
     function handleAddImage(id: number, url: string, title: string) {
-        setEditorState((state) => {
-            return imagePlugin.addImage(state, url, {
-                alt: title,
-                image_id: id,
-            });
-        });
+        setEditorState((state) => imagePlugin.addImage(state, url, {
+            alt: title,
+            image_id: id,
+        }));
         setAddImageModal(false);
     }
 
@@ -146,21 +141,20 @@ const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
                     <i className="material-icons">format_underlined</i>
                 </ToolBarButton>
                 <ToolBarButton
-                    type='clickable'
+                    type="clickable"
                     onClick={handleShowImageModal}
                 >
                     <i className="material-icons">photo</i>
                 </ToolBarButton>
             </ToolBar>
-            <div className="rte-editor-container" onClick={handleEditorContainerClick}>
+            <div className="rte-editor-container">
                 <Editor
                     editorState={editorState}
                     onChange={setEditorState}
                     plugins={plugins}
-                    ref={editorRef}
                 />
                 <AlignmentTool />
-                <div className="clear"></div>
+                <div className="clear" />
             </div>
             <QueryClientProvider client={queryClient}>
                 <ImageListModal

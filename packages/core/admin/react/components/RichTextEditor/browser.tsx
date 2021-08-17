@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import RichTextEditor from './RichTextEditor';
 import jQuery from 'jquery';
+import RichTextEditor from './RichTextEditor';
 import './styles.scss';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -10,11 +10,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         const rawValue = container.getAttribute('data-value');
-        let initialValue: any = undefined;
+        let initialValue: any;
         if (rawValue) {
             try {
                 initialValue = JSON.parse(rawValue);
-            } catch {}
+            } catch {
+                initialValue = undefined;
+            }
         }
         const name = container.getAttribute('data-name');
         ReactDOM.render(<RichTextEditor initialValue={initialValue} name={name} />, container);
@@ -23,12 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function parse(element: Element | HTMLDocument) {
         Array
             .from(element.querySelectorAll('.draft-rte[data-name]'))
-            .forEach(renderRichTextEditor)
+            .forEach(renderRichTextEditor);
     }
 
     parse(document);
-    
-    jQuery(document).on('formset:added', function(e, row) {
-        parse(row[0]);
-    });
+    jQuery(document).on('formset:added', (e, row) => parse(row[0]));
 });

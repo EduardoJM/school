@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useInfiniteQuery } from 'react-query'
+import { useInfiniteQuery } from 'react-query';
 
 /**
  * API Image Item.
@@ -75,10 +75,10 @@ const ImageListModal: React.FC<ImageListModalProps> = (props) => {
             return res.json();
         },
         {
-            getPreviousPageParam: firstPage => firstPage.previous ?? false,
-            getNextPageParam: lastPage => lastPage.next ?? false,
-        }
-    )
+            getPreviousPageParam: (firstPage) => firstPage.previous ?? false,
+            getNextPageParam: (lastPage) => lastPage.next ?? false,
+        },
+    );
 
     /**
      * Called when the add button has clicked.
@@ -117,38 +117,36 @@ const ImageListModal: React.FC<ImageListModalProps> = (props) => {
                                 {data.pages.map((page) => (
                                     <React.Fragment key={page.next || 'http://localhost:8000/api/v1/image_list/'}>
                                         {page.results.map((img) => (
-                                            <div
+                                            <button
+                                                type="button"
                                                 key={img.id}
                                                 className={`image-item${img === selectedImage ? ' current' : ''}`}
                                                 title={img.title}
-                                                style={{
-                                                    backgroundImage: `url(http://localhost:8000/media/${img.image})`
-                                                }}
                                                 onClick={() => setSelectedImage(img)}
-                                            />
+                                            >
+                                                <img src={`http://localhost:8000/media/${img.image}`} alt={img.title} />
+                                            </button>
                                         ))}
                                     </React.Fragment>
                                 ))}
                                 {hasNextPage && (
-                                    <div
+                                    <button
+                                        type="button"
                                         className="image-item load-item"
                                         onClick={handleLoadNext}
                                     >
-                                        {isFetchingNextPage
-                                            ? (
-                                                <>
-                                                    <i className="material-icons">refresh</i>
-                                                    <span>Carregando...</span>
-                                                </>
-                                            )
-                                            : (
-                                                <>
-                                                    <i className="material-icons">more_horiz</i>
-                                                    <span>Mais</span>
-                                                </>
-                                            )
-                                        }
-                                    </div>
+                                        {isFetchingNextPage ? (
+                                            <>
+                                                <i className="material-icons">refresh</i>
+                                                <span>Carregando...</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <i className="material-icons">more_horiz</i>
+                                                <span>Mais</span>
+                                            </>
+                                        )}
+                                    </button>
                                 )}
                             </div>
                         )}
