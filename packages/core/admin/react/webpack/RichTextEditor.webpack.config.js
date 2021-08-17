@@ -1,5 +1,6 @@
 const path = require('path');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+// eslint-disable-next-line import/no-extraneous-dependencies
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     mode: 'production',
@@ -21,23 +22,23 @@ module.exports = {
                 test: /\.(js|ts|tsx)$/,
                 exclude: /node_modules/,
                 use: {
-                    loader: 'babel-loader'
-                }
+                    loader: 'babel-loader',
+                },
             },
             {
                 test: /\.s[ac]ss$/i,
                 use: [
                     MiniCssExtractPlugin.loader,
-                    "css-loader",
-                    "sass-loader",
+                    'css-loader',
+                    'sass-loader',
                 ],
             },
-        ]
+        ],
     },
     externals: {
-        'react': 'React',
+        react: 'React',
         'react-dom': 'ReactDOM',
-        'jquery': 'django.jQuery'
+        jquery: 'django.jQuery',
     },
     plugins: [
         new MiniCssExtractPlugin({
