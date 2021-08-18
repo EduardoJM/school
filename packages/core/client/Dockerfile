@@ -1,4 +1,4 @@
-FROM node:13 as build
+FROM node:14-alpine
 
 ENV PATH /app/node_modules/.bin:$PATH
 ADD package.json /app/package.json

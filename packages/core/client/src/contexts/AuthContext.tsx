@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { parseCookies, setCookie, destroyCookie } from 'nookies';
 import Router from 'next/router';
 
@@ -25,12 +25,12 @@ export const AuthProvider: React.FC = ({ children }) => {
             }
 
             try {
-                const user = await AuthService.retrieveAuthenticatedUserData();
-                setUser(user);
-            } catch(err) {
+                const localUser = await AuthService.retrieveAuthenticatedUserData();
+                setUser(localUser);
+            } catch (err) {
                 axios.defaults.headers.Authorization = undefined;
                 // TODO: add better error handling
-                console.log("TODO: ERROR: ", JSON.stringify(err.response.data, null, 4));
+                console.log('TODO: ERROR: ', JSON.stringify(err.response.data, null, 4));
             }
         }
 
@@ -40,17 +40,16 @@ export const AuthProvider: React.FC = ({ children }) => {
     async function login(username: string, password: string) {
         try {
             const result = await AuthService.auth({ username, password });
-            
             setCookie(undefined, '@inventare_auth_token', result.token, {
-                maxAge: 60 * 60 * 24 * 30 // 1 month
+                maxAge: 60 * 60 * 24 * 30, // ~ 1 month
             });
             axios.defaults.headers.Authorization = `Bearer ${result.token}`;
             setUser(result.user);
 
             Router.push('/dashboard');
-        } catch(err) {
+        } catch (err) {
             // TODO: add better error handling
-            console.log("TODO: ERROR: ", JSON.stringify(err.response.data, null, 4));
+            console.log('TODO: ERROR: ', JSON.stringify(err.response.data, null, 4));
         }
     }
 
@@ -62,12 +61,14 @@ export const AuthProvider: React.FC = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{
-            isAuthenticated: !!user,
-            userData: user,
-            login,
-            logout,
-        }}>
+        <AuthContext.Provider
+            value={{
+                isAuthenticated: !!user,
+                userData: user,
+                login,
+                logout,
+            }}
+        >
             {children}
         </AuthContext.Provider>
     );

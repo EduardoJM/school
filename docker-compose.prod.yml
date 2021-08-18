@@ -15,7 +15,7 @@ services:
       MYSQL_DATABASE: inventare
       MYSQL_ROOT_PASSWORD: root
 
-  admin_migration_prod:
+  admin_migration:
     build:
       context: ./packages/core/admin/
       dockerfile: Dockerfile.prod
@@ -32,7 +32,7 @@ services:
     depends_on:
       - database
 
-  admin_prod:
+  admin:
     build:
       context: ./packages/core/admin/
       dockerfile: Dockerfile.prod
@@ -53,9 +53,9 @@ services:
       - DEBUG=true
     depends_on: 
       - database
-      - admin_migration_prod
+      - admin_migration
 
-  client_prod:
+  client:
     build:
       context: ./packages/core/client/
       dockerfile: Dockerfile.prod
@@ -64,4 +64,4 @@ services:
     ports:
       - 3000:3000
     depends_on:
-      - admin_prod
+      - admin

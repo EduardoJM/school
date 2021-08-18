@@ -1,11 +1,8 @@
-import type { NextPage } from 'next'
-import { FormEvent, useContext, useState } from 'react';
-import { AuthContext } from '../contexts/AuthContext';
+import React, { FormEvent, useState } from 'react';
 import { useAuth } from '../hooks';
 
 const Login = () => {
-    const { login } = useContext(AuthContext);
-    console.log(login);
+    const { login } = useAuth();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -29,6 +26,6 @@ const Login = () => {
             </form>
         </div>
     );
-}
+};
 
 export default Login;
