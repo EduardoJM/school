@@ -1,6 +1,7 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const path = require('path');
-// eslint-disable-next-line import/no-extraneous-dependencies
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const webpack = require('webpack');
 
 module.exports = {
     mode: 'production',
@@ -43,6 +44,9 @@ module.exports = {
     plugins: [
         new MiniCssExtractPlugin({
             filename: 'rte.min.css',
+        }),
+        new webpack.EnvironmentPlugin({
+            API_URL: 'http://localhost:8000',
         }),
     ],
 };

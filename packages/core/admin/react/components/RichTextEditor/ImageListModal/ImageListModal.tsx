@@ -70,7 +70,7 @@ const ImageListModal: React.FC<ImageListModalProps> = (props) => {
         hasNextPage,
     } = useInfiniteQuery<ImagesResponse>(
         'imagesData',
-        async ({ pageParam = 'http://localhost:8000/api/v1/image_list/' }) => {
+        async ({ pageParam = `${process.env.API_URL}/api/v1/image_list/` }) => {
             const res = await fetch(pageParam);
             return res.json();
         },
@@ -88,7 +88,7 @@ const ImageListModal: React.FC<ImageListModalProps> = (props) => {
             handleClose();
             return;
         }
-        handleAddImage(selectedImage.id, `http://localhost:8000/media/${selectedImage.image}`, selectedImage.title);
+        handleAddImage(selectedImage.id, `${process.env.API_URL}/media/${selectedImage.image}`, selectedImage.title);
     }
 
     /**
@@ -115,7 +115,7 @@ const ImageListModal: React.FC<ImageListModalProps> = (props) => {
                         ) : (
                             <div className="image-list">
                                 {data.pages.map((page) => (
-                                    <React.Fragment key={page.next || 'http://localhost:8000/api/v1/image_list/'}>
+                                    <React.Fragment key={page.next || `${process.env.API_URL}/api/v1/image_list/`}>
                                         {page.results.map((img) => (
                                             <button
                                                 type="button"
@@ -124,7 +124,7 @@ const ImageListModal: React.FC<ImageListModalProps> = (props) => {
                                                 title={img.title}
                                                 onClick={() => setSelectedImage(img)}
                                             >
-                                                <img src={`http://localhost:8000/media/${img.image}`} alt={img.title} />
+                                                <img src={`${process.env.API_URL}/media/${img.image}`} alt={img.title} />
                                             </button>
                                         ))}
                                     </React.Fragment>
