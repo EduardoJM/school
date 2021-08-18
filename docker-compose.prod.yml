@@ -15,8 +15,10 @@ services:
       MYSQL_DATABASE: inventare
       MYSQL_ROOT_PASSWORD: root
 
-  admin_migration:
-    build: ./packages/core/admin/
+  admin_migration_prod:
+    build:
+      context: ./packages/core/admin/
+      dockerfile: Dockerfile.prod
     command: python manage.py migrate --noinput
     networks:
       - inventare
@@ -30,9 +32,13 @@ services:
     depends_on:
       - database
 
-  admin:
-    build: ./packages/core/admin/
+  admin_prod:
+    build:
+      context: ./packages/core/admin/
+      dockerfile: Dockerfile.prod
     command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./packages/core/admin/media:/app/media
     networks:
       - inventare
     ports:
@@ -46,16 +52,14 @@ services:
       - SQL_PORT=3306
       - DEBUG=true
     depends_on: 
-      - admin_migration
       - database
+      - admin_migration_prod
 
   client_prod:
-    build:
-      context: ./packages/core/client/
-      dockerfile: Dockerfile
+    build: ./packages/core/client/
     networks:
       - inventare
     ports:
-      - 3000:80
+      - 3000:3000
     depends_on:
-      - admin
+      - admin_prod
