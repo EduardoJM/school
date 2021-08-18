@@ -56,7 +56,9 @@ services:
       - admin_migration_prod
 
   client_prod:
-    build: ./packages/core/client/
+    build:
+      context: ./packages/core/client/
+      dockerfile: Dockerfile.prod
     networks:
       - inventare
     ports:

@@ -5,7 +5,9 @@ import { useAuth } from '../../hooks';
 import { SubjectsService } from '../../services/inventare';
 import { getAPIClient } from '../../services/inventare/APIClient';
 
-const Dashboard: NextPage = ({ subjects }) => {
+const Dashboard: NextPage<{
+  subjects: any;
+}> = ({ subjects }) => {
   const { userData } = useAuth();
   return (
     <>
