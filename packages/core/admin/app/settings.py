@@ -182,8 +182,8 @@ else:
             'rest_framework.throttling.UserRateThrottle',
         ),
         'DEFAULT_THROTTLE_RATES': {
-            'anon': '15/minute',
-            'user': '1/second',
+            'anon': '2/second',
+            'user': '10/second',
         },
     }
 
