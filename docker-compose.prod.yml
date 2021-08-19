@@ -50,7 +50,7 @@ services:
       - SQL_PASSWORD=root
       - SQL_HOST=database
       - SQL_PORT=3306
-      - DEBUG=true
+      - DEBUG=false
     depends_on: 
       - database
       - admin_migration
