@@ -30,7 +30,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             },
         };
     }
-    const apiClient = getAPIClient(context, 'http://admin:8000/api/v1');
+    const apiClient = getAPIClient(context, true);
     try {
         const subjects = await SubjectsService.retrieveSubjects(1, apiClient);
         return {
