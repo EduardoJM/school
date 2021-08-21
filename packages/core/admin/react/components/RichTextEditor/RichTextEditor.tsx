@@ -16,6 +16,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 
 import ToolBar from './ToolBar';
 import ToolBarButton from './ToolBarButton';
+import ToolBarSeparator from './ToolBarSeparator';
 import ImageListModal from './ImageListModal';
 
 const focusPlugin = createFocusPlugin();
@@ -46,8 +47,7 @@ interface RichTextEditorProps {
 
 const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
     const { name, initialValue } = props;
-
-    const [editorState, setEditorState] = React.useState(() => {
+    const [editorState, setEditorState] = useState(() => {
         if (!initialValue) {
             return EditorState.createEmpty();
         }
@@ -59,7 +59,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
             return EditorState.createEmpty();
         }
     });
-    const currentInlineStyle = useMemo(() => editorState.getCurrentInlineStyle(), [editorState]);
     const htmlEditorState = useMemo(() => stateToHTML(editorState.getCurrentContent(), {
         entityStyleFn: (entity: any) => {
             const entityType = entity.get('type').toLowerCase();
@@ -96,8 +95,19 @@ const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
     ), [editorState]);
     const [addImageModal, setAddImageModal] = useState(false);
 
-    function handleApplyInlineStyle(style: string) {
+    const currentInlineStyle = editorState.getCurrentInlineStyle();
+    const selection = editorState.getSelection();
+    const blockType = editorState
+        .getCurrentContent()
+        .getBlockForKey(selection.getStartKey())
+        .getType();
+
+    function handleToggleInlineStyle(style: string) {
         setEditorState(RichUtils.toggleInlineStyle(editorState, style));
+    }
+
+    function handleToggleBlockType(type: string) {
+        setEditorState(RichUtils.toggleBlockType(editorState, type));
     }
 
     function handleAddImage(id: number, url: string, title: string) {
@@ -121,25 +131,43 @@ const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
             <ToolBar>
                 <ToolBarButton
                     inlineStyle="BOLD"
-                    onApplyInlineStyle={handleApplyInlineStyle}
+                    onApplyInlineStyle={handleToggleInlineStyle}
                     active={currentInlineStyle.has('BOLD')}
                 >
                     <i className="material-icons">format_bold</i>
                 </ToolBarButton>
                 <ToolBarButton
                     inlineStyle="ITALIC"
-                    onApplyInlineStyle={handleApplyInlineStyle}
+                    onApplyInlineStyle={handleToggleInlineStyle}
                     active={currentInlineStyle.has('ITALIC')}
                 >
                     <i className="material-icons">format_italic</i>
                 </ToolBarButton>
                 <ToolBarButton
                     inlineStyle="UNDERLINE"
-                    onApplyInlineStyle={handleApplyInlineStyle}
+                    onApplyInlineStyle={handleToggleInlineStyle}
                     active={currentInlineStyle.has('UNDERLINE')}
                 >
                     <i className="material-icons">format_underlined</i>
                 </ToolBarButton>
+                <ToolBarSeparator />
+                <ToolBarButton
+                    type="blockType"
+                    blockType="unordered-list-item"
+                    onApplyBlockType={handleToggleBlockType}
+                    active={blockType === 'unordered-list-item'}
+                >
+                    <i className="material-icons">format_list_bulleted</i>
+                </ToolBarButton>
+                <ToolBarButton
+                    type="blockType"
+                    blockType="ordered-list-item"
+                    onApplyBlockType={handleToggleBlockType}
+                    active={blockType === 'ordered-list-item'}
+                >
+                    <i className="material-icons">format_list_numbered</i>
+                </ToolBarButton>
+                <ToolBarSeparator />
                 <ToolBarButton
                     type="clickable"
                     onClick={handleShowImageModal}

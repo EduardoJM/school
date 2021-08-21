@@ -60,6 +60,14 @@
              color: var(--rte-toolbar-button-active);
          }
      }
+
+     span.separator {
+         display: block;
+         width: 1px;
+         align-self: stretch;
+         background: rgba(220, 220, 220, 0.4);
+         margin: 0 10px;
+     }
 }
 
 .image-list-modal {
