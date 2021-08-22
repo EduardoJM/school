@@ -25,7 +25,7 @@ export default function stateToHTML(editorState: EditorState): string {
                 return {
                     element: 'img',
                     attributes: {
-                        src: data.src,
+                        src: `{% BASE_MEDIA_URL %}/${data.media_url}`,
                     },
                     style,
                 };
