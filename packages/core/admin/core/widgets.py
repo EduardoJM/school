@@ -7,11 +7,13 @@ class RichTextEditor(forms.Widget):
         js = [
             'https://unpkg.com/react@17.0.2/umd/react.development.js',
             'https://unpkg.com/react-dom@17/umd/react-dom.development.js',
+            'https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js',
             'modules/rich-text-editor/rte.min.js',
         ]
         css = {
             'all': [
                 'modules/rich-text-editor/rte.min.css',
+                'https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css',
             ]
         }
 
