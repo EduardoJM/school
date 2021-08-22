@@ -47,17 +47,19 @@ const ImageListModal: React.FC<ImageListModalProps> = (props) => {
                         <button
                             type="button"
                             onClick={() => setCurrentTab(0)}
+                            className={`${currentTab === 0 ? 'active' : 'inactive'}`}
                         >
                             Galeria
                         </button>
                         <button
                             type="button"
                             onClick={() => setCurrentTab(1)}
+                            className={`${currentTab === 1 ? 'active' : 'inactive'}`}
                         >
                             Enviar
                         </button>
                     </div>
-                    <div className="content-top">
+                    <div className={`content-top${currentTab === 0 ? ' lister' : ' uploader'}`}>
                         {currentTab === 0 && (
                             <TabList
                                 selectedImage={selectedImage}

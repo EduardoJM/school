@@ -63,23 +63,18 @@ const TabUpload: React.FC<TabUploadProps> = (props) => {
             )}
             {!addImageMutation.isLoading && !addImageMutation.error && (
                 <form method="post" onSubmit={handleUploadPhoto}>
-                    <div className="form-row">
-                        <div className="dropzone" {...getRootProps()}>
-                            <input accept="image/*" {...getInputProps()} />
-                            {selectedFileUrl ? (
-                                <img
-                                    src={selectedFileUrl}
-                                    alt="Imagem para ser enviada"
-                                />
-                            ) : (
-                                <p>
-                                    <i className="material-icons">file_upload</i>
-                                    Imagem para ser enviada
-                                </p>
-                            )}
-                        </div>
+                    <div className="dropzone" {...getRootProps()}>
+                        <input accept="image/*" {...getInputProps()} />
+                        {selectedFileUrl ? (
+                            <div className="preview" style={{ backgroundImage: `url(${selectedFileUrl})` }} />
+                        ) : (
+                            <p>
+                                <i className="material-icons">file_upload</i>
+                                Imagem para ser enviada
+                            </p>
+                        )}
                     </div>
-                    <div className="form-row">
+                    <div className="image-modal-form-row">
                         <label htmlFor="image-description">
                             Descrição
                             <strong>*</strong>
@@ -92,8 +87,8 @@ const TabUpload: React.FC<TabUploadProps> = (props) => {
                             />
                         </label>
                     </div>
-                    <div className="submit-row">
-                        <button type="submit">Enviar</button>
+                    <div className="image-modal-submit-row">
+                        <button type="submit" className="btn btn-muted">Enviar</button>
                     </div>
                 </form>
             )}
