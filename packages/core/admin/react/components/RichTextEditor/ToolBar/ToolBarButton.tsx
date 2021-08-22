@@ -4,10 +4,11 @@ export interface ToolBarButtonProps {
     type?: 'inlineStyle' | 'blockType' | 'clickable';
     inlineStyle?: string;
     blockType?: string;
-    onApplyInlineStyle?: (style: string) => void;
-    onApplyBlockType?: (style: string) => void;
+    onToggleStyle?: (style: string) => void;
+    onToggleBlockType?: (type: string) => void;
     active?: boolean;
-    onClick?: () => void;
+    clickFunction?: string;
+    onClick?: (clickFunction: string) => void;
 }
 
 const ToolBarButton: React.FC<ToolBarButtonProps> = (props) => {
@@ -16,19 +17,20 @@ const ToolBarButton: React.FC<ToolBarButtonProps> = (props) => {
         type = 'inlineStyle',
         inlineStyle,
         blockType,
-        onApplyInlineStyle,
-        onApplyBlockType,
+        onToggleStyle,
+        onToggleBlockType,
         active = false,
+        clickFunction,
         onClick,
     } = props;
 
     function handleClick() {
-        if (type === 'inlineStyle' && inlineStyle && onApplyInlineStyle) {
-            onApplyInlineStyle(inlineStyle);
-        } else if (type === 'blockType' && blockType && onApplyBlockType) {
-            onApplyBlockType(blockType);
-        } else if (type === 'clickable' && onClick) {
-            onClick();
+        if (type === 'inlineStyle' && inlineStyle && onToggleStyle) {
+            onToggleStyle(inlineStyle);
+        } else if (type === 'blockType' && blockType && onToggleBlockType) {
+            onToggleBlockType(blockType);
+        } else if (type === 'clickable' && onClick && clickFunction) {
+            onClick(clickFunction);
         }
     }
 

@@ -16,7 +16,7 @@ export interface ImageListModalProps {
     /**
      * A function called to close the modal adding image.
      */
-    handleAddImage: (id: number, url: string, title: string) => void;
+    handleAddImage: (id: number, mediaUrl: string, url: string, title: string) => void;
 }
 
 const ImageListModal: React.FC<ImageListModalProps> = (props) => {
@@ -32,7 +32,12 @@ const ImageListModal: React.FC<ImageListModalProps> = (props) => {
             handleClose();
             return;
         }
-        handleAddImage(selectedImage.id, `${process.env.API_URL}/media/${selectedImage.image}`, selectedImage.title);
+        handleAddImage(
+            selectedImage.id,
+            selectedImage.image,
+            `${process.env.API_URL}/media/${selectedImage.image}`,
+            selectedImage.title,
+        );
     }
 
     if (!opened) {

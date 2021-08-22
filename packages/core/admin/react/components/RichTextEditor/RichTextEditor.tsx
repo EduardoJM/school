@@ -11,13 +11,12 @@ import createImagePlugin from '@draft-js-plugins/image';
 import createAlignmentPlugin from '@draft-js-plugins/alignment';
 import createFocusPlugin from '@draft-js-plugins/focus';
 import createResizeablePlugin from '@draft-js-plugins/resizeable';
-import { stateToHTML } from 'draft-js-export-html';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-import ToolBar from './ToolBar';
-import ToolBarButton from './ToolBarButton';
-import ToolBarSeparator from './ToolBarSeparator';
+import useModal from '../../Hooks/useModal';
+import { ToolBar, createToolBarData } from './ToolBar';
 import ImageListModal from './ImageListModal';
+import stateToHTML from './utils/stateToHTML';
 
 const focusPlugin = createFocusPlugin();
 const resizeablePlugin = createResizeablePlugin();
@@ -47,6 +46,7 @@ interface RichTextEditorProps {
 
 const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
     const { name, initialValue } = props;
+
     const [editorState, setEditorState] = useState(() => {
         if (!initialValue) {
             return EditorState.createEmpty();
@@ -59,122 +59,47 @@ const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
             return EditorState.createEmpty();
         }
     });
-    const htmlEditorState = useMemo(() => stateToHTML(editorState.getCurrentContent(), {
-        entityStyleFn: (entity: any) => {
-            const entityType = entity.get('type').toLowerCase();
-            if (entityType === 'image') {
-                const data = entity.getData();
-                const style: Record<string, any> = {
-                    display: 'block',
-                };
-                if (data.alignment === 'center') {
-                    style['margin-left'] = 'auto';
-                    style['margin-right'] = 'auto';
-                } else if (data.alignment === 'left') {
-                    style.float = 'left';
-                } else if (data.alignment === 'right') {
-                    style.float = 'right';
-                }
-                if (data.width !== undefined && data.width !== 0) {
-                    style.width = `${data.width}%`;
-                    style.height = 'auto';
-                }
-                return {
-                    element: 'img',
-                    attributes: {
-                        src: data.src,
-                    },
-                    style,
-                };
-            }
-            return undefined;
-        },
-    }), [editorState]);
+
+    const htmlEditorState = useMemo(() => stateToHTML(editorState), [editorState]);
+
     const rawContentState = useMemo(() => convertToRaw(
         editorState.getCurrentContent(),
     ), [editorState]);
-    const [addImageModal, setAddImageModal] = useState(false);
 
-    const currentInlineStyle = editorState.getCurrentInlineStyle();
     const selection = editorState.getSelection();
+    const currentInlineStyle = editorState.getCurrentInlineStyle();
     const blockType = editorState
         .getCurrentContent()
         .getBlockForKey(selection.getStartKey())
         .getType();
 
-    function handleToggleInlineStyle(style: string) {
-        setEditorState(RichUtils.toggleInlineStyle(editorState, style));
-    }
+    const addImageModal = useModal();
 
-    function handleToggleBlockType(type: string) {
-        setEditorState(RichUtils.toggleBlockType(editorState, type));
-    }
+    const toolBarData = createToolBarData(
+        (style) => setEditorState(RichUtils.toggleInlineStyle(editorState, style)),
+        (type) => setEditorState(RichUtils.toggleBlockType(editorState, type)),
+        (feat) => {
+            if (feat === 'add-image') {
+                addImageModal.open();
+            }
+        },
+    );
 
-    function handleAddImage(id: number, url: string, title: string) {
+    function handleAddImage(id: number, mediaUrl: string, url: string, title: string) {
+        addImageModal.close();
         setEditorState((state) => imagePlugin.addImage(state, url, {
             alt: title,
-            image_id: id,
+            media_url: mediaUrl,
         }));
-        setAddImageModal(false);
-    }
-
-    function handleCloseImageModal() {
-        setAddImageModal(false);
-    }
-
-    function handleShowImageModal() {
-        setAddImageModal(true);
     }
 
     return (
         <>
-            <ToolBar>
-                <ToolBarButton
-                    inlineStyle="BOLD"
-                    onApplyInlineStyle={handleToggleInlineStyle}
-                    active={currentInlineStyle.has('BOLD')}
-                >
-                    <i className="material-icons">format_bold</i>
-                </ToolBarButton>
-                <ToolBarButton
-                    inlineStyle="ITALIC"
-                    onApplyInlineStyle={handleToggleInlineStyle}
-                    active={currentInlineStyle.has('ITALIC')}
-                >
-                    <i className="material-icons">format_italic</i>
-                </ToolBarButton>
-                <ToolBarButton
-                    inlineStyle="UNDERLINE"
-                    onApplyInlineStyle={handleToggleInlineStyle}
-                    active={currentInlineStyle.has('UNDERLINE')}
-                >
-                    <i className="material-icons">format_underlined</i>
-                </ToolBarButton>
-                <ToolBarSeparator />
-                <ToolBarButton
-                    type="blockType"
-                    blockType="unordered-list-item"
-                    onApplyBlockType={handleToggleBlockType}
-                    active={blockType === 'unordered-list-item'}
-                >
-                    <i className="material-icons">format_list_bulleted</i>
-                </ToolBarButton>
-                <ToolBarButton
-                    type="blockType"
-                    blockType="ordered-list-item"
-                    onApplyBlockType={handleToggleBlockType}
-                    active={blockType === 'ordered-list-item'}
-                >
-                    <i className="material-icons">format_list_numbered</i>
-                </ToolBarButton>
-                <ToolBarSeparator />
-                <ToolBarButton
-                    type="clickable"
-                    onClick={handleShowImageModal}
-                >
-                    <i className="material-icons">photo</i>
-                </ToolBarButton>
-            </ToolBar>
+            <ToolBar
+                data={toolBarData}
+                currentBlockType={blockType}
+                currentInlineStyle={currentInlineStyle}
+            />
             <div className="rte-editor-container">
                 <Editor
                     editorState={editorState}
@@ -186,9 +111,9 @@ const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
             </div>
             <QueryClientProvider client={queryClient}>
                 <ImageListModal
-                    opened={addImageModal}
+                    opened={addImageModal.opened}
                     handleAddImage={handleAddImage}
-                    handleClose={handleCloseImageModal}
+                    handleClose={addImageModal.close}
                 />
             </QueryClientProvider>
             <input name={name} type="hidden" value={JSON.stringify(rawContentState)} />
