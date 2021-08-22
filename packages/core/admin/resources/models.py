@@ -17,3 +17,4 @@ class QuestionImage(models.Model):
     class Meta:
         verbose_name = 'Imagem'
         verbose_name_plural = 'Imagens'
+        ordering = ['-id']
