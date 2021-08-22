@@ -5,6 +5,7 @@ import {
     EditorState,
     RawDraftContentState,
     RichUtils,
+    Modifier,
 } from 'draft-js';
 import Editor, { composeDecorators } from '@draft-js-plugins/editor';
 import createImagePlugin from '@draft-js-plugins/image';
@@ -15,8 +16,10 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 
 import useModal from '../../Hooks/useModal';
 import { ToolBar, createToolBarData } from './ToolBar';
-import ImageListModal from './ImageListModal';
+import ImageListModal from './modals/ImageListModal';
+import MathExpressionModal from './modals/MathExpressionModal';
 import stateToHTML from './utils/stateToHTML';
+import createInlineMathPlugin from './Plugins/InlineMath/InlineMath';
 
 const focusPlugin = createFocusPlugin();
 const resizeablePlugin = createResizeablePlugin();
@@ -29,12 +32,14 @@ const decorator = composeDecorators(
     focusPlugin.decorator,
 );
 const imagePlugin = createImagePlugin({ decorator });
+const inlineMathPlugin = createInlineMathPlugin();
 
 const plugins = [
     focusPlugin,
     alignmentPlugin,
     resizeablePlugin,
     imagePlugin,
+    inlineMathPlugin,
 ];
 
 const queryClient = new QueryClient();
@@ -74,6 +79,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
         .getType();
 
     const addImageModal = useModal();
+    const addExpressionModal = useModal();
 
     const toolBarData = createToolBarData(
         (style) => setEditorState(RichUtils.toggleInlineStyle(editorState, style)),
@@ -81,6 +87,8 @@ const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
         (feat) => {
             if (feat === 'add-image') {
                 addImageModal.open();
+            } else if (feat === 'add-math') {
+                addExpressionModal.open();
             }
         },
     );
@@ -91,6 +99,17 @@ const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
             alt: title,
             media_url: mediaUrl,
         }));
+    }
+
+    function handleAddMath(expr: string, inline: boolean) {
+        if (inline) {
+            setEditorState(
+                (state) => EditorState.createWithContent(
+                    Modifier.insertText(state.getCurrentContent(), state.getSelection(), `\\(${expr}\\)`),
+                ),
+            );
+            addExpressionModal.close();
+        }
     }
 
     return (
@@ -116,6 +135,11 @@ const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
                     handleClose={addImageModal.close}
                 />
             </QueryClientProvider>
+            <MathExpressionModal
+                opened={addExpressionModal.opened}
+                handleClose={addExpressionModal.close}
+                handleAddExpression={handleAddMath}
+            />
             <input name={name} type="hidden" value={JSON.stringify(rawContentState)} />
             <input name={`${name}_rendered`} type="hidden" value={htmlEditorState} />
         </>

@@ -43,9 +43,8 @@ const ImageListModal: React.FC<ImageListModalProps> = (props) => {
     if (!opened) {
         return null;
     }
-
     return (
-        <div className={`image-list-modal${opened ? ' opened' : ' closed'}`}>
+        <div className={`modal image-list-modal${opened ? ' opened' : ' closed'}`}>
             <div className="overlay">
                 <div className="content">
                     <div className="content-header">

@@ -51,6 +51,12 @@ export default function createToolBarData(
             children: (<i className="material-icons">photo</i>),
             options: { clickFunction: 'add-image', onClick },
         },
+        {
+            id: 'btn-math',
+            type: 'clickable',
+            children: (<i className="material-icons">functions</i>),
+            options: { clickFunction: 'add-math', onClick },
+        },
     ];
     return ToolBarData;
 }

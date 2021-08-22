@@ -40,6 +40,7 @@ module.exports = {
         react: 'React',
         'react-dom': 'ReactDOM',
         jquery: 'django.jQuery',
+        katex: 'katex',
     },
     plugins: [
         new MiniCssExtractPlugin({

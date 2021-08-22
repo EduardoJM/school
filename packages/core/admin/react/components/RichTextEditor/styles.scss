@@ -70,7 +70,7 @@
     }
 }
 
-.image-list-modal {
+.modal {
     position: fixed;
     left: 0;
     top: 0;
@@ -98,139 +98,195 @@
             display: flex;
             flex-direction: column;
             align-items: stretch;
+        }
+    }
+}
 
-            .content-header {
-                height: 30px;
-                display: flex;
-                align-items: stretch;
-                
-                button {
-                    flex: 0 0 50%;
-                    border: none;
-                    outline: none;
-                    background: transparent;
-                    color: var(--modal-fg);
-                    cursor: pointer;
+.image-list-modal {
+    .content-header {
+        height: 30px;
+        display: flex;
+        align-items: stretch;
+        
+        button {
+            flex: 0 0 50%;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--modal-fg);
+            cursor: pointer;
 
-                    &.inactive {
-                        background: var(--modal-border);
-                    }
-                }
+            &.inactive {
+                background: var(--modal-border);
             }
+        }
+    }
 
-            .content-top {
-                flex: 1;
-                padding: 10px;
-                overflow-x: hidden;
-                overflow-y: auto;
+    .content-top {
+        flex: 1;
+        padding: 10px;
+        overflow-x: hidden;
+        overflow-y: auto;
 
-                &.uploader {
-                    form {
-                        width: 100%;
-                        height: 100%;
-
-                        display: flex;
-                        flex-direction: column;
-                        align-items: stretch;
-                    }
-                }
-
-                .dropzone {
-                    flex: 1;
-                    background: var(--modal-image-upload-background);
-                    border-radius: 10px;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    outline: 0;
-                    cursor: pointer;
-
-                    .preview {
-                        width: 100%;
-                        height: 100%;
-                        background-size: contain;
-                        background-position: center;
-                        background-repeat: no-repeat;
-                    }
-
-                    p {
-                        width: calc(100% - 60px);
-                        height: calc(100% - 60px);
-                        border-radius: 10px;
-                        border: 1px dashed var(--modal-image-upload-border);
-                        
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: center;
-                        align-items: center;
-                        color: var(--modal-image-upload-fg);
-                    }
-                    .material-icons {
-                        font-size: 24px;
-                        color: var(--modal-image-upload-fg);
-                        margin-bottom: 8px;
-                    }
-                }
-
-                .image-modal-form-row {
-                    margin-top: 10px;
-                }
-
-                .image-modal-submit-row {
-                    margin-top: 10px;
-                    display: flex;
-                    justify-content: flex-end;
-                }
-            }
-
-            .loading-container,
-            .error-container {
+        &.uploader {
+            form {
                 width: 100%;
                 height: 100%;
+
                 display: flex;
-                align-items: center;
-                justify-content: center;
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        .dropzone {
+            flex: 1;
+            background: var(--modal-image-upload-background);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            outline: 0;
+            cursor: pointer;
+
+            .preview {
+                width: 100%;
+                height: 100%;
+                background-size: contain;
+                background-position: center;
+                background-repeat: no-repeat;
             }
 
-            .content-footer {
-                padding: 10px;
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                justify-content: flex-end;
+            p {
+                width: calc(100% - 60px);
+                height: calc(100% - 60px);
+                border-radius: 10px;
+                border: 1px dashed var(--modal-image-upload-border);
                 
-                .btn-muted {
-                    margin-right: 10px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                color: var(--modal-image-upload-fg);
+            }
+            .material-icons {
+                font-size: 24px;
+                color: var(--modal-image-upload-fg);
+                margin-bottom: 8px;
+            }
+        }
+
+        .image-modal-form-row {
+            margin-top: 10px;
+        }
+
+        .image-modal-submit-row {
+            margin-top: 10px;
+            display: flex;
+            justify-content: flex-end;
+        }
+    }
+
+    .loading-container,
+    .error-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .content-footer {
+        padding: 10px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+        
+        .btn-muted {
+            margin-right: 10px;
+        }
+    }
+
+    .image-list {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 10px;
+
+        .image-item {
+            aspect-ratio: 1;
+            border: 2px solid transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            outline: none;
+            background: transparent;
+
+            img {
+                max-width: 100%;
+                max-height: 100%;
+            }
+
+            &.load-item {
+                flex-direction: column;
+            }
+
+            &.current {
+                border-color: var(--modal-image-selected);
+            }
+        }
+    }
+}
+
+.math-expression-modal {
+    .content {
+        padding: 10px;
+
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+
+        .content-footer {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .content-top {
+            flex: 1;
+
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+
+            label.label-math-expression {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+
+                textarea {
+                    margin-top: 10px;
+                    resize: none;
+                    padding: 10px;
+                    flex: 1;
+                }
+
+                .tex-preview {
+                    height: 100px;
                 }
             }
-
-            .image-list {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                grid-gap: 10px;
-
-                .image-item {
-                    aspect-ratio: 1;
-                    border: 2px solid transparent;
-                    cursor: pointer;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    outline: none;
-                    background: transparent;
-
-                    img {
-                        max-width: 100%;
-                        max-height: 100%;
-                    }
-
-                    &.load-item {
-                        flex-direction: column;
-                    }
-
-                    &.current {
-                        border-color: var(--modal-image-selected);
-                    }
+            label.label-math-inline {
+                margin-bottom: 20px;
+                padding: 10px;
+                background-color: var(--modal-border);
+                display: flex;
+                align-items: center;
+                
+                input {
+                    margin-right: 10px;
                 }
             }
         }
