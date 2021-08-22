@@ -1,6 +1,8 @@
 from django.db import models
 
-class QuestionImage(models.Model):
+from core.models import TimestampsMixin
+
+class QuestionImage(TimestampsMixin, models.Model):
     image = models.ImageField(
         verbose_name = 'Imagem',
         upload_to = 'images/resources/questions',
