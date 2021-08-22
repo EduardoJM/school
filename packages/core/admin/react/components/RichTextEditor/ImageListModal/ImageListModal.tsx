@@ -1,45 +1,5 @@
 import React, { useState } from 'react';
-import { useInfiniteQuery } from 'react-query';
-
-/**
- * API Image Item.
- */
-interface ImageItem {
-    /**
-     * Image ID
-     */
-    id: number;
-    /**
-     * Image URL.
-     */
-    image: string;
-    /**
-     * Image Title.
-     */
-    title: string;
-}
-
-/**
- * API Images Response.
- */
-interface ImagesResponse {
-    /**
-     * Items Count.
-     */
-    count: number;
-    /**
-     * Next Page API URL.
-     */
-    next: string | null;
-    /**
-     * Previours Page API URL.
-     */
-    previous: string | null;
-    /**
-     * Page Images Results.
-     */
-    results: ImageItem[];
-}
+import { TabList, ImageItem, TabUpload } from './Tabs';
 
 /**
  * A interface that describes the ImageListModal Props.
@@ -61,24 +21,8 @@ export interface ImageListModalProps {
 
 const ImageListModal: React.FC<ImageListModalProps> = (props) => {
     const { opened, handleClose, handleAddImage } = props;
+    const [currentTab, setCurrentTab] = useState(0);
     const [selectedImage, setSelectedImage] = useState<ImageItem | null>(null);
-    const {
-        data,
-        error,
-        isFetchingNextPage,
-        fetchNextPage,
-        hasNextPage,
-    } = useInfiniteQuery<ImagesResponse>(
-        'imagesData',
-        async ({ pageParam = `${process.env.API_URL}/api/v1/image_list/` }) => {
-            const res = await fetch(pageParam);
-            return res.json();
-        },
-        {
-            getPreviousPageParam: (firstPage) => firstPage.previous ?? false,
-            getNextPageParam: (lastPage) => lastPage.next ?? false,
-        },
-    );
 
     /**
      * Called when the add button has clicked.
@@ -91,70 +35,60 @@ const ImageListModal: React.FC<ImageListModalProps> = (props) => {
         handleAddImage(selectedImage.id, `${process.env.API_URL}/media/${selectedImage.image}`, selectedImage.title);
     }
 
-    /**
-     * Called when the load next button has clicked.
-     */
-    function handleLoadNext() {
-        if (hasNextPage) {
-            fetchNextPage();
-        }
-    }
-
     if (!opened) {
         return null;
     }
+
     return (
         <div className={`image-list-modal${opened ? ' opened' : ' closed'}`}>
             <div className="overlay">
                 <div className="content">
+                    <div className="content-header">
+                        <button
+                            type="button"
+                            onClick={() => setCurrentTab(0)}
+                        >
+                            Galeria
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setCurrentTab(1)}
+                        >
+                            Enviar
+                        </button>
+                    </div>
                     <div className="content-top">
-                        {error ? (
-                            <div className="error-container">
-                                Aconteceu um erro...
-                            </div>
-                        ) : (
-                            <div className="image-list">
-                                {data.pages.map((page) => (
-                                    <React.Fragment key={page.next || `${process.env.API_URL}/api/v1/image_list/`}>
-                                        {page.results.map((img) => (
-                                            <button
-                                                type="button"
-                                                key={img.id}
-                                                className={`image-item${img === selectedImage ? ' current' : ''}`}
-                                                title={img.title}
-                                                onClick={() => setSelectedImage(img)}
-                                            >
-                                                <img src={`${process.env.API_URL}/media/${img.image}`} alt={img.title} />
-                                            </button>
-                                        ))}
-                                    </React.Fragment>
-                                ))}
-                                {hasNextPage && (
-                                    <button
-                                        type="button"
-                                        className="image-item load-item"
-                                        onClick={handleLoadNext}
-                                    >
-                                        {isFetchingNextPage ? (
-                                            <>
-                                                <i className="material-icons">refresh</i>
-                                                <span>Carregando...</span>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <i className="material-icons">more_horiz</i>
-                                                <span>Mais</span>
-                                            </>
-                                        )}
-                                    </button>
-                                )}
-                            </div>
+                        {currentTab === 0 && (
+                            <TabList
+                                selectedImage={selectedImage}
+                                handleSelectImage={setSelectedImage}
+                            />
+                        )}
+                        {currentTab === 1 && (
+                            <TabUpload
+                                uploadSuccess={() => setCurrentTab(0)}
+                            />
                         )}
                     </div>
-                    <div className="content-footer">
-                        <button type="button" className="btn btn-muted" onClick={handleClose}>Cancelar</button>
-                        <button type="button" className="btn btn-primary" onClick={handleAddClick}>Adicionar</button>
-                    </div>
+                    {currentTab === 0 && (
+                        <div className="content-footer">
+                            <button
+                                type="button"
+                                className="btn btn-muted"
+                                onClick={handleClose}
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-primary"
+                                onClick={handleAddClick}
+                                disabled={selectedImage === null}
+                            >
+                                Adicionar
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
