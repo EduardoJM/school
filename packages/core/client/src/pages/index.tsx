@@ -1,8 +1,12 @@
 import React from 'react';
 import type { NextPage } from 'next';
+import Head from '../components/infra/Head';
 
 const Home: NextPage = () => (
-    <h1>HELLO!</h1>
+    <>
+        <Head />
+        <h1>HELLO!</h1>
+    </>
 );
 
 export default Home;
