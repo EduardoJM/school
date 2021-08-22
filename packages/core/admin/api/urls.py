@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.urls import path, include
 from django.views.generic.base import TemplateView
+from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework.routers import SimpleRouter
 from rest_framework.schemas import get_schema_view

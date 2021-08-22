@@ -17,6 +17,7 @@ from .serializers import (
     CompleteQuestionSerializer, SubjectSerializer, ResumedQuestionSerializer,
     TokenObtainSerializer, UserSerializer, QuestionImageSerializer
 )
+from .authentication import CsrfExemptSessionAuthentication
 
 class QuestionViewSet(
     mixins.RetrieveModelMixin,
@@ -114,3 +115,5 @@ class QuestionImageViewset(
 ):
     queryset = QuestionImage.objects.all()
     serializer_class = QuestionImageSerializer
+    authentication_classes = [CsrfExemptSessionAuthentication]
+    permission_classes = [IsAuthenticated]
