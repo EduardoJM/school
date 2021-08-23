@@ -18,13 +18,30 @@ const Login = () => {
             <div>
                 <form onSubmit={handleSubmit}>
                     <div>
-                        <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+                        <input
+                            type="text"
+                            placeholder="Username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            data-testid="username-input"
+                        />
                     </div>
                     <div>
-                        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            data-testid="password-input"
+                        />
                     </div>
                     <div>
-                        <button type="submit">Entrar</button>
+                        <button
+                            type="submit"
+                            data-testid="submit-button"
+                        >
+                            Entrar
+                        </button>
                     </div>
                 </form>
             </div>
