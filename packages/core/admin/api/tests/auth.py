@@ -8,7 +8,6 @@ from peoples.models import User
 
 class ApiAuthTestCase(APITestCase):
     url = reverse('token_obtain_pair')
-    url_refresh = reverse('token_refresh')
 
     def setUp(self):
         self.username = "john"
@@ -26,14 +25,7 @@ class ApiAuthTestCase(APITestCase):
         })
         self.assertEqual(response_auth.status_code, 200, "Api authentication must be return a 200 status code.")
         data_auth = json.loads(response_auth.content)
-        if not "refresh" in data_auth:
-            raise self.failureException("Api authentication must be return a refresh token.")
-        if not "access" in data_auth:
-            raise self.failureException("Api authentication must be return a access token.")
-        response = self.client.post(self.url_refresh, {
-            "refresh": data_auth["refresh"]
-        })
-        self.assertEqual(response.status_code, 200, "Api refresh authentication must be return a 200 status code.")
-        data = json.loads(response.content)
-        if not 'access' in data:
-            raise self.failureException("Api refresh authentication must be return a access token.")
+        if not "token" in data_auth:
+            raise self.failureException("Api authentication must be return a token.")
+        if not "user" in data_auth:
+            raise self.failureException("Api authentication must be return a user data.")

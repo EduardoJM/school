@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "rte": "webpack -c ./react/webpack/RichTextEditor.webpack.config.js"
+    "rte": "webpack -c ./react/webpack/RichTextEditor.webpack.config.js",
+    "test-django-app": "python manage.py test"
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",

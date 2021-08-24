@@ -6,7 +6,7 @@
   "license": "MIT",
   "private": "true",
   "scripts": {
-    "test": "jest"
+    "test": "jest && yarn workspace @inventare/admin test-django-app"
   },
   "workspaces": {
     "packages": [
