@@ -34,4 +34,22 @@ describe('ToolBarButton', () => {
         expect(onClickFn).toHaveBeenCalledTimes(1);
         expect(onClickFn).toHaveBeenCalledWith('test');
     });
+
+    it('The ToolBarButton with \'blockType\' type, onToggleBlockType and blockType properties should be call the onToggleBlockType property', () => {
+        const onToggleBlockTypeFn = jest.fn();
+        const { getByRole } = render(<ToolBarButton type="blockType" onToggleBlockType={onToggleBlockTypeFn} blockType="TEST_TYPE" />);
+        const button = getByRole('button');
+        fireEvent.click(button);
+        expect(onToggleBlockTypeFn).toHaveBeenCalledTimes(1);
+        expect(onToggleBlockTypeFn).toHaveBeenCalledWith('TEST_TYPE');
+    });
+
+    it('The ToolBarButton with \'inlineStyle\' type, onToggleStyle and inlineStyle properties should be call the onToggleStyle property', () => {
+        const onToggleStyleFn = jest.fn();
+        const { getByRole } = render(<ToolBarButton type="inlineStyle" onToggleStyle={onToggleStyleFn} inlineStyle="INLINE_STYLE" />);
+        const button = getByRole('button');
+        fireEvent.click(button);
+        expect(onToggleStyleFn).toHaveBeenCalledTimes(1);
+        expect(onToggleStyleFn).toHaveBeenCalledWith('INLINE_STYLE');
+    });
 });
