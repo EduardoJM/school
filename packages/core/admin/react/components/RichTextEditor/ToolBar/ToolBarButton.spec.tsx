@@ -52,4 +52,18 @@ describe('ToolBarButton', () => {
         expect(onToggleStyleFn).toHaveBeenCalledTimes(1);
         expect(onToggleStyleFn).toHaveBeenCalledWith('INLINE_STYLE');
     });
+
+    it('The ToolBarButton without active property should be have the \'inactive\' class', () => {
+        const { getByRole } = render(<ToolBarButton />);
+        const button = getByRole('button');
+        fireEvent.click(button);
+        expect(button.classList).toContain('inactive');
+    });
+
+    it('The ToolBarButton with active property should be have the \'active\' class', () => {
+        const { getByRole } = render(<ToolBarButton active />);
+        const button = getByRole('button');
+        fireEvent.click(button);
+        expect(button.classList).toContain('active');
+    });
 });
