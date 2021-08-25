@@ -1,9 +1,9 @@
 /* eslint-disable import/extensions */
-const { name } = require('./package.json');
+const { name } = require('../package.json');
 
 module.exports = {
-    displayName: name,
-    name,
+    displayName: `${name}/react`,
+    name: `${name}/react`,
     collectCoverageFrom: [
         '**/*.{js,jsx,ts,tsx}',
         '!**/*.d.ts',
