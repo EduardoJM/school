@@ -26,7 +26,7 @@ const Link: React.FC<LinkProps> = (props) => {
         replace,
         scroll,
         shallow,
-        passHref,
+        passHref = true,
         prefetch,
         locale,
         ...nativeProps
@@ -39,7 +39,7 @@ const Link: React.FC<LinkProps> = (props) => {
             replace={replace}
             scroll={scroll}
             shallow={shallow}
-            passHref={passHref || true}
+            passHref={passHref}
             prefetch={prefetch}
             locale={locale}
         >
