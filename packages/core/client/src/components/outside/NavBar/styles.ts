@@ -9,6 +9,7 @@ export const NavBarContainer = styled.nav`
 `;
 
 export const NavBarList = styled.ul<NavBarListProps>`
+    height: 64px;
     list-style: none;
     display: flex;
     flex-direction: row;
@@ -21,8 +22,33 @@ export const NavBarListItem = styled.li`
 
 export const NavBarLink = styled(LinkRawElement)`
     cursor: pointer;
-    display: block;
-    padding: 10px 20px;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
     text-decoration: none;
     color: #FFF;
+    border-bottom: 2px solid transparent;
+`;
+
+export const NavBarLinkActive = styled(NavBarLink)`
+    border-bottom: 2px solid #FFF;
+`;
+
+export const NavBarFit = styled.li`
+    flex: 1;
+`;
+
+export const NavBarBrandingLink = styled(LinkRawElement)`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    height: 100%;
+    color: #FFF;
+    text-decoration: none;
+    font-size: 24pt;
 `;
