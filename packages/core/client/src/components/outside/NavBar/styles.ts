@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { LinkRawElement } from '../../infra/Link';
 
 export interface NavBarListProps {
     attachment: 'left' | 'right';
@@ -18,8 +19,10 @@ export const NavBarList = styled.ul<NavBarListProps>`
 export const NavBarListItem = styled.li`
 `;
 
-export const NavBarLink = styled.a`
+export const NavBarLink = styled(LinkRawElement)`
     cursor: pointer;
     display: block;
     padding: 10px 20px;
+    text-decoration: none;
+    color: #FFF;
 `;
