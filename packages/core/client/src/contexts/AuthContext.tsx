@@ -4,6 +4,7 @@ import Router from 'next/router';
 
 import { User } from '../types/inventare';
 import { AuthService, axios } from '../services/inventare';
+import { useGlobalDisplay } from '../hooks';
 
 export interface AuthContextData {
     isAuthenticated: boolean;
@@ -15,6 +16,7 @@ export interface AuthContextData {
 export const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export const AuthProvider: React.FC = ({ children }) => {
+    const { pushLoading, popLoading, pushMessage } = useGlobalDisplay();
     const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
@@ -29,8 +31,6 @@ export const AuthProvider: React.FC = ({ children }) => {
                 setUser(localUser);
             } catch (err) {
                 axios.defaults.headers.Authorization = undefined;
-                // TODO: add better error handling
-                console.log('TODO: ERROR: ', JSON.stringify(err.response.data, null, 4));
             }
         }
 
@@ -38,6 +38,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     }, []);
 
     async function login(username: string, password: string) {
+        pushLoading();
         try {
             const result = await AuthService.auth({ username, password });
             setCookie(undefined, '@inventare_auth_token', result.token, {
@@ -49,7 +50,9 @@ export const AuthProvider: React.FC = ({ children }) => {
             Router.push('/dashboard');
         } catch (err) {
             // TODO: add better error handling
-            console.log('TODO: ERROR: ', JSON.stringify(err.response.data, null, 4));
+            pushMessage(JSON.stringify(err.response.data, null, 4));
+        } finally {
+            popLoading();
         }
     }
 
