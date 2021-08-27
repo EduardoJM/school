@@ -15,9 +15,30 @@ export const NavBarList = styled.ul<NavBarListProps>`
     flex-direction: row;
     align-items: stretch;
     justify-content: ${(props) => (props.attachment === 'left' ? 'flex-start' : 'flex-end')};
+    
+    @media (max-width: 992px) {
+        flex-direction: column;
+        align-items: flex-start;
+        height: unset;
+        position: relative;
+    }
 `;
 
-export const NavBarListItem = styled.li`
+export interface NavBarListItemProps {
+    visibleByToggle: boolean;
+}
+
+export const NavBarListItem = styled.li<NavBarListItemProps>`
+    @media (max-width: 992px) {
+        align-self: stretch;
+        display: ${(props) => (props.visibleByToggle ? 'block' : 'none')};
+    }
+`;
+
+export const NavBarBrandListItem = styled.li`
+    @media (max-width: 992px) {
+        height: 64px;
+    }
 `;
 
 export const NavBarLink = styled(LinkRawElement)`
@@ -34,10 +55,19 @@ export const NavBarLink = styled(LinkRawElement)`
 
 export const NavBarLinkActive = styled(NavBarLink)`
     border-bottom: 2px solid #FFF;
+    
+    @media (max-width: 992px) {
+        border-bottom: 2px solid transparent;
+        font-weight: bold;
+    }
 `;
 
 export const NavBarFit = styled.li`
     flex: 1;
+
+    @media (max-width: 992px) {
+        display: none;
+    }
 `;
 
 export const NavBarBrandingLink = styled(LinkRawElement)`
@@ -51,4 +81,22 @@ export const NavBarBrandingLink = styled(LinkRawElement)`
     color: #FFF;
     text-decoration: none;
     font-size: 24pt;
+`;
+
+export const NavBarToggleButton = styled.li`
+    cursor: pointer;
+    
+    height: 64px;
+
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @media (min-width: 992px) {
+        display: none;
+    }
 `;

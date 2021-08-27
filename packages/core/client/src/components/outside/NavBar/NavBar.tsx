@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
+import { MdMenu } from 'react-icons/md';
+
 import Link from '../../infra/Link';
 import {
     NavBarContainer,
@@ -7,8 +9,10 @@ import {
     NavBarListItem,
     NavBarLink,
     NavBarLinkActive,
+    NavBarBrandListItem,
     NavBarBrandingLink,
     NavBarFit,
+    NavBarToggleButton,
 } from './styles';
 
 export interface NavBarItem {
@@ -27,16 +31,28 @@ const NavBar: React.FC<NavBarProps> = (props) => {
         items = [],
     } = props;
     const router = useRouter();
+    const [toggleState, setToggleState] = useState(false);
+
+    function handleToggleMenuClick() {
+        setToggleState((toggle) => !toggle);
+    }
 
     return (
         <NavBarContainer className={`navbar ${className}`}>
             <NavBarList attachment="right">
-                <NavBarListItem>
+                <NavBarBrandListItem>
                     <Link href="/" element={NavBarBrandingLink}>Inventare</Link>
-                </NavBarListItem>
+                </NavBarBrandListItem>
+                <NavBarToggleButton onClick={handleToggleMenuClick}>
+                    <MdMenu size={32} color="#FFF" />
+                </NavBarToggleButton>
                 <NavBarFit />
                 {items.map((item) => (
-                    <NavBarListItem className="navbar-item" key={item.path}>
+                    <NavBarListItem
+                        className="navbar-item"
+                        key={item.path}
+                        visibleByToggle={toggleState}
+                    >
                         <Link
                             href={item.path}
                             element={router.asPath === item.path ? NavBarLinkActive : NavBarLink}
