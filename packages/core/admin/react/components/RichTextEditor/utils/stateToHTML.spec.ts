@@ -1,4 +1,5 @@
 import { convertFromRaw, EditorState, RawDraftContentState } from 'draft-js';
+import katex from 'katex';
 import stateToHTML from './stateToHTML';
 
 describe('stateToHTML utils', () => {
@@ -108,5 +109,26 @@ describe('stateToHTML utils', () => {
         const state = EditorState.createWithContent(convertFromRaw(initialState));
         const html = stateToHTML(state);
         expect(html).toEqual('<p>t<del>esting</del> paragraph.</p>');
+    });
+
+    it('stateToHTML should be render inline tex equation delimited by \\( and \\) with KaTeX', () => {
+        const initialState: RawDraftContentState = {
+            entityMap: {},
+            blocks: [
+                {
+                    key: '9gm3s',
+                    text: 'testing \\(2x=y\\) paragraph.',
+                    type: 'unstyled',
+                    depth: 0,
+                    inlineStyleRanges: [],
+                    entityRanges: [],
+                    data: {},
+                },
+            ],
+        };
+        const state = EditorState.createWithContent(convertFromRaw(initialState));
+        const html = stateToHTML(state);
+        const tex = katex.renderToString('2x=y', { displayMode: false });
+        expect(html).toEqual(`<p>testing ${tex} paragraph.</p>`);
     });
 });
