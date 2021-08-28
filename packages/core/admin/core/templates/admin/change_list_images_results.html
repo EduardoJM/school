@@ -1,0 +1,21 @@
+{% load i18n %}
+
+{% if result_hidden_fields %}
+    <div class="hiddenfields">{# DIV for HTML validation #}
+        {% for item in result_hidden_fields %}{{ item }}{% endfor %}
+    </div>
+{% endif %}
+
+{% if results %}
+    <div class="results">
+        <div class="images_result_grid">
+            {% for result in results %}
+                <div class="images_result">
+                    {% for item in result %}
+                        {{ item }}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
