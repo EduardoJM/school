@@ -13,9 +13,8 @@ export default function stateToHTML(editorState: EditorState): string {
             const entityType = entity.get('type').toLowerCase();
             if (entityType === 'image') {
                 const data = entity.getData();
-                const style: Record<string, any> = {
-                    display: 'block',
-                };
+                const style: Record<string, any> = {};
+                // alignment support
                 if (data.alignment === 'center') {
                     style['margin-left'] = 'auto';
                     style['margin-right'] = 'auto';
@@ -24,16 +23,20 @@ export default function stateToHTML(editorState: EditorState): string {
                 } else if (data.alignment === 'right') {
                     style.float = 'right';
                 }
+                // resizing support
                 if (data.width !== undefined && data.width !== 0) {
                     style.width = `${data.width}%`;
                     style.height = 'auto';
                 }
+                // determine the src based on the media_url or src
+                let { src } = data;
+                if (data.media_url) {
+                    src = `{% BASE_MEDIA_URL %}/${data.media_url}`;
+                }
                 return {
                     element: 'img',
-                    attributes: {
-                        src: `{% BASE_MEDIA_URL %}/${data.media_url}`,
-                    },
-                    style,
+                    attributes: { src },
+                    style: Object.keys(style).length > 0 ? style : undefined,
                 };
             }
             return undefined;
