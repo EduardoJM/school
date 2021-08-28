@@ -1,6 +1,6 @@
 import { ContentBlock } from 'draft-js';
 
-const inlineMathRegex = /\\\(.*?\\\)/gi;
+export const inlineMathRegex = /\\\(.*?\\\)/gi;
 
 export default function inlineMathStrategy(
     contentBlock: ContentBlock,

@@ -1,8 +1,10 @@
 import { EditorState } from 'draft-js';
 import { stateToHTML as rawStateToHTML } from 'draft-js-export-html';
+import katex from 'katex';
+import { inlineMathRegex } from '../Plugins/InlineMath/strategy';
 
 export default function stateToHTML(editorState: EditorState): string {
-    return rawStateToHTML(editorState.getCurrentContent(), {
+    const rendered = rawStateToHTML(editorState.getCurrentContent(), {
         inlineStyles: {
             BOLD: { element: 'b' },
             ITALIC: { element: 'i' },
@@ -37,4 +39,18 @@ export default function stateToHTML(editorState: EditorState): string {
             return undefined;
         },
     });
+    // render inline math
+    const matches = Array.from(rendered.matchAll(inlineMathRegex));
+    let outputRendered = '';
+    let lastIndex = 0;
+    matches.forEach((match) => {
+        if (match.index !== undefined) {
+            outputRendered += rendered.substring(lastIndex, match.index);
+            const expr = match[0];
+            outputRendered += katex.renderToString(expr.replace('\\(', '').replace('\\)', ''), { displayMode: false });
+            lastIndex = match.index + expr.length;
+        }
+    });
+    outputRendered += rendered.substring(lastIndex);
+    return outputRendered;
 }
