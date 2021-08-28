@@ -3,6 +3,10 @@ import { stateToHTML as rawStateToHTML } from 'draft-js-export-html';
 
 export default function stateToHTML(editorState: EditorState): string {
     return rawStateToHTML(editorState.getCurrentContent(), {
+        inlineStyles: {
+            BOLD: { element: 'b' },
+            ITALIC: { element: 'i' },
+        },
         entityStyleFn: (entity: any) => {
             const entityType = entity.get('type').toLowerCase();
             if (entityType === 'image') {

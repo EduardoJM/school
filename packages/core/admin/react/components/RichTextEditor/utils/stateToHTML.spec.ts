@@ -88,7 +88,7 @@ describe('stateToHTML utils', () => {
         expect(html).toEqual('<p>t<u>esting</u> paragraph.</p>');
     });
 
-    it('stateToHTML should be render strikethrough range as <s/>', () => {
+    it('stateToHTML should be render strikethrough range as <del/>', () => {
         const initialState: RawDraftContentState = {
             entityMap: {},
             blocks: [
@@ -107,6 +107,6 @@ describe('stateToHTML utils', () => {
         };
         const state = EditorState.createWithContent(convertFromRaw(initialState));
         const html = stateToHTML(state);
-        expect(html).toEqual('<p>t<s>esting</s> paragraph.</p>');
+        expect(html).toEqual('<p>t<del>esting</del> paragraph.</p>');
     });
 });
