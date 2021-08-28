@@ -1,5 +1,9 @@
 @import url(./forms/inputs.css);
 
+.login .main {
+    padding-left: 0 !important;
+}
+
 .login main {
     height: 100vh;
     display: flex;
