@@ -26,6 +26,12 @@ export default function createToolBarData(
             options: { style: 'UNDERLINE', toggleInline },
         },
         {
+            id: 'btn-strike',
+            type: 'inline',
+            children: (<i className="material-icons">format_strikethrough</i>),
+            options: { style: 'STRIKETHROUGH', toggleInline },
+        },
+        {
             id: 'separator-inline',
             type: 'separator',
         },
