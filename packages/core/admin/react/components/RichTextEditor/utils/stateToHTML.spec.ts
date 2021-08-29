@@ -1,4 +1,9 @@
-import { convertFromRaw, EditorState, RawDraftContentState, RawDraftInlineStyleRange } from 'draft-js';
+import {
+    convertFromRaw,
+    EditorState,
+    RawDraftContentState,
+    RawDraftInlineStyleRange,
+} from 'draft-js';
 import katex from 'katex';
 import stateToHTML from './stateToHTML';
 
