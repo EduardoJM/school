@@ -6,8 +6,9 @@
   "license": "MIT",
   "private": "true",
   "scripts": {
-    "test:react": "jest",
-    "test:client": "cd packages/core/client && jest"
+    "test:javascript": "jest --coverage",
+    "test:admin": "cd packages/core/admin && coverage run --source='.' manage.py test && coverage html",
+    "test": "yarn test:javascript && yarn test:admin"
   },
   "workspaces": {
     "packages": [

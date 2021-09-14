@@ -6,3 +6,6 @@ media
 *.css.map
 .sass-cache
 core/static/modules
+.coverage
+coverage.json
+htmlcov
