@@ -1,5 +1,0 @@
-{% extends 'admin/includes/sidebar/item.html' %}
-{% block item-active-class %}{% if  "/admin/" == request.path %} class="active"{% endif %}{% endblock %}
-{% block item-icon %}{% include 'admin/includes/sidebar/icon.html' with app="Dashboard" %}{% endblock %}
-{% block item-name %}Dashboard{% endblock %}
-{% block item-root-link %}{% url 'admin:index' %}{% endblock %}

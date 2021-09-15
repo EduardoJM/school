@@ -1,7 +1,0 @@
-{% load i18n admin_urls %}
-{% block object-tools-items %}
-    {% url opts|admin_urlname:'history' original.pk|admin_urlquote as history_url %}
-    <a class="navbar-button" href="{% add_preserved_filters history_url %}" class="historylink">
-        {% translate "History" %}
-    </a>
-{% endblock %}

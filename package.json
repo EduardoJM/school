@@ -6,9 +6,8 @@
   "license": "MIT",
   "private": "true",
   "scripts": {
-    "test:javascript": "jest --coverage",
-    "test:admin": "cd packages/core/admin && coverage run --source='.' manage.py test && coverage html",
-    "test": "yarn test:javascript && yarn test:admin"
+    "test": "yarn jest",
+    "test:coverage": "yarn jest --coverage"
   },
   "workspaces": {
     "packages": [
@@ -16,15 +15,13 @@
     ]
   },
   "devDependencies": {
-    "@inventare/eslint": "*",
     "@types/jest": "^27.0.1",
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "^3.3.0",
     "husky": "^7.0.1",
     "jest": "^27.0.6",
-    "jest-without-globals": "^0.0.3",
     "ts-jest": "^27.0.5",
-    "typescript": "^4.3.5"
+    "typescript": "^4.4.3"
   },
   "config": {
     "commitizen": {
