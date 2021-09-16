@@ -5,6 +5,7 @@ import cors from 'cors';
 import createConnection from './connection';
 import { defaults } from './configs';
 import routes from './routes';
+import { errors } from './middlewares';
 
 createConnection().then(async (connection) => {
     if (!connection) {
@@ -17,6 +18,8 @@ createConnection().then(async (connection) => {
     app.use(express.json());
 
     app.use(routes);
+
+    app.use(errors());
 
     const port = process.env.SERVER_PORT || defaults.port;
 

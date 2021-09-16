@@ -9,30 +9,36 @@ export interface SubjectCreateRequestBody {
 }
 
 export default class SubjectsController {
-    static async create(request: Request<SubjectCreateRequestBody>, response: Response) {
+    static async create(request: Request<any, any, SubjectCreateRequestBody>, response: Response) {
         const {
             name, icon, active
         } = request.body;
-        // TODO: add try/catch on needed statements
         const subjectRepo = getRepository(Subject);
-        const alreadyNamed = await subjectRepo.findOne({ name });
-        if (alreadyNamed) {
-            // TODO: separar mensagens...
-            return response.status(409).json({
-                'message': 'Já cadastrada'
-            });
+        try {
+            const alreadyNamed = await subjectRepo.findOne({ name });
+            if (alreadyNamed) {
+                // TODO: separar mensagens...
+                return response.status(409).json({
+                    'message': 'Já cadastrada'
+                });
+            }
+        } catch (err) {
+            console.log(`ERROR: trying to check if a subject with determinated name are already registered.\r\n\r\n ${JSON.stringify(err)}`);
         }
-        const subject = new Subject();
-        subject.name = name;
-        subject.active = active !== undefined ? active : true;
-        subject.icon = icon;
-        const result = await subjectRepo.save(subject);
-        return response.status(201).json(result);
+        const subject = Subject.create({ name, active: active !== undefined ? active : true, icon: icon || '' });
+        try {
+            const result = await subjectRepo.save(subject);
+            return response.status(201).json(result);
+        } catch (err) {
+            console.log(`ERROR: trying to save a subject.\r\n\r\n ${JSON.stringify(err)}`);
+            // TODO: add a better error message here.
+            return response.status(500).json({});
+        }
     }
 
     static async list(request: Request, response: Response) {
         // TODO: add try/catch on needed statements
         const subjectRepo = getRepository(Subject);
-        return response.json(subjectRepo.find());
+        return response.json(await subjectRepo.find());
     }
 }

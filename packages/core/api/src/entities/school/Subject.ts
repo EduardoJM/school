@@ -37,4 +37,12 @@ export default class Subject {
 
     @OneToMany(() => Tag, (tag) => tag.subject)
     tags!: Tag[];
+
+    static create(data: Record<string, any>): Subject {
+        let subject = new Subject();
+        try {
+            subject = Object.assign(subject, data);
+        } catch {}
+        return subject;
+    }
 }

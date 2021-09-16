@@ -13,15 +13,18 @@ services:
       - inventare
     environment:
       MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: inventare
 
   api:
     depends_on:
       - database
-    build: ./Dockerfile.api
+    build:
+      context: .
+      dockerfile: Dockerfile.api
     volumes:
-      - ./packages/core/api/src:/app/src
-      - ./packages/core/api/nodemon.json:/app/nodemon.json
-      - ./packages/core/api/tsconfig.json:/app/tsconfig.json
+      - ./packages/core/api/src:/app/packages/core/api/src
+      - ./packages/core/api/nodemon.json:/app/packages/core/api/nodemon.json
+      - ./packages/core/api/tsconfig.json:/app/packages/core/api/tsconfig.json
     ports:
       - "3333:3333"
     networks: 
@@ -30,4 +33,4 @@ services:
       SQL_HOST: database
       SQL_USER: root
       SQL_PASSWORD: root
-    command: npm run dev
+    command: yarn dev
