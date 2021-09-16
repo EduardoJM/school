@@ -17,7 +17,7 @@ services:
   api:
     depends_on:
       - database
-    build: ./packages/core/api
+    build: ./Dockerfile.api
     volumes:
       - ./packages/core/api/src:/app/src
       - ./packages/core/api/nodemon.json:/app/nodemon.json
