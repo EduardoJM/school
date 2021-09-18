@@ -1,7 +1,11 @@
 import { Request, Response, NextFunction, response } from 'express';
 import { celebrate, isCelebrateError } from 'celebrate';
 import { messages } from 'joi-translation-pt-br';
-import { SubjectRequestBodySchema, StudentCreateRequestBodySchema } from '../schemas';
+import {
+    SubjectRequestBodySchema,
+    StudentCreateRequestBodySchema,
+    AuthRequestBodySchema,
+} from '../schemas';
 
 export function errors() {
     return (err: Error, request: Request, response: Response, next: NextFunction) => {
@@ -29,5 +33,10 @@ export const SubjectCreateBodyValidation = celebrate(
 
 export const StudentCreateBodyValidation = celebrate(
     { body: StudentCreateRequestBodySchema },
+    { messages, abortEarly: false, convert: true },
+);
+
+export const AuthRequestBodyValidation = celebrate(
+    { body: AuthRequestBodySchema },
     { messages, abortEarly: false, convert: true },
 );
