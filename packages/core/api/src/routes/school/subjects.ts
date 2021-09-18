@@ -1,19 +1,24 @@
 import express from 'express';
 import { SubjectsController } from '../../controllers';
-import { SubjectCreateBodyValidation } from '../../middlewares';
+import {
+    SubjectCreateBodyValidation,
+    IsUserAuthenticated,
+    IsUserAdmin,
+} from '../../middlewares';
 
 const subjectsRouter = express.Router();
 
 subjectsRouter.post(
     '/',
-    // ADD MIDDLEWARES HERE
+    IsUserAuthenticated,
+    IsUserAdmin,
     SubjectCreateBodyValidation,
     SubjectsController.create,
 );
 
 subjectsRouter.get(
     '/',
-    // ADD MIDDLEWARES HERE
+    IsUserAuthenticated,
     SubjectsController.list
 );
 

@@ -71,6 +71,14 @@ export class User {
         return bcrypt.compareSync(unencryptedPassword, this.password);
     }
 
+    isAdmin(): boolean {
+        return !!this.admin;
+    }
+
+    isStudent(): boolean {
+        return !!this.student;
+    }
+
     serializeChild(): Record<string, any> {
         if (this.student) {
             return this.student.serialize();
