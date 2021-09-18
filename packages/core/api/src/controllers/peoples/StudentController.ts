@@ -1,6 +1,12 @@
 import { Request, Response } from 'express';
 import { getRepository, getConnection } from 'typeorm';
 import { Student, User } from '../../entities';
+import {
+    responses,
+    HTTP_201_CREATED,
+    HTTP_409_CONFLICT,
+    HTTP_500_INTERNAL_SERVER_ERROR,
+} from '../../constants';
 
 export interface StudentCreateRequestBody {
     fullName: string;
@@ -22,13 +28,13 @@ export class StudentController {
         try {
             const alreadyNamed = await userRepo.findOne({ email });
             if (alreadyNamed) {
-                // TODO: separar mensagens...
-                return response.status(409).json({
-                    'message': 'Já cadastrado'
-                });
+                return response
+                    .status(HTTP_409_CONFLICT)
+                    .json(responses.EMAIL_ALREADY_USED);
             }
         } catch (err) {
             console.log(`ERROR: trying to check if a user with determinated e-mail are already registered.\r\n\r\n ${JSON.stringify(err)}`);
+            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
         }
         const user = new User();
         user.fullName = fullName;
@@ -49,11 +55,10 @@ export class StudentController {
                 result = await studentRepo.save(student);
                 data = result.serialize();
             });
-            return response.status(201).json(data);
+            return response.status(HTTP_201_CREATED).json(data);
         } catch (err) {
             console.log(`ERROR: trying to save a student.\r\n\r\n ${JSON.stringify(err)}`);
-            // TODO: add a better error message here.
-            return response.status(500).json({});
+            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
         }
     }
 
