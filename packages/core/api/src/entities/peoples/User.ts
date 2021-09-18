@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import bcrypt from 'bcryptjs';
 import { Student } from './Student';
+import { Admin } from './Admin';
 import { getGravatarImageUrl } from '../../integrations/gravatar';
 
 @Entity()
@@ -58,6 +59,9 @@ export class User {
 
     @OneToOne(() => Student, (student) => student.user)
     student!: Student;
+
+    @OneToOne(() => Admin, (admin) => admin.user)
+    admin!: Admin;
 
     hashPassword() {
         this.password = bcrypt.hashSync(this.password, 10);
