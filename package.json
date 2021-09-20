@@ -4,7 +4,7 @@
   "repository": "https://github.com/EduardoJM/school.git",
   "author": "Eduardo Oliveira <eduardo_y05@outlook.com>",
   "license": "MIT",
-  "private": "true",
+  "private": true,
   "scripts": {
     "test": "yarn jest",
     "test:coverage": "yarn jest --coverage"

@@ -1,11 +1,9 @@
-import React, { FormEvent } from 'react';
+import React, { FormEvent, useState } from 'react';
 import {
     Container,
     CssBaseline,
     Box,
-    Grid,
     Avatar,
-    Link,
     Typography,
     TextField,
     FormControlLabel,
@@ -13,11 +11,16 @@ import {
     Button,
 } from '@mui/material';
 import { LockOutlined } from '@mui/icons-material';
+import { useAuth } from '../../../contexts/auth';
 
 const Login: React.FC = () => {
+    const { login } = useAuth();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
+        login(email, password);
     }
 
     return (
@@ -45,6 +48,8 @@ const Login: React.FC = () => {
                         id="email"
                         label="Endereço de e-mail"
                         name="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         autoComplete="email"
                         autoFocus
                     />
@@ -56,6 +61,8 @@ const Login: React.FC = () => {
                         label="Senha"
                         type="password"
                         id="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         autoComplete="current-password"
                     />
                     <FormControlLabel

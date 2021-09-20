@@ -1,10 +1,15 @@
 import React from 'react';
-import Dashboard from './components/dashboard/Dashboard';
-import Login from './pages/outside/Login';
+import { SnackbarProvider } from 'notistack';
+import Router from './routes';
+import { AuthProvider } from './contexts/auth';
 
 function App() {
   return (
-    <Login />
+    <SnackbarProvider maxSnack={3}>
+      <AuthProvider>
+        <Router />
+      </AuthProvider>
+    </SnackbarProvider>
   );
 }
 
