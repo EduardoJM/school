@@ -34,3 +34,21 @@ services:
       SQL_USER: root
       SQL_PASSWORD: root
     command: yarn dev
+  
+  admin:
+    depends_on: 
+      - database
+      - api
+    build:
+      context: .
+      dockerfile: Dockerfile.admin
+    volumes:
+      - ./packages/core/admin/public:/app/packages/core/admin/public
+      - ./packages/core/admin/src:/app/packages/core/admin/src
+      - ./packages/core/admin/.env:/app/packages/core/admin/.env
+      - ./packages/core/admin/tsconfig.json:/app/packages/core/admin/tsconfig.json
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    command: yarn start
