@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
-import { User } from '../user/UserEntity';
+import { User, UserType } from '../user/UserEntity';
 import {
     responses,
     HTTP_200_OK,
@@ -13,11 +13,12 @@ import { generateToken } from '../../../utils/jwt';
 export interface AuthRequestBody {
     email: string;
     password: string;
+    userTypes?: UserType[];
 }
 
 export class AuthController {
     async auth(request: Request<any, any, AuthRequestBody>, response: Response) {
-        const { email, password } = request.body;
+        const { email, password, userTypes } = request.body;
         const userRepo = getRepository(User);
         try {
             const user = await userRepo.findOne({
@@ -33,6 +34,14 @@ export class AuthController {
                 return response
                     .status(HTTP_401_UNAUTHORIZED)
                     .json(responses.AUTH_WRONG_PASSWORD);
+            }
+            if (userTypes) {
+                const type = user.getUserType();
+                if (!userTypes.includes(type)) {
+                    return response
+                        .status(HTTP_401_UNAUTHORIZED)
+                        .json(responses.AUTH_NO_PERMISSION);
+                }
             }
             const token = generateToken({ id: user.id });
             return response.status(HTTP_200_OK).json({

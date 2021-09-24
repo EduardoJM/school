@@ -11,7 +11,7 @@ import { Student } from '../student/StudentEntity';
 import { Admin } from '../admin/AdminEntity';
 import { getGravatarImageUrl, checkIfGravatarExists } from '../../../integrations/gravatar';
 
-export type UserType = 'UNKNOWN' | 'ADMIN' | 'STUDENT';
+export type UserType = 'UNKNOWN' | 'ADMIN' | 'STUDENT' | 'TEACHER';
 
 @Entity()
 export class User {
