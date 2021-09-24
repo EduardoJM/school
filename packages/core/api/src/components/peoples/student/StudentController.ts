@@ -8,7 +8,6 @@ import {
     HTTP_409_CONFLICT,
     HTTP_500_INTERNAL_SERVER_ERROR,
 } from '../../../constants';
-import { StudentRepository } from './StudentRepository';
 
 export interface StudentCreateRequestBody {
     fullName: string;
@@ -25,10 +24,9 @@ export class StudentController {
         const {
             fullName, email, password, displayName, useGravatar, avatar
         } = request.body;
-        const studentRepo = getRepository(Student);
-        const userRepo = getRepository(User);
+        const userRepository = getRepository(User);
         try {
-            const emailAlreadyUsed = await userRepo.findOne({ email });
+            const emailAlreadyUsed = await userRepository.findOne({ email });
             if (emailAlreadyUsed) {
                 return response
                     .status(HTTP_409_CONFLICT)
@@ -48,28 +46,31 @@ export class StudentController {
         user.useGravatar = useGravatar !== undefined ? useGravatar : true;
         user.avatar = avatar || '';
 
-        let result: any = {};
-
         const connection = getConnection();
-        await connection.transaction(async () => {
-            const student = new Student();
-            
-            const userRepository = getRepository(User);
-            const repository = getCustomRepository(StudentRepository);
-            student.owner = await userRepository.save(user);
-
-            result = await repository.save(student);
-        });
-
-        return response.json(result);
+        let result: any;
+        try {
+            await connection.transaction(async (entityManager) => {
+                const student = new Student();
+                student.user = await entityManager.save(user);
+                const resultStudent = await entityManager.save(student);
+                result = await resultStudent.serialize();
+            });
+            return response.status(HTTP_201_CREATED).json(result);
+        } catch(err) {
+            console.log(`ERROR: trying to save a new student.\r\n\r\n ${JSON.stringify(err)}`);
+            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
+        }
     }
 
     async list(request: Request, response: Response) {
         // TODO: add try/catch on needed statements
-        const connection = getConnection();
-        const repository = connection.getCustomRepository(StudentRepository);
-        const results = await repository.find();
-        return response.json(results);
+        // TODO: TEMPORARY ROUTE
+        const repository = getRepository(Student);
+        const results = await repository.find({
+            relations: ['user'],
+        });
+        const result = await Promise.all(results.map(async(student) => await student.serialize()));
+        return response.json(result);
         /*
         try {
         } catch (err) {

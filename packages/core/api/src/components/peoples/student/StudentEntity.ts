@@ -1,26 +1,29 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { PolymorphicParent } from 'typeorm-polymorphic';
-import { PolymorphicChildInterface } from 'typeorm-polymorphic/dist/polymorphic.interface';
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    OneToOne,
+    JoinColumn,
+} from 'typeorm';
 import { User } from '../user/UserEntity';
 
 @Entity()
-export class Student implements PolymorphicChildInterface {
+export class Student {
     @PrimaryGeneratedColumn()
     id!: number;
     
-    @PolymorphicParent(() => User)
-    owner!: User;
-
-    @Column()
-    entityId!: number;
-
-    @Column()
-    entityType!: string;
+    @OneToOne(() => User, (user) => user.student, {
+        onDelete: 'CASCADE',
+        eager: true,
+    })
+    @JoinColumn()
+    user!: User;
 
     async serialize(): Promise<Record<string, any>> {
-        return {
-            type: 'STUDENT',
-            ...(await this.owner.serialize(false)),
-        }
-    };
+        this.user.student = this;
+        return this.user.serialize();
+    }
+
+    async serializeChild(): Promise<Record<string, any>> {
+        return {};
+    }
 }

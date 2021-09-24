@@ -1,4 +1,4 @@
-FROM node:14-alpine as build
+FROM node:14-alpine
 
 WORKDIR /app
 
@@ -9,15 +9,5 @@ COPY packages/core/api ./packages/core/api
 RUN yarn install --pure-lockfile --non-interactive
 
 WORKDIR /app/packages/core/api
+
 RUN yarn build
-
-FROM node:14-alpine
-
-WORKDIR /app
-COPY package.json .
-COPY yarn.lock .
-COPY --from=build /app/packages/core/api /app/packages/core/api
-
-RUN yarn install --pure-lockfile --non-interactive
-
-WORKDIR /app/packages/core/api

@@ -1,0 +1,13 @@
+import { celebrate, Joi } from 'celebrate';
+import { messages } from 'joi-translation-pt-br';
+
+export const AuthRequestBodySchema = Joi.object().keys({
+    email: Joi.string().required(),
+    password: Joi.string().required(),
+});
+
+export const AuthRequestBodyValidation = celebrate(
+    { body: AuthRequestBodySchema },
+    { messages, abortEarly: false, convert: true },
+);
+

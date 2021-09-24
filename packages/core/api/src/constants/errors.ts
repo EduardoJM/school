@@ -10,8 +10,7 @@ export const codes = {
     AUTH_EXPIRED_TOKEN: 'AUTH_EXPIRED_TOKEN',
     AUTH_USER_NOT_FOUND: 'AUTH_USER_NOT_FOUND',
     AUTH_NO_LOGGED_USER: 'AUTH_NO_LOGGED_USER',
-    AUTH_ONLY_ADMIN: 'AUTH_ONLY_ADMIN',
-    AUTH_ONLY_STUDENT: 'AUTH_ONLY_STUDENT',
+    AUTH_NO_PERMISSION: 'AUTH_NO_PERMISSION',
 };
 
 export const messages = {
@@ -25,8 +24,7 @@ export const messages = {
     AUTH_EXPIRED_TOKEN: 'As credenciais de autenticação não são mais válidas',
     AUTH_USER_NOT_FOUND: 'Não existe um usuário válido para as credenciais fornecidas',
     AUTH_NO_LOGGED_USER: 'Não há um usuário autenticado',
-    AUTH_ONLY_ADMIN: 'Você precisa ser um administrador para acessar',
-    AUTH_ONLY_STUDENT: 'Você precisa ser um aluno para acessar',
+    AUTH_NO_PERMISSION: 'Você não tem permissões para executar essa ação',
 };
 
 export const responses = {
@@ -67,12 +65,8 @@ export const responses = {
         error: codes.AUTH_NO_LOGGED_USER,
         message: messages.AUTH_NO_LOGGED_USER,
     },
-    AUTH_ONLY_ADMIN: {
-        error: codes.AUTH_ONLY_ADMIN,
-        message: messages.AUTH_ONLY_ADMIN,
-    },
-    AUTH_ONLY_STUDENT: {
-        error: codes.AUTH_ONLY_STUDENT,
-        message: messages.AUTH_ONLY_STUDENT,
+    AUTH_NO_PERMISSION: {
+        error: codes.AUTH_NO_PERMISSION,
+        message: messages.AUTH_NO_PERMISSION,
     },
 };

@@ -3,19 +3,18 @@ import { StudentController } from './StudentController';
 import { StudentCreateBodyValidation } from './StudentValidations';
 
 const controller = new StudentController();
-const studentsRouter = express.Router();
+const StudentsRouter = express.Router();
 
-studentsRouter.post(
+StudentsRouter.post(
     '/',
-    // ADD MIDDLEWARES HERE
     StudentCreateBodyValidation,
     controller.create,
 );
 
-studentsRouter.get(
+StudentsRouter.get(
     '/',
     // ADD MIDDLEWARES HERE
     controller.list
 );
 
-export default studentsRouter;
+export { StudentsRouter };

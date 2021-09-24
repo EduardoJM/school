@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { getRepository } from 'typeorm';
-import { User } from '../../entities';
+import { User } from '../../components/Entities';
 import { Request } from '../../utils/express';
 import {
     HTTP_401_UNAUTHORIZED,
@@ -40,7 +40,7 @@ export async function IsUserAuthenticated(request: Request, response: Response, 
     const userRepo = getRepository(User);
     const user = await userRepo.findOne({
         where: { id },
-        relations: ['admin', 'student'],
+        relations: ['student', 'admin'],
     });
     if (!user) {
         return response.status(HTTP_404_NOT_FOUND).json(responses.AUTH_USER_NOT_FOUND);

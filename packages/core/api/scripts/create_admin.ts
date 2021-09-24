@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import readline from 'readline';
 import { getRepository } from 'typeorm';
 import createConnection from '../src/connection';
-import { Admin, User } from '../src/entities';
+import { Admin, User } from '../src/components/Entities';
 
 const input = readline.createInterface({
     input: process.stdin,

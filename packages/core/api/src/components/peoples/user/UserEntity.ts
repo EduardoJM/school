@@ -6,11 +6,12 @@ import {
     UpdateDateColumn,
     OneToOne,
 } from 'typeorm';
-import { PolymorphicChildren } from 'typeorm-polymorphic';
 import bcrypt from 'bcryptjs';
 import { Student } from '../student/StudentEntity';
 import { Admin } from '../admin/AdminEntity';
-//import { getGravatarImageUrl, checkIfGravatarExists } from '../../integrations/gravatar';
+import { getGravatarImageUrl, checkIfGravatarExists } from '../../../integrations/gravatar';
+
+export type UserType = 'UNKNOWN' | 'ADMIN' | 'STUDENT';
 
 @Entity()
 export class User {
@@ -58,16 +59,11 @@ export class User {
     @UpdateDateColumn()
     updatedAt!: Date;
 
-    //@OneToOne(() => Student, (student) => student.user)
-    @PolymorphicChildren(() => [Student, Admin], {
-        hasMany: false,
-    })
-    specific!: Student | Admin;
+    @OneToOne(() => Student, (student) => student.user)
+    student!: Student;
 
-    /*
     @OneToOne(() => Admin, (admin) => admin.user)
     admin!: Admin;
-    */
 
     hashPassword() {
         this.password = bcrypt.hashSync(this.password, 10);
@@ -77,65 +73,55 @@ export class User {
         return bcrypt.compareSync(unencryptedPassword, this.password);
     }
 
+    async getAvatar(): Promise<string | null> {
+        if (this.useGravatar) {
+            const hasGravatar = await checkIfGravatarExists(this.email);
+            if (hasGravatar) {
+                return getGravatarImageUrl(this.email);
+            }
+        }
+        if (this.avatar === undefined) {
+            return null;
+        }
+        return this.avatar;
+    }
+
     isAdmin(): boolean {
-        return false;
-        //return !!this.admin;
+        return !!this.admin;
     }
 
     isStudent(): boolean {
-        return false;
-        //return !!this.student;
+        return !!this.student;
     }
 
-    async serializeChild(): Promise<Record<string, any>> {
-        /*
-        if (this.student) {
-            return this.student.serialize();
+    getUserType(): UserType {
+        if (this.isAdmin()) {
+            return 'ADMIN';
+        } else if (this.isStudent()) {
+            return 'STUDENT';
         }
-        if (this.admin) {
-            return this.admin.serialize();
-        }
-        */
-        return {};//this.serialize(true);
+        return 'UNKNOWN';
     }
 
-    /*async getAvatar(): Promise<string | null> {
-        if (!this.useGravatar) {
-            // TODO: build domain here
-            return this.avatar;
+    async serialize(): Promise<Record<string, any>> {
+        const type = this.getUserType();
+        let childData: Record<string, any> = {};
+        if (type == 'ADMIN') {
+            childData = await this.admin.serializeChild();
+        } else if (type == 'STUDENT') {
+            childData = await this.student.serializeChild();
         }
-        const hasGravatar = await checkIfGravatarExists(this.email);
-        if (hasGravatar) {
-            return getGravatarImageUrl(this.email);
-        }
-        return null;
-    }*/
-
-    async serialize(id: boolean = true): Promise<Record<string, any>> {
-        /*const initialData: Record<string, any> = {};
-        if (id) {
-            initialData['id'] = this.id;
-        }
-        return {
+        const data = {
+            id: this.id,
+            type: type,
             fullName: this.fullName,
             displayName: this.displayName,
             email: this.email,
             avatar: await this.getAvatar(),
             createdAt: this.createdAt,
             updatedAt: this.updatedAt,
-            ...initialData,
-        };*/
-        return {};
-    }
-
-    static create(data: Record<string, any>): User {
-        let user = new User();
-        try {
-            user = Object.assign(user, data);
-            if (Object.prototype.hasOwnProperty.call(data, 'password')) {
-                user.hashPassword();
-            }
-        } catch {}
-        return user;
-    }
+            ...childData
+        };
+        return data;
+    };
 }

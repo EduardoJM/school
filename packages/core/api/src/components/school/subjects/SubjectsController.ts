@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
-import { Subject } from '../../entities';
+import { Subject } from './SubjectsEntity';
 
 export interface SubjectCreateRequestBody {
     name: string;
@@ -8,8 +8,8 @@ export interface SubjectCreateRequestBody {
     icon?: string;
 }
 
-export default class SubjectsController {
-    static async create(request: Request<any, any, SubjectCreateRequestBody>, response: Response) {
+export class SubjectsController {
+    async create(request: Request<any, any, SubjectCreateRequestBody>, response: Response) {
         const {
             name, icon, active
         } = request.body;
@@ -36,7 +36,7 @@ export default class SubjectsController {
         }
     }
 
-    static async list(request: Request, response: Response) {
+    async list(request: Request, response: Response) {
         // TODO: add try/catch on needed statements
         const subjectRepo = getRepository(Subject);
         return response.json(await subjectRepo.find());

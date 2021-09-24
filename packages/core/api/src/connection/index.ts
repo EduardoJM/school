@@ -1,5 +1,5 @@
 import { Connection, createConnection } from 'typeorm';
-import { Entities } from '../entities';
+import { Entities } from '../components/Entities';
 import { defaults } from '../configs';
 
 export default async function newConnection(): Promise<Connection | null> {

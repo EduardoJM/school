@@ -4,13 +4,12 @@ import {
     PrimaryGeneratedColumn,
     CreateDateColumn,
     UpdateDateColumn,
-    ManyToOne,
     OneToMany,
 } from 'typeorm';
-import Subject from './Subject';
+import { Tag } from '../tags/TagEntity';
 
 @Entity()
-export default class Tag {
+export class Subject {
     @PrimaryGeneratedColumn()
     id!: number;
 
@@ -21,8 +20,11 @@ export default class Tag {
     })
     name!: string;
 
-    @ManyToOne(() => Subject, (subject) => subject.tags)
-    subject!: Subject;
+    @Column({
+        length: 150,
+        nullable: true
+    })
+    icon!: string;
 
     @CreateDateColumn()
     createdAt!: Date;
@@ -33,9 +35,14 @@ export default class Tag {
     @Column()
     active!: boolean;
 
-    @ManyToOne(() => Tag, (tag) => tag.children)
-    parent!: Tag;
+    @OneToMany(() => Tag, (tag) => tag.subject)
+    tags!: Tag[];
 
-    @OneToMany(() => Tag, (tag) => tag.parent)
-    children!: Tag[];
+    static create(data: Record<string, any>): Subject {
+        let subject = new Subject();
+        try {
+            subject = Object.assign(subject, data);
+        } catch {}
+        return subject;
+    }
 }

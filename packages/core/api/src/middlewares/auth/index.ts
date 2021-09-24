@@ -1,3 +1,2 @@
-export * from './IsUserAdmin';
+export * from './IsUserOfType';
 export * from './IsUserAuthenticated';
-export * from './IsUserStudent';
