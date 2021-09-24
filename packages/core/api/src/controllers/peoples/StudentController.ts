@@ -53,7 +53,7 @@ export class StudentController {
                 const student = new Student();
                 student.user = userResult;
                 result = await studentRepo.save(student);
-                data = result.serialize();
+                data = await result.serialize();
             });
             return response.status(HTTP_201_CREATED).json(data);
         } catch (err) {

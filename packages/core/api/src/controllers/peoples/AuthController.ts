@@ -36,7 +36,7 @@ export class AuthController {
             }
             const token = generateToken({ id: user.id });
             return response.status(HTTP_200_OK).json({
-                user: user.serializeChild(),
+                user: await user.serializeChild(),
                 token,
             })
         } catch (err) {

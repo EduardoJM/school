@@ -9,7 +9,7 @@ import {
 import bcrypt from 'bcryptjs';
 import { Student } from './Student';
 import { Admin } from './Admin';
-import { getGravatarImageUrl } from '../../integrations/gravatar';
+import { getGravatarImageUrl, checkIfGravatarExists } from '../../integrations/gravatar';
 
 @Entity()
 export class User {
@@ -79,7 +79,7 @@ export class User {
         return !!this.student;
     }
 
-    serializeChild(): Record<string, any> {
+    async serializeChild(): Promise<Record<string, any>> {
         if (this.student) {
             return this.student.serialize();
         }
@@ -89,24 +89,28 @@ export class User {
         return this.serialize(true);
     }
 
-    serialize(id: boolean = true): Record<string, any> {
+    async getAvatar(): Promise<string | null> {
+        if (!this.useGravatar) {
+            // TODO: build domain here
+            return this.avatar;
+        }
+        const hasGravatar = await checkIfGravatarExists(this.email);
+        if (hasGravatar) {
+            return getGravatarImageUrl(this.email);
+        }
+        return null;
+    }
+
+    async serialize(id: boolean = true): Promise<Record<string, any>> {
         const initialData: Record<string, any> = {};
         if (id) {
             initialData['id'] = this.id;
-        }
-        if (this.useGravatar) {
-            initialData['avatar'] = getGravatarImageUrl(this.email);
-        } else {
-            // TODO: add domain here...
-            initialData['avatar'] = this.avatar;
         }
         return {
             fullName: this.fullName,
             displayName: this.displayName,
             email: this.email,
-            // TODO: add domain here...
-            rawAvatar: this.avatar,
-            useGravatar: this.useGravatar,
+            avatar: await this.getAvatar(),
             createdAt: this.createdAt,
             updatedAt: this.updatedAt,
             ...initialData,

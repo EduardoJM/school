@@ -19,7 +19,7 @@ export class Student {
     @JoinColumn()
     user!: User;
 
-    serialize(): Record<string, any> {
+    async serialize(): Promise<Record<string, any>> {
         if (!this.user) {
             return {
                 id: this.id,
@@ -29,7 +29,7 @@ export class Student {
             return {
                 id: this.id,
                 type: 'STUDENT',
-                ...this.user.serialize(false),
+                ...(await this.user.serialize(false)),
             }
         }
     };
