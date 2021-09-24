@@ -5,32 +5,28 @@ import {
     OneToOne,
     JoinColumn,
 } from 'typeorm';
+import { PolymorphicParent } from 'typeorm-polymorphic';
+import { PolymorphicChildInterface } from 'typeorm-polymorphic/dist/polymorphic.interface';
 import { User } from './User';
 
 @Entity()
-export class Admin {
+export class Admin implements PolymorphicChildInterface {
     @PrimaryGeneratedColumn()
     id!: number;
+    
+    @PolymorphicParent(() => User)
+    owner!: User;
 
-    @OneToOne(() => User, (user) => user.admin, {
-        onDelete: 'CASCADE',
-        eager: true,
-    })
-    @JoinColumn()
-    user!: User;
+    @Column()
+    entityId!: number;
+
+    @Column()
+    entityType!: string;
 
     async serialize(): Promise<Record<string, any>> {
-        if (!this.user) {
-            return {
-                id: this.id,
-                type: 'ADMIN',
-            };
-        } else {
-            return {
-                id: this.id,
-                type: 'ADMIN',
-                ...(await this.user.serialize(false)),
-            }
+        return {
+            type: 'ADMIN',
+            ...(await this.owner.serialize(false)),
         }
     };
 }

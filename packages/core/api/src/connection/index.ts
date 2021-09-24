@@ -17,6 +17,7 @@ export default async function newConnection(): Promise<Connection | null> {
             logging: false,
         });
     } catch (error) {
+        console.log(error);
         console.log(JSON.stringify(error, null, 4));
         conn = null;
     }

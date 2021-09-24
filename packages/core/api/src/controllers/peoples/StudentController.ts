@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getRepository, getConnection } from 'typeorm';
+import { getCustomRepository, getRepository, getConnection } from 'typeorm';
 import { Student, User } from '../../entities';
 import {
     responses,
@@ -7,6 +7,7 @@ import {
     HTTP_409_CONFLICT,
     HTTP_500_INTERNAL_SERVER_ERROR,
 } from '../../constants';
+import { StudentRepository } from '../../repositories/StudentRepository';
 
 export interface StudentCreateRequestBody {
     fullName: string;
@@ -44,14 +45,30 @@ export class StudentController {
         user.displayName = displayName || '';
         user.useGravatar = useGravatar !== undefined ? useGravatar : true;
         user.avatar = avatar || '';
-        try {
+
+        let result: any = {};
+
+        const connection = getConnection();
+        await connection.transaction(async (entityManager) => {
+            const student = new Student();
+            
+            const userRepository = getRepository(User);
+            const repository = getCustomRepository(StudentRepository);
+            student.owner = await userRepository.save(user);
+
+            result = await repository.save(student);
+        });
+
+        return response.json(result);
+
+        /*try {
             const connection = getConnection();
             let result: Student | null = null;
             let data: Record<string, any> = {};
             await connection.transaction(async (entityManager) => {
                 const userResult = await userRepo.save(user);
                 const student = new Student();
-                student.user = userResult;
+                student.owner = userResult;
                 result = await studentRepo.save(student);
                 data = await result.serialize();
             });
@@ -59,19 +76,21 @@ export class StudentController {
         } catch (err) {
             console.log(`ERROR: trying to save a student.\r\n\r\n ${JSON.stringify(err)}`);
             return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
-        }
+        }*/
     }
 
     static async list(request: Request, response: Response) {
         // TODO: add try/catch on needed statements
-        const studentRepo = getRepository(Student);
+        const connection = getConnection();
+        const repository = connection.getCustomRepository(StudentRepository);
+        const results = await repository.find();
+        return response.json(results);
+        /*
         try {
-            const results = await studentRepo.find({ relations: ['user'] });
-            return response.json(results.map((item) => item.serialize()));
         } catch (err) {
             console.log(`ERROR: trying to load students.\r\n\r\n ${JSON.stringify(err)}`);
             // TODO: add a better error message here.
             return response.status(500).json({});
-        }
+        }*/
     }
 }

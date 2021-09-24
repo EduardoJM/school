@@ -6,6 +6,7 @@ import {
     UpdateDateColumn,
     OneToOne,
 } from 'typeorm';
+import { PolymorphicChildren } from 'typeorm-polymorphic';
 import bcrypt from 'bcryptjs';
 import { Student } from './Student';
 import { Admin } from './Admin';
@@ -57,11 +58,16 @@ export class User {
     @UpdateDateColumn()
     updatedAt!: Date;
 
-    @OneToOne(() => Student, (student) => student.user)
-    student!: Student;
+    //@OneToOne(() => Student, (student) => student.user)
+    @PolymorphicChildren(() => [Student, Admin], {
+        hasMany: false,
+    })
+    specific!: Student | Admin;
 
+    /*
     @OneToOne(() => Admin, (admin) => admin.user)
     admin!: Admin;
+    */
 
     hashPassword() {
         this.password = bcrypt.hashSync(this.password, 10);
@@ -72,21 +78,25 @@ export class User {
     }
 
     isAdmin(): boolean {
-        return !!this.admin;
+        return false;
+        //return !!this.admin;
     }
 
     isStudent(): boolean {
-        return !!this.student;
+        return false;
+        //return !!this.student;
     }
 
     async serializeChild(): Promise<Record<string, any>> {
+        /*
         if (this.student) {
             return this.student.serialize();
         }
         if (this.admin) {
             return this.admin.serialize();
         }
-        return this.serialize(true);
+        */
+        return {};//this.serialize(true);
     }
 
     async getAvatar(): Promise<string | null> {
@@ -102,7 +112,7 @@ export class User {
     }
 
     async serialize(id: boolean = true): Promise<Record<string, any>> {
-        const initialData: Record<string, any> = {};
+        /*const initialData: Record<string, any> = {};
         if (id) {
             initialData['id'] = this.id;
         }
@@ -114,7 +124,8 @@ export class User {
             createdAt: this.createdAt,
             updatedAt: this.updatedAt,
             ...initialData,
-        };
+        };*/
+        return {};
     }
 
     static create(data: Record<string, any>): User {

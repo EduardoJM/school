@@ -22,8 +22,10 @@ export class AuthController {
         try {
             const user = await userRepo.findOne({
                 where: { email },
-                relations: ['student', 'admin'],
+                //relations: ['student', 'admin'],
             });
+            return response.json(user);
+            /*
             if (!user) {
                 return response
                     .status(HTTP_404_NOT_FOUND)
@@ -39,6 +41,7 @@ export class AuthController {
                 user: await user.serializeChild(),
                 token,
             })
+            */
         } catch (err) {
             console.log(`ERROR: trying to check if a user with determinated e-mail are already registered.\r\n\r\n ${JSON.stringify(err)}`);
             return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
