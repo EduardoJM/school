@@ -9,5 +9,5 @@ export const SubjectRequestBodySchema = Joi.object().keys({
 
 export const SubjectCreateBodyValidation = celebrate(
     { body: SubjectRequestBodySchema },
-    { messages, abortEarly: false, convert: true },
+    { messages, abortEarly: true, convert: true },
 );

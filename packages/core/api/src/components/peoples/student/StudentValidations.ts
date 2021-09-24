@@ -13,5 +13,5 @@ export const StudentCreateRequestBodySchema = Joi.object().keys({
 
 export const StudentCreateBodyValidation = celebrate(
     { body: StudentCreateRequestBodySchema },
-    { messages, abortEarly: false, convert: true },
+    { messages, abortEarly: true, convert: true },
 );

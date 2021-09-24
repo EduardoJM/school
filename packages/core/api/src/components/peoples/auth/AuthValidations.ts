@@ -9,6 +9,6 @@ export const AuthRequestBodySchema = Joi.object().keys({
 
 export const AuthRequestBodyValidation = celebrate(
     { body: AuthRequestBodySchema },
-    { messages, abortEarly: false, convert: true },
+    { messages, abortEarly: true, convert: true },
 );
 

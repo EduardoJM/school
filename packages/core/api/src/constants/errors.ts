@@ -14,6 +14,7 @@ export const codes = {
 };
 
 export const messages = {
+    VALIDATION_FAILED: 'Dados enviados são inválidos',
     EMAIL_ALREADY_USED: 'Já existe uma conta cadastrada com esse e-mail',
     UNKNOWN_ERROR: 'Houve um erro desconhecido no servidor, entre em contato com o suporte.',
     

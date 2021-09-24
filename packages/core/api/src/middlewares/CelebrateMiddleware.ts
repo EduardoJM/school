@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { isCelebrateError } from 'celebrate';
+import { codes, messages } from '../constants/errors';
 
 export function errors() {
     return (err: Error, request: Request, response: Response, next: NextFunction) => {
@@ -8,14 +9,13 @@ export function errors() {
         }
 
         // TODO: create a dictionary to translate the errors field names
-        let messages: string[] = [];
+        let errorMessages: string[] = [];
         for (const [segment, joiError] of err.details.entries()) {
-            messages.push(joiError.message);
+            errorMessages.push(joiError.message);
         }
-        // TODO: add a standard to status and json response
         return response.status(400).json({
-            errorCode: 'VALIDATION_ERROR',
-            error: messages,
+            error: codes.VALIDATION_FAILED,
+            message: errorMessages.length > 0 ? errorMessages[0] : messages.VALIDATION_FAILED,
         });
     };
 }
