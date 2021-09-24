@@ -1,13 +1,7 @@
-import {
-    Entity,
-    Column,
-    PrimaryGeneratedColumn,
-    OneToOne,
-    JoinColumn,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { PolymorphicParent } from 'typeorm-polymorphic';
 import { PolymorphicChildInterface } from 'typeorm-polymorphic/dist/polymorphic.interface';
-import { User } from './User';
+import { User } from '../user/UserEntity';
 
 @Entity()
 export class Student implements PolymorphicChildInterface {

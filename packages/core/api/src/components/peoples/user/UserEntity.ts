@@ -8,9 +8,9 @@ import {
 } from 'typeorm';
 import { PolymorphicChildren } from 'typeorm-polymorphic';
 import bcrypt from 'bcryptjs';
-import { Student } from './Student';
-import { Admin } from './Admin';
-import { getGravatarImageUrl, checkIfGravatarExists } from '../../integrations/gravatar';
+import { Student } from '../student/StudentEntity';
+import { Admin } from '../admin/AdminEntity';
+//import { getGravatarImageUrl, checkIfGravatarExists } from '../../integrations/gravatar';
 
 @Entity()
 export class User {
@@ -99,7 +99,7 @@ export class User {
         return {};//this.serialize(true);
     }
 
-    async getAvatar(): Promise<string | null> {
+    /*async getAvatar(): Promise<string | null> {
         if (!this.useGravatar) {
             // TODO: build domain here
             return this.avatar;
@@ -109,7 +109,7 @@ export class User {
             return getGravatarImageUrl(this.email);
         }
         return null;
-    }
+    }*/
 
     async serialize(id: boolean = true): Promise<Record<string, any>> {
         /*const initialData: Record<string, any> = {};

@@ -1,13 +1,14 @@
 import { Request, Response } from 'express';
 import { getCustomRepository, getRepository, getConnection } from 'typeorm';
-import { Student, User } from '../../entities';
+import { Student } from './StudentEntity';
+import { User } from '../user/UserEntity';
 import {
     responses,
     HTTP_201_CREATED,
     HTTP_409_CONFLICT,
     HTTP_500_INTERNAL_SERVER_ERROR,
-} from '../../constants';
-import { StudentRepository } from '../../repositories/StudentRepository';
+} from '../../../constants';
+import { StudentRepository } from './StudentRepository';
 
 export interface StudentCreateRequestBody {
     fullName: string;
@@ -20,15 +21,15 @@ export interface StudentCreateRequestBody {
 }
 
 export class StudentController {
-    static async create(request: Request<any, any, StudentCreateRequestBody>, response: Response) {
+    async create(request: Request<any, any, StudentCreateRequestBody>, response: Response) {
         const {
             fullName, email, password, displayName, useGravatar, avatar
         } = request.body;
         const studentRepo = getRepository(Student);
         const userRepo = getRepository(User);
         try {
-            const alreadyNamed = await userRepo.findOne({ email });
-            if (alreadyNamed) {
+            const emailAlreadyUsed = await userRepo.findOne({ email });
+            if (emailAlreadyUsed) {
                 return response
                     .status(HTTP_409_CONFLICT)
                     .json(responses.EMAIL_ALREADY_USED);
@@ -37,6 +38,7 @@ export class StudentController {
             console.log(`ERROR: trying to check if a user with determinated e-mail are already registered.\r\n\r\n ${JSON.stringify(err)}`);
             return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
         }
+
         const user = new User();
         user.fullName = fullName;
         user.email = email;
@@ -49,7 +51,7 @@ export class StudentController {
         let result: any = {};
 
         const connection = getConnection();
-        await connection.transaction(async (entityManager) => {
+        await connection.transaction(async () => {
             const student = new Student();
             
             const userRepository = getRepository(User);
@@ -60,26 +62,9 @@ export class StudentController {
         });
 
         return response.json(result);
-
-        /*try {
-            const connection = getConnection();
-            let result: Student | null = null;
-            let data: Record<string, any> = {};
-            await connection.transaction(async (entityManager) => {
-                const userResult = await userRepo.save(user);
-                const student = new Student();
-                student.owner = userResult;
-                result = await studentRepo.save(student);
-                data = await result.serialize();
-            });
-            return response.status(HTTP_201_CREATED).json(data);
-        } catch (err) {
-            console.log(`ERROR: trying to save a student.\r\n\r\n ${JSON.stringify(err)}`);
-            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
-        }*/
     }
 
-    static async list(request: Request, response: Response) {
+    async list(request: Request, response: Response) {
         // TODO: add try/catch on needed statements
         const connection = getConnection();
         const repository = connection.getCustomRepository(StudentRepository);
