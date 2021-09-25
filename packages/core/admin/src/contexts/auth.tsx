@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { User } from '../entities';
 import { api } from '../services/api';
-import { login } from '../services/peoples/auth';
+import { login, validate } from '../services/peoples/auth';
 import { getDisplayErrorMessage } from '../utils/error';
 
 export interface AuthContextData {
@@ -36,6 +36,27 @@ export const AuthProvider: React.FC = ({ children }) => {
         api.defaults.headers.Authorization = undefined;
         setUser(null);
     }
+
+    useEffect(() => {
+        async function handleValidateLogin() {
+            const jwt = localStorage.getItem('@INVENTARE:JWT');
+            if (!jwt) {
+                return;
+            }
+            api.defaults.headers.Authorization = `Bearer ${jwt}`;
+
+            try {
+                const user = await validate();
+                setUser(user);
+            } catch(err) {
+                enqueueSnackbar(getDisplayErrorMessage(err), { variant: 'error' });
+                api.defaults.headers.Authorization = undefined;
+                localStorage.removeItem('@INVENTARE:JWT');
+            }
+        }
+
+        handleValidateLogin();
+    }, [enqueueSnackbar]);
 
     return (
         <AuthContext.Provider
