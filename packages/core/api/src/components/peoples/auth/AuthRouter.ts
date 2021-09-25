@@ -12,7 +12,7 @@ AuthRouter.post(
     controller.auth,
 );
 
-AuthRouter.get(
+AuthRouter.post(
     '/validate',
     IsUserAuthenticated,
     ValidateRequestBodyValidation,

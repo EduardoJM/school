@@ -50,6 +50,8 @@ export class User {
 
     @Column({
         length: 250,
+        nullable: true,
+        default: '',
     })
     avatar!: string;
 
