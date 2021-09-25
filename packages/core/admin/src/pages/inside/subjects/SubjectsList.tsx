@@ -7,7 +7,13 @@ import {
     TableCell,
     TableHead,
     TableRow,
+    ButtonGroup,
+    IconButton,
 } from '@mui/material';
+import {
+    Delete,
+    Edit
+} from '@mui/icons-material';
 import { useQuery } from 'react-query';
 import { useHistory } from 'react-router-dom';
 import { getSubjects } from '../../../services/school';
@@ -41,6 +47,7 @@ export const SubjectsList: React.FC = () => {
                     <TableRow>
                         <TableCell>ID</TableCell>
                         <TableCell>Nome</TableCell>
+                        <TableCell>Ações</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -48,6 +55,12 @@ export const SubjectsList: React.FC = () => {
                         <TableRow key={item.id}>
                             <TableCell>{item.id}</TableCell>
                             <TableCell>{item.name}</TableCell>
+                            <TableCell>
+                                <ButtonGroup>
+                                    <IconButton><Edit /></IconButton>
+                                    <IconButton><Delete /></IconButton>
+                                </ButtonGroup>
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
