@@ -16,7 +16,29 @@ export interface AuthRequestBody {
     userTypes?: UserType[];
 }
 
+export interface ValidateRequestBody {
+    userTypes?: UserType[];
+}
+
 export class AuthController {
+    async validate(request: Request<any, any, ValidateRequestBody>, response: Response) {
+        if (!request.user) {
+            return response
+                .status(HTTP_404_NOT_FOUND)
+                .json(responses.AUTH_ACCOUNT_NOT_FOUND);
+        }
+        const { userTypes } = request.body;
+        if (userTypes) {
+            const type = request.user.getUserType();
+            if (!userTypes.includes(type)) {
+                return response
+                    .status(HTTP_401_UNAUTHORIZED)
+                    .json(responses.AUTH_NO_PERMISSION);
+            }
+        }
+        return response.json(await request.user.serialize());
+    }
+
     async auth(request: Request<any, any, AuthRequestBody>, response: Response) {
         const { email, password, userTypes } = request.body;
         const userRepo = getRepository(User);

@@ -12,3 +12,11 @@ export const AuthRequestBodyValidation = celebrate(
     { messages, abortEarly: true, convert: true },
 );
 
+export const ValidateRequestBodySchema = Joi.object().keys({
+    userTypes: Joi.array().items(Joi.string().valid('UNKNOWN', 'ADMIN', 'STUDENT', 'TEACHER')).optional(),
+});
+
+export const ValidateRequestBodyValidation = celebrate(
+    { body: ValidateRequestBodySchema },
+    { messages, abortEarly: true, convert: true },
+);

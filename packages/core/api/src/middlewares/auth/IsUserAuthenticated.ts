@@ -1,7 +1,6 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { getRepository } from 'typeorm';
 import { User } from '../../components/Entities';
-import { Request } from '../../utils/express';
 import {
     HTTP_401_UNAUTHORIZED,
     HTTP_404_NOT_FOUND,

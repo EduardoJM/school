@@ -1,5 +1,4 @@
-import { Response, NextFunction } from 'express';
-import { Request } from '../../utils/express';
+import { Request, Response, NextFunction } from 'express';
 import {
     HTTP_401_UNAUTHORIZED,
     responses,
