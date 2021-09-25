@@ -23,6 +23,7 @@ services:
       dockerfile: Dockerfile.api
     volumes:
       - ./packages/core/api/src:/app/packages/core/api/src
+      - ./packages/core/api/scripts:/app/packages/core/api/scripts
       - ./packages/core/api/nodemon.json:/app/packages/core/api/nodemon.json
       - ./packages/core/api/tsconfig.json:/app/packages/core/api/tsconfig.json
     ports:
