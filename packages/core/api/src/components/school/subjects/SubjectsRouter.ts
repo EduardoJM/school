@@ -7,6 +7,7 @@ import {
     IsUserAuthenticated,
     IsUserOfType,
 } from '../../../middlewares';
+import { SubjectsIconUploader } from './SubjectsIconUploader';
 
 const SubjectsRouter = express.Router();
 const controller = new SubjectsController();
@@ -15,6 +16,7 @@ SubjectsRouter.post(
     '/',
     IsUserAuthenticated,
     IsUserOfType(['ADMIN']),
+    SubjectsIconUploader,
     SubjectCreateBodyValidation,
     controller.create,
 );

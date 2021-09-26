@@ -3,11 +3,12 @@ import { getRepository } from 'typeorm';
 import { buildPaginator, Order } from 'typeorm-cursor-pagination';
 import { Subject } from './SubjectsEntity';
 import { CursorQueryParams } from '../../../@types/CursorQueryParams';
+import { HTTP_201_CREATED, HTTP_409_CONFLICT, HTTP_500_INTERNAL_SERVER_ERROR, responses } from '../../../constants';
 
 export interface SubjectCreateRequestBody {
     name: string;
-    active?: boolean;
-    icon?: string;
+    active: boolean;
+    icon: string;
 }
 
 export class SubjectsController {
@@ -19,22 +20,22 @@ export class SubjectsController {
         try {
             const alreadyNamed = await subjectRepo.findOne({ name });
             if (alreadyNamed) {
-                // TODO: separar mensagens...
-                return response.status(409).json({
-                    'message': 'Já cadastrada'
-                });
+                return response.status(HTTP_409_CONFLICT).json(responses.RESOURCE_NAME_ALREADY_USED);
             }
         } catch (err) {
             console.log(`ERROR: trying to check if a subject with determinated name are already registered.\r\n\r\n ${JSON.stringify(err)}`);
+            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
         }
-        const subject = Subject.create({ name, active: active !== undefined ? active : true, icon: icon || '' });
+        const subject = new Subject();
+        subject.name = name;
+        subject.icon = icon;
+        subject.active = active;
         try {
             const result = await subjectRepo.save(subject);
-            return response.status(201).json(result);
+            return response.status(HTTP_201_CREATED).json(result);
         } catch (err) {
             console.log(`ERROR: trying to save a subject.\r\n\r\n ${JSON.stringify(err)}`);
-            // TODO: add a better error message here.
-            return response.status(500).json({});
+            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
         }
     }
 

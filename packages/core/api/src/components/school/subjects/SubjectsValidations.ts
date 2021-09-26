@@ -3,8 +3,8 @@ import { messages } from 'joi-translation-pt-br';
 
 export const SubjectRequestBodySchema = Joi.object().keys({
     name: Joi.string().required(),
-    active: Joi.boolean().optional(),
-    icon: Joi.string().optional(),
+    active: Joi.boolean().required(),
+    icon: Joi.string().required(),
 });
 
 export const SubjectCreateBodyValidation = celebrate(

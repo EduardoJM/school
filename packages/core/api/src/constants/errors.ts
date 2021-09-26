@@ -11,6 +11,11 @@ export const codes = {
     AUTH_USER_NOT_FOUND: 'AUTH_USER_NOT_FOUND',
     AUTH_NO_LOGGED_USER: 'AUTH_NO_LOGGED_USER',
     AUTH_NO_PERMISSION: 'AUTH_NO_PERMISSION',
+
+    UPLOADER_INVALID_FILE_TYPE: 'UPLOADER_INVALID_FILE_TYPE',
+    UPLOADER_FILE_TOO_LARGE_1MB: 'UPLOADER_FILE_TOO_LARGE_1MB',
+    
+    RESOURCE_NAME_ALREADY_USED: 'RESOURCE_NAME_ALREADY_USED',
 };
 
 export const messages = {
@@ -26,6 +31,11 @@ export const messages = {
     AUTH_USER_NOT_FOUND: 'Não existe um usuário válido para as credenciais fornecidas',
     AUTH_NO_LOGGED_USER: 'Não há um usuário autenticado',
     AUTH_NO_PERMISSION: 'Você não tem permissões para executar essa ação',
+
+    UPLOADER_INVALID_FILE_TYPE: 'Tipo de arquivo não suportado',
+    UPLOADER_FILE_TOO_LARGE_1MB: 'O tamanho máximo de arquivo suportado é 1mb',
+
+    RESOURCE_NAME_ALREADY_USED: 'Esse nome já está sendo utilizado por outro item',
 };
 
 export const responses = {
@@ -69,5 +79,13 @@ export const responses = {
     AUTH_NO_PERMISSION: {
         error: codes.AUTH_NO_PERMISSION,
         message: messages.AUTH_NO_PERMISSION,
+    },
+    RESOURCE_NAME_ALREADY_USED: {
+        error: codes.RESOURCE_NAME_ALREADY_USED,
+        message: messages.RESOURCE_NAME_ALREADY_USED,
+    },
+    UPLOADER_FILE_TOO_LARGE_1MB: {
+        error: codes.UPLOADER_FILE_TOO_LARGE_1MB,
+        message: messages.UPLOADER_FILE_TOO_LARGE_1MB,
     },
 };
