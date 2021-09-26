@@ -5,3 +5,11 @@ export interface Subject {
     createdAt: string;
     updatedAt: string;
 }
+
+export interface CursorPaginatedSubjects {
+    results: Subject[];
+    cursor: {
+        afterCursor: string | null;
+        beforeCursor: string | null;
+    }
+}

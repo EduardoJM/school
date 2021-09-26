@@ -51,7 +51,7 @@ export const SubjectsList: React.FC = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {query.data?.map((item) => (
+                    {query.data?.results.map((item) => (
                         <TableRow key={item.id}>
                             <TableCell>{item.id}</TableCell>
                             <TableCell>{item.name}</TableCell>
