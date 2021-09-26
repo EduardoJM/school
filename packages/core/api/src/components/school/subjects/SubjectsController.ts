@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
+import { buildPaginator, Order } from 'typeorm-cursor-pagination';
 import { Subject } from './SubjectsEntity';
+import { CursorQueryParams } from '../../../@types/CursorQueryParams';
 
 export interface SubjectCreateRequestBody {
     name: string;
@@ -36,9 +38,40 @@ export class SubjectsController {
         }
     }
 
-    async list(request: Request, response: Response) {
-        // TODO: add try/catch on needed statements
-        const subjectRepo = getRepository(Subject);
-        return response.json(await subjectRepo.find());
+    async list(request: Request<any, any, any, CursorQueryParams>, response: Response) {
+        const {
+            size,
+            after,
+            before,
+            search,
+            orderby,
+            order,
+        } = request.query;
+        const { user } = request;
+        
+        const queryBuilder = getRepository(Subject).createQueryBuilder('subject');
+        if (user && user.getUserType() === 'STUDENT') {
+            queryBuilder.where('subject.active = :active', { active: true });
+        }
+        if (search) {
+            queryBuilder.where('subject.name LIKE :s', { s: `%${search}%` });
+        }
+
+        const paginator = buildPaginator({
+            entity: Subject,
+            paginationKeys: [(orderby as keyof Subject) || 'id'],
+            query: {
+                limit: parseInt(size || '10', 10),
+                order: (order as Order) || 'ASC',
+                afterCursor: after,
+                beforeCursor: before,
+            },
+        });
+        const { data, cursor } = await paginator.paginate(queryBuilder);
+        
+        return response.json({
+            results: data,
+            cursor,
+        });
     }
 }
