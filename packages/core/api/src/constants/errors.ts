@@ -16,6 +16,7 @@ export const codes = {
     UPLOADER_FILE_TOO_LARGE_1MB: 'UPLOADER_FILE_TOO_LARGE_1MB',
     
     RESOURCE_NAME_ALREADY_USED: 'RESOURCE_NAME_ALREADY_USED',
+    RESOURCE_NOT_FOUND: 'RESOURCE_NOT_FOUND',
 };
 
 export const messages = {
@@ -36,6 +37,7 @@ export const messages = {
     UPLOADER_FILE_TOO_LARGE_1MB: 'O tamanho máximo de arquivo suportado é 1mb',
 
     RESOURCE_NAME_ALREADY_USED: 'Esse nome já está sendo utilizado por outro item',
+    RESOURCE_NOT_FOUND: 'Recurso não encontrado',
 };
 
 export const responses = {
@@ -83,6 +85,10 @@ export const responses = {
     RESOURCE_NAME_ALREADY_USED: {
         error: codes.RESOURCE_NAME_ALREADY_USED,
         message: messages.RESOURCE_NAME_ALREADY_USED,
+    },
+    RESOURCE_NOT_FOUND: {
+        error: codes.RESOURCE_NOT_FOUND,
+        message: messages.RESOURCE_NOT_FOUND,
     },
     UPLOADER_FILE_TOO_LARGE_1MB: {
         error: codes.UPLOADER_FILE_TOO_LARGE_1MB,

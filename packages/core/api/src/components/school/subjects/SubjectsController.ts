@@ -3,12 +3,24 @@ import { getRepository } from 'typeorm';
 import { buildPaginator, Order } from 'typeorm-cursor-pagination';
 import { Subject } from './SubjectsEntity';
 import { CursorQueryParams } from '../../../@types/CursorQueryParams';
-import { HTTP_201_CREATED, HTTP_409_CONFLICT, HTTP_500_INTERNAL_SERVER_ERROR, responses } from '../../../constants';
+import { ParamsDictionary } from 'express-serve-static-core';
+import {
+    HTTP_200_OK,
+    HTTP_201_CREATED,
+    HTTP_404_NOT_FOUND,
+    HTTP_409_CONFLICT,
+    HTTP_500_INTERNAL_SERVER_ERROR,
+    responses,
+} from '../../../constants';
 
 export interface SubjectCreateRequestBody {
     name: string;
     active: boolean;
     icon: string;
+}
+
+export interface SubjectsUpdateParams extends ParamsDictionary{
+    id: string;
 }
 
 export class SubjectsController {
@@ -35,6 +47,33 @@ export class SubjectsController {
             return response.status(HTTP_201_CREATED).json(result);
         } catch (err) {
             console.log(`ERROR: trying to save a subject.\r\n\r\n ${JSON.stringify(err)}`);
+            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
+        }
+    }
+
+    async updateComplete(request: Request<SubjectsUpdateParams, any, SubjectCreateRequestBody>, response: Response) {
+        const {
+            name, icon, active
+        } = request.body;
+        const { id: idStr } = request.params;
+        const id = parseInt(idStr);
+        const subjectRepo = getRepository(Subject);
+        try {
+            const subject = await subjectRepo.findOne({ id });
+            if (!subject) {
+                return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
+            }
+            const alreadyNamed = await subjectRepo.findOne({ name });
+            if (alreadyNamed && alreadyNamed.id !== subject.id) {
+                return response.status(HTTP_409_CONFLICT).json(responses.RESOURCE_NAME_ALREADY_USED);
+            }
+            subject.name = name;
+            subject.icon = icon;
+            subject.active = active;
+            const result = await subjectRepo.save(subject);
+            return response.status(HTTP_200_OK).json(result);
+        } catch (err) {
+            console.log(`ERROR: trying to check if a subject with determinated name are already registered.\r\n\r\n ${JSON.stringify(err)}`);
             return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
         }
     }

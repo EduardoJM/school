@@ -20,6 +20,14 @@ SubjectsRouter.post(
     SubjectCreateBodyValidation,
     controller.create,
 );
+SubjectsRouter.put(
+    '/:id',
+    IsUserAuthenticated,
+    IsUserOfType(['ADMIN']),
+    SubjectsIconUploader,
+    SubjectCreateBodyValidation,
+    controller.updateComplete
+);
 
 SubjectsRouter.get(
     '/',
