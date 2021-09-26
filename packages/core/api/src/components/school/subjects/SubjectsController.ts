@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
+import path from 'path';
 import { getRepository } from 'typeorm';
 import { buildPaginator, Order } from 'typeorm-cursor-pagination';
+import { ParamsDictionary } from 'express-serve-static-core';
 import { Subject } from './SubjectsEntity';
 import { CursorQueryParams } from '../../../@types/CursorQueryParams';
-import { ParamsDictionary } from 'express-serve-static-core';
 import {
     HTTP_200_OK,
     HTTP_201_CREATED,
@@ -12,6 +13,7 @@ import {
     HTTP_500_INTERNAL_SERVER_ERROR,
     responses,
 } from '../../../constants';
+import { removeFileIfExists } from '../../../utils/files';
 
 export interface SubjectCreateRequestBody {
     name: string;
@@ -19,7 +21,7 @@ export interface SubjectCreateRequestBody {
     icon: string;
 }
 
-export interface SubjectsUpdateParams extends ParamsDictionary{
+export interface SubjectsIdParams extends ParamsDictionary{
     id: string;
 }
 
@@ -51,7 +53,7 @@ export class SubjectsController {
         }
     }
 
-    async updateComplete(request: Request<SubjectsUpdateParams, any, SubjectCreateRequestBody>, response: Response) {
+    async updateComplete(request: Request<SubjectsIdParams, any, SubjectCreateRequestBody>, response: Response) {
         const {
             name, icon, active
         } = request.body;
@@ -61,19 +63,48 @@ export class SubjectsController {
         try {
             const subject = await subjectRepo.findOne({ id });
             if (!subject) {
+                removeFileIfExists(path.resolve(
+                    __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', icon,
+                ));
                 return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
             }
             const alreadyNamed = await subjectRepo.findOne({ name });
             if (alreadyNamed && alreadyNamed.id !== subject.id) {
+                removeFileIfExists(path.resolve(
+                    __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', icon,
+                ));
                 return response.status(HTTP_409_CONFLICT).json(responses.RESOURCE_NAME_ALREADY_USED);
             }
+            removeFileIfExists(path.resolve(
+                __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', subject.icon,
+            ));
             subject.name = name;
             subject.icon = icon;
             subject.active = active;
             const result = await subjectRepo.save(subject);
             return response.status(HTTP_200_OK).json(result);
         } catch (err) {
-            console.log(`ERROR: trying to check if a subject with determinated name are already registered.\r\n\r\n ${JSON.stringify(err)}`);
+            console.log(`ERROR: trying to update a subject.\r\n\r\n ${JSON.stringify(err)}`);
+            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
+        }
+    }
+
+    async delete(request: Request<SubjectsIdParams, any, SubjectCreateRequestBody>, response: Response) {
+        const { id: idStr } = request.params;
+        const id = parseInt(idStr);
+        const subjectRepo = getRepository(Subject);
+        try {
+            const subject = await subjectRepo.findOne({ id });
+            if (!subject) {
+                return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
+            }
+            removeFileIfExists(path.resolve(
+                __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', subject.icon,
+            ));
+            await subjectRepo.remove(subject);
+            return response.status(HTTP_200_OK).send();
+        } catch (err) {
+            console.log(`ERROR: trying to delete a subject.\r\n\r\n ${JSON.stringify(err)}`);
             return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
         }
     }

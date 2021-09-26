@@ -28,7 +28,12 @@ SubjectsRouter.put(
     SubjectCreateBodyValidation,
     controller.updateComplete
 );
-
+SubjectsRouter.delete(
+    '/:id',
+    IsUserAuthenticated,
+    IsUserOfType(['ADMIN']),
+    controller.delete,
+);
 SubjectsRouter.get(
     '/',
     IsUserAuthenticated,
