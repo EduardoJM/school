@@ -4,6 +4,7 @@ import {
 
     Box,
     Toolbar,
+    Collapse,
     List,
     ListItem,
     ListItemIcon,
@@ -13,15 +14,32 @@ import {
     Divider,
     IconButton,
     ListSubheader,
+    ListItemButton,
 } from '@mui/material';
-import { Menu, ChevronLeft, ChevronRight, Inbox, Mail } from '@mui/icons-material';
+import {
+    Menu,
+    ChevronLeft,
+    ChevronRight,
+    Inbox,
+    Mail,
+    ExpandLess,
+    ExpandMore,
+
+    Dashboard as DashboardIcon,
+    School as SchoolIcon,
+    Label as LabelIcon,
+    LibraryBooks as LibraryBooksIcon,
+} from '@mui/icons-material';
+import { useHistory } from 'react-router-dom';
 import AppBar from '../AppBar';
 import Drawer from '../Drawer';
 import DrawerHeader from '../DrawerHeader';
 
 const Dashboard: React.FC = ({ children }) => {
     const theme = useTheme();
+    const history = useHistory();
     const [open, setOpen] = useState(true);
+    const [schoolIsOpen, setSchoolIsOpen] = useState(false);
     
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -30,6 +48,15 @@ const Dashboard: React.FC = ({ children }) => {
     const handleDrawerClose = () => {
         setOpen(false);
     };
+
+    
+    function handleToggleSchool() {
+        setSchoolIsOpen((state) => !state);
+    };
+
+    function handlePushLink(link: string) {
+        history.push(link);
+    }
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -60,6 +87,40 @@ const Dashboard: React.FC = ({ children }) => {
                     </IconButton>
                 </DrawerHeader>
                 <Divider />
+                <List>
+                    <ListItem button onClick={() => handlePushLink('/')}>
+                        <ListItemIcon>
+                            <DashboardIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Dashboard" />
+                    </ListItem>
+                </List>
+                <Divider />
+                <List>
+                    <ListItemButton onClick={handleToggleSchool}>
+                        <ListItemIcon>
+                            <SchoolIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Escola" />
+                        {schoolIsOpen ? <ExpandLess /> : <ExpandMore />}
+                    </ListItemButton>
+                    <Collapse in={schoolIsOpen} timeout="auto" unmountOnExit>
+                        <List disablePadding>
+                            <ListItem button onClick={() => handlePushLink('/subjects')}>
+                                <ListItemIcon>
+                                    <LibraryBooksIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Disciplinas" />
+                            </ListItem>
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <LabelIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Marcadores" />
+                            </ListItem>
+                        </List>
+                    </Collapse>
+                </List>
                 <List>
                     {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
                         <ListItem button key={text}>
