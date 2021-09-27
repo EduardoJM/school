@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 
 import createConnection from './connection';
 import { defaults } from './configs';
@@ -18,6 +19,7 @@ createConnection().then(async (connection) => {
     app.use(express.json());
 
     app.use(Router);
+    app.use('/media', express.static(path.resolve(__dirname, '..', 'media')));
 
     app.use(errors());
 

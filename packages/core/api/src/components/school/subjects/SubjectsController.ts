@@ -133,7 +133,7 @@ export class SubjectsController {
             paginationKeys: [(orderby as keyof Subject) || 'id'],
             query: {
                 limit: parseInt(size || '10', 10),
-                order: (order as Order) || 'ASC',
+                order: (order as Order) || 'DESC',
                 afterCursor: after,
                 beforeCursor: before,
             },
@@ -141,7 +141,7 @@ export class SubjectsController {
         const { data, cursor } = await paginator.paginate(queryBuilder);
         
         return response.json({
-            results: data,
+            results: data.map((item) => item.serialize()),
             cursor,
         });
     }

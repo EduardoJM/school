@@ -7,6 +7,7 @@ import {
     OneToMany,
 } from 'typeorm';
 import { Tag } from '../tags/TagEntity';
+import { buildUrl } from '../../../utils/urls';
 
 @Entity()
 export class Subject {
@@ -37,4 +38,15 @@ export class Subject {
 
     @OneToMany(() => Tag, (tag) => tag.subject)
     tags!: Tag[];
+
+    serialize(): Record<string, any> {
+        return {
+            id: this.id,
+            name: this.name,
+            icon: (!this.icon || this.icon === '') ? '' : buildUrl(`icons/subjects/${this.icon}`),
+            createdAt: this.createdAt,
+            updatedAt: this.updatedAt,
+            active: this.active,
+        };
+    }
 }

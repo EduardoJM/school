@@ -15,5 +15,7 @@ const defaults = {
     pagSeguroEmail: 'eduardo_y05@outlook.com',
     pagSeguroToken: 'E7A2E8CE97E24CA89D0EE682085B3B41',
     pagSeguroNotificationUrl: null,
+
+    imageBaseUrl: 'http://localhost:3333/media/',
 };
 export default defaults;
