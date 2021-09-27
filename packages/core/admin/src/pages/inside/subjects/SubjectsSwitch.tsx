@@ -12,9 +12,6 @@ const SubjectsSwitch: React.FC = () => {
             <Route path="/subjects/" exact>
                 <SubjectsList />
             </Route>
-            <Route path="/subjects/:page/">
-                <SubjectsList />
-            </Route>
         </Switch>
     )
 };
