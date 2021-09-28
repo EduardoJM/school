@@ -13,15 +13,12 @@ import {
     Typography,
     Divider,
     IconButton,
-    ListSubheader,
     ListItemButton,
 } from '@mui/material';
 import {
     Menu,
     ChevronLeft,
     ChevronRight,
-    Inbox,
-    Mail,
     ExpandLess,
     ExpandMore,
 
@@ -30,14 +27,13 @@ import {
     Label as LabelIcon,
     LibraryBooks as LibraryBooksIcon,
 } from '@mui/icons-material';
-import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import AppBar from '../AppBar';
 import Drawer from '../Drawer';
 import DrawerHeader from '../DrawerHeader';
 
 const Dashboard: React.FC = ({ children }) => {
     const theme = useTheme();
-    const history = useHistory();
     const [open, setOpen] = useState(true);
     const [schoolIsOpen, setSchoolIsOpen] = useState(false);
     
@@ -53,10 +49,6 @@ const Dashboard: React.FC = ({ children }) => {
     function handleToggleSchool() {
         setSchoolIsOpen((state) => !state);
     };
-
-    function handlePushLink(link: string) {
-        history.push(link);
-    }
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -88,7 +80,7 @@ const Dashboard: React.FC = ({ children }) => {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    <ListItem button onClick={() => handlePushLink('/')}>
+                    <ListItem button component={Link} to="/">
                         <ListItemIcon>
                             <DashboardIcon />
                         </ListItemIcon>
@@ -106,7 +98,7 @@ const Dashboard: React.FC = ({ children }) => {
                     </ListItemButton>
                     <Collapse in={schoolIsOpen} timeout="auto" unmountOnExit>
                         <List disablePadding>
-                            <ListItem button onClick={() => handlePushLink('/subjects')}>
+                            <ListItem button component={Link} to="/subjects">
                                 <ListItemIcon>
                                     <LibraryBooksIcon />
                                 </ListItemIcon>
