@@ -2,6 +2,7 @@ import express from 'express';
 import { SubjectsController } from './SubjectsController';
 import {
     SubjectCreateBodyValidation,
+    SubjectPartialUpdateCreateBodyValidation,
 } from './SubjectsValidations';
 import {
     IsUserAuthenticated,
@@ -27,6 +28,14 @@ SubjectsRouter.put(
     SubjectsIconUploader,
     SubjectCreateBodyValidation,
     controller.updateComplete
+);
+SubjectsRouter.patch(
+    '/:id',
+    IsUserAuthenticated,
+    IsUserOfType(['ADMIN']),
+    SubjectsIconUploader,
+    SubjectPartialUpdateCreateBodyValidation,
+    controller.updatePartial,
 );
 SubjectsRouter.delete(
     '/:id',
