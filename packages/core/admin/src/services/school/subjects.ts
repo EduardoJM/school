@@ -6,6 +6,11 @@ export async function createSubject(data: FormData): Promise<Subject> {
     return result.data;
 }
 
+export async function partialUpdateSubject({ id, data } : { id: number | string; data: FormData; }): Promise<Subject> {
+    const result = await api.patch<Subject>(`/school/subjects/${id}`, data);
+    return result.data;
+};
+
 export async function getSubjects(opts?: CursorPaginationOptions): Promise<CursorPaginatedSubjects> {
     let url = '/school/subjects';
     let params = '';
@@ -22,5 +27,10 @@ export async function getSubjects(opts?: CursorPaginationOptions): Promise<Curso
         url = `${url}${params}`;
     }
     const result = await api.get<CursorPaginatedSubjects>(url);
+    return result.data;
+}
+
+export async function getSubjectById(id: number | string): Promise<Subject> {
+    const result = await api.get<Subject>(`/school/subjects/${id}`);
     return result.data;
 }

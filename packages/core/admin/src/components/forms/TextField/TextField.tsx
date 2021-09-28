@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, RefObject } from 'react';
+import React, { useRef, useEffect, useState, RefObject } from 'react';
 import { useField } from '@unform/core';
 import {
     TextField as MaterialTextField,
@@ -8,8 +8,9 @@ import {
 export const TextField: React.FC<MaterialTextFieldProps> = (props) => {
     const { name, ...rest } = props;
     const inputRef = useRef<HTMLDivElement>(null);
+    const [value, setValue] = useState(props.value ? props.value : '');
 
-    const { fieldName, defaultValue, registerField } = useField(name || 'text-field-input');
+    const { fieldName, registerField } = useField(name || 'text-field-input');
 
     useEffect(() => {
         function getInput(base: HTMLDivElement | null) {
@@ -33,13 +34,15 @@ export const TextField: React.FC<MaterialTextFieldProps> = (props) => {
             setValue: (ref, value) => {
                 const input = getInput(ref.current);
                 if (input) {
-                    input.value = value
+                    input.value = value;
+                    setValue(value);
                 }
             },
             clearValue: (ref) => {
                 const input = getInput(ref.current);
                 if (input) {
-                    input.value = ''
+                    input.value = '';
+                    setValue('');
                 }
             },
         })
@@ -49,7 +52,8 @@ export const TextField: React.FC<MaterialTextFieldProps> = (props) => {
         <MaterialTextField
             name={name}
             ref={inputRef}
-            defaultValue={defaultValue}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
             {...rest}
         />
     );

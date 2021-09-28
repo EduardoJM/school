@@ -115,7 +115,9 @@ export const SubjectsList: React.FC = () => {
                             <TableCell>{item.active ? 'Sim' : 'Não'}</TableCell>
                             <TableCell>
                                 <ButtonGroup>
-                                    <IconButton><Edit /></IconButton>
+                                    <IconButton component={Link} to={`/subjects/${item.id}`}>
+                                        <Edit />
+                                    </IconButton>
                                     <IconButton><Delete /></IconButton>
                                 </ButtonGroup>
                             </TableCell>

@@ -70,8 +70,12 @@ export const ImageDropzone: React.FC<ImageDropzoneProps> = (props) => {
                 setCurrentFileUrl(null);
             },
             setValue: (ref: InputRefProps, value) => {
-                ref.acceptedFile = value;
-                setCurrentFileUrl(URL.createObjectURL(value));
+                if (typeof value === 'string') {
+                    setCurrentFileUrl(value);
+                } else {
+                    ref.acceptedFile = value;
+                    setCurrentFileUrl(URL.createObjectURL(value));
+                }
             },
         });
     }, [fieldName, registerField]);

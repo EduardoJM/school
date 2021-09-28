@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, RefObject } from 'react';
+import React, { useRef, useState, useEffect, RefObject } from 'react';
 import { useField } from '@unform/core';
 import {
     Checkbox as MaterialCheckbox,
@@ -8,6 +8,7 @@ import {
 export const Checkbox: React.FC<MaterialCheckboxProps> = (props) => {
     const { name, ...rest } = props;
     const inputRef = useRef<HTMLButtonElement>(null);
+    const [checked, setChecked] = useState(() => props.checked ? true : false);
     
     const { fieldName, registerField } = useField(name || 'checkbox-input');
     
@@ -29,20 +30,22 @@ export const Checkbox: React.FC<MaterialCheckboxProps> = (props) => {
             getValue: (ref: RefObject<HTMLSpanElement>) => {
                 const input = getInput(ref.current);
                 if (!input) {
-                    return true;
+                    return false;
                 }
                 return input.checked;
             },
             setValue: (ref, value) => {
                 const input = getInput(ref.current);
                 if (input) {
-                    input.checked = true;
+                    input.checked = value;
+                    setChecked(value);
                 }
             },
             clearValue: (ref) => {
                 const input = getInput(ref.current);
                 if (input) {
-                    input.checked = true;
+                    input.checked = false;
+                    setChecked(false);
                 }
             },
         })
@@ -52,6 +55,8 @@ export const Checkbox: React.FC<MaterialCheckboxProps> = (props) => {
         <MaterialCheckbox
             name={name}
             ref={inputRef}
+            checked={checked}
+            onChange={(e) => setChecked(e.target.checked)}
             {...rest}
         />
     )

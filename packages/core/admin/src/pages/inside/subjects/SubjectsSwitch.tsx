@@ -9,6 +9,9 @@ const SubjectsSwitch: React.FC = () => {
             <Route path="/subjects/add">
                 <SubjectsAdd />
             </Route>
+            <Route path="/subjects/:id">
+                <SubjectsAdd />
+            </Route>
             <Route path="/subjects/" exact>
                 <SubjectsList />
             </Route>
