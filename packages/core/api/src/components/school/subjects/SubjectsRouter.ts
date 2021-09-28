@@ -39,5 +39,10 @@ SubjectsRouter.get(
     IsUserAuthenticated,
     controller.list
 );
+SubjectsRouter.get(
+    '/:id',
+    IsUserAuthenticated,
+    controller.getById
+);
 
 export { SubjectsRouter };

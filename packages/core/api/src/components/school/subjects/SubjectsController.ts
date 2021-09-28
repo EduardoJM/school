@@ -8,6 +8,7 @@ import { CursorQueryParams } from '../../../@types/CursorQueryParams';
 import {
     HTTP_200_OK,
     HTTP_201_CREATED,
+    HTTP_204_NO_CONTENT,
     HTTP_404_NOT_FOUND,
     HTTP_409_CONFLICT,
     HTTP_500_INTERNAL_SERVER_ERROR,
@@ -102,9 +103,31 @@ export class SubjectsController {
                 __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', subject.icon,
             ));
             await subjectRepo.remove(subject);
-            return response.status(HTTP_200_OK).send();
+            return response.status(HTTP_204_NO_CONTENT).send();
         } catch (err) {
             console.log(`ERROR: trying to delete a subject.\r\n\r\n ${JSON.stringify(err)}`);
+            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
+        }
+    }
+
+    async getById(request: Request<SubjectsIdParams, any, any>, response: Response) {
+        const { user } = request;
+        const { id: idStr } = request.params;
+        const id = parseInt(idStr);
+        const subjectRepo = getRepository(Subject);
+        try {
+            const subject = await subjectRepo.findOne({ id });
+            if (!subject) {
+                return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
+            }
+            if (user && user.getUserType() === 'STUDENT') {
+                if (!subject.active) {
+                    return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
+                }
+            }
+            return response.status(HTTP_200_OK).json(subject.serialize());
+        } catch (err) {
+            console.log(`ERROR: trying to get a subject.\r\n\r\n ${JSON.stringify(err)}`);
             return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
         }
     }
