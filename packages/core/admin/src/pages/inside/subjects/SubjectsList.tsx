@@ -14,17 +14,27 @@ import {
     Select,
     MenuItem,
     Typography,
+
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    DialogActions,
 } from '@mui/material';
 import {
     Delete,
     Edit
 } from '@mui/icons-material';
-import { useQuery } from 'react-query';
+import { useSnackbar } from 'notistack';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { useHistory, Link } from 'react-router-dom';
 import { useSearchQuery } from '../../../hooks';
-import { getSubjects } from '../../../services/school';
+import { getSubjects, deleteSubject } from '../../../services/school';
+import { Subject } from '../../../entities';
+import { getDisplayErrorMessage } from '../../../utils/error';
 
 export const SubjectsList: React.FC = () => {
+    const { enqueueSnackbar } = useSnackbar();
     const searchOptions = useSearchQuery({
         size: undefined,
         after: undefined,
@@ -33,6 +43,7 @@ export const SubjectsList: React.FC = () => {
         orderby: undefined,
         order: undefined,
     });
+    const queryClient = useQueryClient();
     const query = useQuery(['subjects', searchOptions], async () => getSubjects(searchOptions) );
     const history = useHistory();
     const [nextLink, prevLink] = useMemo(() => {
@@ -72,6 +83,34 @@ export const SubjectsList: React.FC = () => {
         return [next, prev];
     }, [searchOptions, query]);
     const [itensPerPage, setItensPerPage] = useState('10');
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [deletingItem, setDeletingItem] = useState<Subject | null>(null);
+    const deleteSubjectMutation = useMutation(deleteSubject, {
+        onSuccess: () => {
+            queryClient.invalidateQueries('subjects');
+        },
+        onError: (err) => {
+            enqueueSnackbar(getDisplayErrorMessage(err), { variant: 'error' });
+        },
+    });
+
+    function handleOpenDeleteDialog(item: Subject) {
+        setDeletingItem(item);
+        setDeleteDialogOpen(true);
+    }
+
+    function handleCloseDeleteDialog() {
+        setDeleteDialogOpen(false);
+        setDeletingItem(null);
+    }
+
+    function handleConfirmDeleteDialog() {
+        setDeleteDialogOpen(false);
+        if (deletingItem) {
+            deleteSubjectMutation.mutate(deletingItem.id);
+            setDeletingItem(null);
+        }
+    }
 
     function handleChangeItensPerPage(e: SelectChangeEvent) {
         setItensPerPage(e.target.value);
@@ -118,7 +157,9 @@ export const SubjectsList: React.FC = () => {
                                     <IconButton component={Link} to={`/subjects/${item.id}`}>
                                         <Edit />
                                     </IconButton>
-                                    <IconButton><Delete /></IconButton>
+                                    <IconButton onClick={() => handleOpenDeleteDialog(item)}>
+                                        <Delete />
+                                    </IconButton>
                                 </ButtonGroup>
                             </TableCell>
                         </TableRow>
@@ -158,6 +199,28 @@ export const SubjectsList: React.FC = () => {
                     )}
                 </ButtonGroup>
             </Box>
+
+            <Dialog
+                open={deleteDialogOpen}
+                onClose={handleCloseDeleteDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Deseja realmente deletar?"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        {deletingItem && (
+                            <>Deseja deletar a disciplina: {deletingItem.name}?</>
+                        )}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDeleteDialog}>Cancelar</Button>
+                    <Button onClick={handleConfirmDeleteDialog} autoFocus>Sim, Deletar</Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 };

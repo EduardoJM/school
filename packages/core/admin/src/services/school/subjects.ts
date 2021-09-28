@@ -34,3 +34,8 @@ export async function getSubjectById(id: number | string): Promise<Subject> {
     const result = await api.get<Subject>(`/school/subjects/${id}`);
     return result.data;
 }
+
+export async function deleteSubject(id: number | string): Promise<Subject> {
+    const result = await api.delete<Subject>(`/school/subjects/${id}`);
+    return result.data;
+}
