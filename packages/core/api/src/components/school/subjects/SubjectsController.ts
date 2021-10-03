@@ -1,10 +1,9 @@
 import { Request, Response } from 'express';
 import path from 'path';
-import { getRepository } from 'typeorm';
-import { buildPaginator, Order } from 'typeorm-cursor-pagination';
+import { FindManyOptions, getRepository, Raw } from 'typeorm';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { Subject } from './SubjectsEntity';
-import { CursorQueryParams } from '../../../@types/CursorQueryParams';
+import { defaults } from '../../../configs';
 import {
     HTTP_200_OK,
     HTTP_201_CREATED,
@@ -24,6 +23,11 @@ export interface SubjectCreateRequestBody {
 
 export interface SubjectsIdParams extends ParamsDictionary{
     id: string;
+}
+
+export interface PaginationParams {
+    page?: string;
+    search?: string;
 }
 
 export class SubjectsController {
@@ -180,40 +184,43 @@ export class SubjectsController {
         }
     }
 
-    async list(request: Request<any, any, any, CursorQueryParams>, response: Response) {
+    async list(request: Request<any, any, any, PaginationParams>, response: Response) {
         const {
-            size,
-            after,
-            before,
+            page,
             search,
-            orderby,
-            order,
         } = request.query;
         const { user } = request;
         
-        const queryBuilder = getRepository(Subject).createQueryBuilder('subject');
-        if (user && user.getUserType() === 'STUDENT') {
-            queryBuilder.where('subject.active = :active', { active: true });
-        }
-        if (search) {
-            queryBuilder.where('subject.name LIKE :s', { s: `%${search}%` });
-        }
-
-        const paginator = buildPaginator({
-            entity: Subject,
-            paginationKeys: [(orderby as keyof Subject) || 'id'],
-            query: {
-                limit: parseInt(size || '10', 10),
-                order: (order as Order) || 'DESC',
-                afterCursor: after,
-                beforeCursor: before,
-            },
-        });
-        const { data, cursor } = await paginator.paginate(queryBuilder);
+        const pageNumber = parseInt(page || '1', 10);
+        const itensPerPage = Number(process.env.ITENS_PER_PAGE || defaults.itensPerPage);
         
+        const subjectsRepository = getRepository(Subject);
+        const options: FindManyOptions<Subject> = {
+            where: {},
+            skip: itensPerPage * (pageNumber - 1),
+            take: itensPerPage,
+        };
+        if (user && user.getUserType() === 'STUDENT') {
+            if (search) {
+                options.where = {
+                    name: Raw(alias => `LOWER(${alias}) Like LOWER('%${search.toLowerCase()}%')`),
+                    active: true,
+                };
+            } else {
+                options.where = {
+                    active: true,
+                };
+            }
+        } else if (search) {
+            options.where = {
+                name: Raw(alias => `LOWER(${alias}) Like LOWER('%${search.toLowerCase()}%')`),
+            };
+        }
+        const [results, count] = await subjectsRepository.findAndCount(options);
         return response.json({
-            results: data.map((item) => item.serialize()),
-            cursor,
+            results: results.map((item) => item.serialize()),
+            count,
+            pages: Math.ceil(count / itensPerPage),
         });
     }
 }
