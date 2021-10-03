@@ -7,19 +7,13 @@ export interface Subject {
     updatedAt: string;
 }
 
-export interface CursorPaginatedSubjects {
+export interface PaginatedSubjects {
     results: Subject[];
-    cursor: {
-        afterCursor: string | null;
-        beforeCursor: string | null;
-    }
+    count: number;
+    pages: number;
 }
 
-export interface CursorPaginationOptions {
-    size?: string;
-    after?: string;
-    before?: string;
+export interface SubjectsPaginationOptions {
     search?: string;
-    orderby?: string;
-    order?: string;
+    page?: string;
 }

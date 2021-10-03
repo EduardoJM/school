@@ -1,5 +1,5 @@
 import { api } from '../api';
-import { Subject, CursorPaginatedSubjects, CursorPaginationOptions } from '../../entities';
+import { Subject, PaginatedSubjects, SubjectsPaginationOptions } from '../../entities';
 
 export async function createSubject(data: FormData): Promise<Subject> {
     const result = await api.post<Subject>('/school/subjects', data);
@@ -11,7 +11,7 @@ export async function partialUpdateSubject({ id, data } : { id: number | string;
     return result.data;
 };
 
-export async function getSubjects(opts?: CursorPaginationOptions): Promise<CursorPaginatedSubjects> {
+export async function getSubjects(opts?: SubjectsPaginationOptions): Promise<PaginatedSubjects> {
     let url = '/school/subjects';
     let params = '';
     if (opts) {
@@ -26,7 +26,7 @@ export async function getSubjects(opts?: CursorPaginationOptions): Promise<Curso
     if (params !== '') {
         url = `${url}${params}`;
     }
-    const result = await api.get<CursorPaginatedSubjects>(url);
+    const result = await api.get<PaginatedSubjects>(url);
     return result.data;
 }
 
