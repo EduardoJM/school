@@ -117,7 +117,11 @@ export const SubjectsList: React.FC = () => {
                     ))}
                 </TableBody>
             </Table>
-            <Box mt={3}>
+            <Box mt={3} sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}>
                 <Pagination
                     count={query.data?.pages}
                     page={parseInt(searchOptions.page || '1', 10)}
