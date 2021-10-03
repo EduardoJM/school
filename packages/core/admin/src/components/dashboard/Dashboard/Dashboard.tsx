@@ -5,14 +5,11 @@ import {
     Box,
     Toolbar,
     Collapse,
-    List,
     ListItem,
-    ListItemIcon,
     ListItemText,
     CssBaseline,
     Typography,
     Divider,
-    IconButton,
     ListItemButton,
 } from '@mui/material';
 import {
@@ -26,32 +23,42 @@ import {
     School as SchoolIcon,
     Label as LabelIcon,
     LibraryBooks as LibraryBooksIcon,
+    Group as GroupIcon,
+    SupervisedUserCircle as SupervisedUserCircleIcon,
+    AssignmentInd as AssignmentIndIcon,
+    PersonPinCircle as PersonPinCircleIcon,
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
+import { List, ListItemIcon, Drawer, DrawerHeader, IconButton } from '../MaterialUI';
 import AppBar from '../AppBar';
-import Drawer from '../Drawer';
-import DrawerHeader from '../DrawerHeader';
 
 const Dashboard: React.FC = ({ children }) => {
     const theme = useTheme();
     const [open, setOpen] = useState(true);
+    const [peoplesIsOpen, setPeopleIsOpen] = useState(false);
     const [schoolIsOpen, setSchoolIsOpen] = useState(false);
-    
+
     const handleDrawerOpen = () => {
         setOpen(true);
     };
-    
+
     const handleDrawerClose = () => {
         setOpen(false);
     };
 
-    
     function handleToggleSchool() {
         setSchoolIsOpen((state) => !state);
     };
 
+    function handleTogglePeoples() {
+        setPeopleIsOpen((state) => !state);
+    }
+
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{
+            display: 'flex',
+            height: '100vh',
+        }}>
             <CssBaseline />
             <AppBar position="fixed" open={open}>
                 <Toolbar>
@@ -68,7 +75,7 @@ const Dashboard: React.FC = ({ children }) => {
                         <Menu />
                     </IconButton>
                     <Typography variant="h6" noWrap component="div">
-                        Mini variant drawer
+                        Instituto Inventare
                     </Typography>
                 </Toolbar>
             </AppBar>
@@ -87,7 +94,37 @@ const Dashboard: React.FC = ({ children }) => {
                         <ListItemText primary="Dashboard" />
                     </ListItem>
                 </List>
-                <Divider />
+                <List>
+                    <ListItemButton onClick={handleTogglePeoples}>
+                        <ListItemIcon>
+                            <GroupIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Pessoas" />
+                        {peoplesIsOpen ? <ExpandLess /> : <ExpandMore />}
+                    </ListItemButton>
+                    <Collapse in={peoplesIsOpen} timeout="auto" unmountOnExit>
+                        <List open={peoplesIsOpen} disablePadding>
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <SupervisedUserCircleIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Administradores" />
+                            </ListItem>
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <AssignmentIndIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Professores" />
+                            </ListItem>
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <PersonPinCircleIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Alunos" />
+                            </ListItem>
+                        </List>
+                    </Collapse>
+                </List>
                 <List>
                     <ListItemButton onClick={handleToggleSchool}>
                         <ListItemIcon>
@@ -97,7 +134,7 @@ const Dashboard: React.FC = ({ children }) => {
                         {schoolIsOpen ? <ExpandLess /> : <ExpandMore />}
                     </ListItemButton>
                     <Collapse in={schoolIsOpen} timeout="auto" unmountOnExit>
-                        <List disablePadding>
+                        <List open={schoolIsOpen} disablePadding>
                             <ListItem button component={Link} to="/subjects">
                                 <ListItemIcon>
                                     <LibraryBooksIcon />
@@ -114,7 +151,15 @@ const Dashboard: React.FC = ({ children }) => {
                     </Collapse>
                 </List>
             </Drawer>
-            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <Box
+                component="main"
+                sx={{
+                    flexGrow: 1,
+                    height: '100vh',
+                    overflow: 'auto',
+                    p: 3
+                }}
+            >
                 <DrawerHeader />
 
                 {children}

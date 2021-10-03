@@ -27,7 +27,7 @@ const closedMixin = (theme: Theme): CSSObject => ({
     },
 });  
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
+export const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
         width: DRAWER_WIDTH,
         flexShrink: 0,
@@ -43,5 +43,3 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
         }),
     }),
 );
-
-export default Drawer;

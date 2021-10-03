@@ -2,12 +2,33 @@ import {
     createTheme
 } from '@mui/material';
 
+export const primaryColor = {
+    dark: '#EA4A00',
+    main: '#FE5000',
+    light: '#FF5D13',
+};
+
 export const theme = createTheme({
     palette: {
-        primary: {
-            dark: '#EA4A00',
-            main: '#FE5000',
-            light: '#FF5D13',
+        mode: 'dark',
+        primary: primaryColor,
+    },
+    components: {
+        MuiDrawer: {
+            styleOverrides: {
+                paper: {
+                    backgroundColor: primaryColor.main,
+                    color: '#FFF',
+                },
+            },
+        },
+        MuiAppBar: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: primaryColor.main,
+                    boxShadow: 'none',
+                },
+            },
         },
     },
 });
