@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import {
     Table,
     Box,
@@ -11,6 +11,10 @@ import {
     IconButton,
     Pagination,
     PaginationItem,
+    TextField,
+
+    Alert,
+    CircularProgress,
 
     Dialog,
     DialogTitle,
@@ -36,8 +40,9 @@ export const SubjectsList: React.FC = () => {
         page: undefined,
         search: undefined,
     });
+    const [search, setSearch] = useState(searchOptions.search || '');
     const queryClient = useQueryClient();
-    const query = useQuery(['subjects', searchOptions], async () => getSubjects(searchOptions) );
+    const query = useQuery(['subjects', [searchOptions, search]], async () => getSubjects({ ...searchOptions, search }) );
     const history = useHistory();
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [deletingItem, setDeletingItem] = useState<Subject | null>(null);
@@ -72,12 +77,11 @@ export const SubjectsList: React.FC = () => {
         history.push('/subjects/add/');
     }
 
-    if (query.isLoading) {
-        return <p>Carregando...</p>;
-    }
-
-    if (query.isError) {
-        return <p>Erro: {String(query.error)}</p>
+    function handleChangeSearchText(e: ChangeEvent<HTMLInputElement>) {
+        setSearch(e.target.value);
+        const url = new URL(window.location.href);
+        url.searchParams.set('search', e.target.value);
+        window.history.pushState({}, '', url.toString());
     }
 
     return (
@@ -88,6 +92,16 @@ export const SubjectsList: React.FC = () => {
             }}>
                 <Button variant="contained" onClick={handleAdd}>Adicionar</Button>
             </Box>
+            <Box mt={3} mb={3}>
+                <TextField
+                    label="Pesquisar..."
+                    variant="standard"
+                    onChange={handleChangeSearchText}
+                    value={search}
+                    fullWidth
+                />
+            </Box>
+            
             <Table sx={{ minWidth: 650 }}>
                 <TableHead>
                     <TableRow>
@@ -98,23 +112,43 @@ export const SubjectsList: React.FC = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {query.data?.results.map((item) => (
-                        <TableRow key={item.id}>
-                            <TableCell>{item.id}</TableCell>
-                            <TableCell>{item.name}</TableCell>
-                            <TableCell>{item.active ? 'Sim' : 'Não'}</TableCell>
-                            <TableCell>
-                                <ButtonGroup>
-                                    <IconButton component={Link} to={`/subjects/${item.id}`}>
-                                        <Edit />
-                                    </IconButton>
-                                    <IconButton onClick={() => handleOpenDeleteDialog(item)}>
-                                        <Delete />
-                                    </IconButton>
-                                </ButtonGroup>
+                    {query.isLoading ? (
+                        <TableRow>
+                            <TableCell colSpan={4}>
+                                <Box mt={3} mb={3} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                    <CircularProgress color="primary" />
+                                </Box>
                             </TableCell>
                         </TableRow>
-                    ))}
+                    ) : query.isError ? (
+                        <TableRow>
+                            <TableCell colSpan={4}>
+                                <Box mt={3} mb={3} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
+                                    <Alert severity="error">{getDisplayErrorMessage(query.error)}</Alert>
+                                </Box>
+                            </TableCell>
+                        </TableRow>
+                    ) : (
+                        <>
+                            {query.data?.results.map((item) => (
+                                <TableRow key={item.id}>
+                                    <TableCell>{item.id}</TableCell>
+                                    <TableCell>{item.name}</TableCell>
+                                    <TableCell>{item.active ? 'Sim' : 'Não'}</TableCell>
+                                    <TableCell>
+                                        <ButtonGroup>
+                                            <IconButton component={Link} to={`/subjects/${item.id}`}>
+                                                <Edit />
+                                            </IconButton>
+                                            <IconButton onClick={() => handleOpenDeleteDialog(item)}>
+                                                <Delete />
+                                            </IconButton>
+                                        </ButtonGroup>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </>
+                    )}
                 </TableBody>
             </Table>
             <Box mt={3} sx={{
