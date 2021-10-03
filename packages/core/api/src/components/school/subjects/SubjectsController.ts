@@ -197,6 +197,9 @@ export class SubjectsController {
         const subjectsRepository = getRepository(Subject);
         const options: FindManyOptions<Subject> = {
             where: {},
+            order: {
+                id: 'DESC',
+            },
             skip: itensPerPage * (pageNumber - 1),
             take: itensPerPage,
         };
