@@ -3,7 +3,7 @@ import path from 'path';
 import { FindManyOptions, getRepository, Raw } from 'typeorm';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { Subject } from './SubjectsEntity';
-import { defaults } from '../../../configs';
+import { defaults, getElasticSearchClient, elasticSearchBrazilianAnalyzer } from '../../../configs';
 import {
     HTTP_200_OK,
     HTTP_201_CREATED,
@@ -51,6 +51,15 @@ export class SubjectsController {
         subject.active = active;
         try {
             const result = await subjectRepo.save(subject);
+            
+            const esClient = getElasticSearchClient();
+            await esClient.index({
+                index: 'subjects',
+                type: 'type_subjects',
+                id: String(result.id),
+                body: result,
+            });
+
             return response.status(HTTP_201_CREATED).json(result);
         } catch (err) {
             console.log(`ERROR: trying to save a subject.\r\n\r\n ${JSON.stringify(err)}`);
@@ -87,6 +96,15 @@ export class SubjectsController {
             subject.icon = icon;
             subject.active = active;
             const result = await subjectRepo.save(subject);
+
+            const esClient = getElasticSearchClient();
+            await esClient.index({
+                index: 'subjects',
+                type: 'type_subjects',
+                id: String(result.id),
+                body: result,
+            });
+
             return response.status(HTTP_200_OK).json(result);
         } catch (err) {
             console.log(`ERROR: trying to update a subject.\r\n\r\n ${JSON.stringify(err)}`);
@@ -135,6 +153,15 @@ export class SubjectsController {
                 subject.active = active;
             }
             const result = await subjectRepo.save(subject);
+
+            const esClient = getElasticSearchClient();
+            await esClient.index({
+                index: 'subjects',
+                type: 'type_subjects',
+                id: String(result.id),
+                body: result,
+            });
+
             return response.status(HTTP_200_OK).json(result);
         } catch (err) {
             console.log(`ERROR: trying to update a subject.\r\n\r\n ${JSON.stringify(err)}`);
@@ -155,11 +182,21 @@ export class SubjectsController {
                 __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', subject.icon,
             ));
             await subjectRepo.remove(subject);
-            return response.status(HTTP_204_NO_CONTENT).send();
         } catch (err) {
             console.log(`ERROR: trying to delete a subject.\r\n\r\n ${JSON.stringify(err)}`);
             return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
         }
+
+        try {
+            const esClient = getElasticSearchClient();
+            await esClient.delete({
+                index: 'subjects',
+                type: 'type_subjects',
+                id: String(id),
+            });
+        } catch (err) {}
+
+        return response.status(HTTP_204_NO_CONTENT).send();
     }
 
     async getById(request: Request<SubjectsIdParams, any, any>, response: Response) {
@@ -190,10 +227,79 @@ export class SubjectsController {
             search,
         } = request.query;
         const { user } = request;
-        
+
         const pageNumber = parseInt(page || '1', 10);
         const itensPerPage = Number(process.env.ITENS_PER_PAGE || defaults.itensPerPage);
+
+        try {
+            let body: any | undefined = undefined;
+            if (search) {
+                if (user && user.getUserType() === 'STUDENT') {
+                    body = {
+                        query: {
+                            bool: {
+                                must: [
+                                    {
+                                        match: {
+                                            name: {
+                                                query: search,
+                                                fuzziness: 'AUTO',
+                                            },
+                                        },
+                                    },
+                                    {
+                                        match: {
+                                            active: true,
+                                        }
+                                    }
+                                ],
+                            }
+                        }
+                    };
+                } else {
+                    body = {
+                        query: {
+                            match: {
+                                name: {
+                                    query: search,
+                                    fuzziness: 'AUTO',
+                                },
+                            }
+                        }
+                    };
+                }
+            }else if (user && user.getUserType() === 'STUDENT') {
+                body = {
+                    query: {
+                        match: {
+                            active: true,
+                        }
+                    }
+                };
+            }
+
+            const esClient = getElasticSearchClient();
+            const result = await esClient.search({
+                index: 'subjects',
+                from: (pageNumber - 1) * itensPerPage,
+                size: itensPerPage,
+                sort: ['id:desc'],
+                body
+            });
+
+            const count = Number((result.hits.total as any).value);
+            
+            return response.json({
+                results: result.hits.hits.map((item) => item._source),
+                count,
+                pages: Math.ceil(count / itensPerPage),
+            });
+        } catch(err) {
+            console.log(`ERROR: trying to search subjects from elasticsearch.\r\n\r\n ${JSON.stringify(err)}`);
+            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
+        }
         
+        /*
         const subjectsRepository = getRepository(Subject);
         const options: FindManyOptions<Subject> = {
             where: {},
@@ -225,5 +331,6 @@ export class SubjectsController {
             count,
             pages: Math.ceil(count / itensPerPage),
         });
+        */
     }
 }
