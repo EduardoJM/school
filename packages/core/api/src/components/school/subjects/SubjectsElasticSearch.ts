@@ -24,7 +24,8 @@ export const SubjectsElasticSearch = {
     },
     async search(search: string, page: number, user?: User) {
         const itensPerPage = Number(process.env.ITENS_PER_PAGE || defaults.itensPerPage);
-        let body: any = {};
+        let body: any = undefined;
+        let sort: any = undefined;
         if (search) {
             if (user && user.getUserType() === 'STUDENT') {
                 body = {
@@ -66,12 +67,16 @@ export const SubjectsElasticSearch = {
                     },
                 },
             };
+            sort = ['id:desc'];
+        } else {
+            sort = ['id:desc'];
         }
         const esClient = getElasticSearchClient();
         const result = await esClient.search({
             index: 'subjects',
             size: itensPerPage,
-            body
+            body,
+            sort,
         });
 
         const count = Number((result.hits.total as any).value);
