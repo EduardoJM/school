@@ -13,6 +13,8 @@ import {
     PaginationItem,
     TextField,
 
+    Switch,
+
     Alert,
     CircularProgress,
 
@@ -30,7 +32,7 @@ import { useSnackbar } from 'notistack';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { useHistory, Link } from 'react-router-dom';
 import { useSearchQuery } from '../../../hooks';
-import { getSubjects, deleteSubject } from '../../../services/school';
+import { getSubjects, deleteSubject, partialUpdateSubject } from '../../../services/school';
 import { Subject } from '../../../entities';
 import { getDisplayErrorMessage } from '../../../utils/error';
 
@@ -47,6 +49,14 @@ export const SubjectsList: React.FC = () => {
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [deletingItem, setDeletingItem] = useState<Subject | null>(null);
     const deleteSubjectMutation = useMutation(deleteSubject, {
+        onSuccess: () => {
+            queryClient.invalidateQueries('subjects');
+        },
+        onError: (err) => {
+            enqueueSnackbar(getDisplayErrorMessage(err), { variant: 'error' });
+        },
+    });
+    const updateSubjectMutation = useMutation(partialUpdateSubject, {
         onSuccess: () => {
             queryClient.invalidateQueries('subjects');
         },
@@ -82,6 +92,12 @@ export const SubjectsList: React.FC = () => {
         const url = new URL(window.location.href);
         url.searchParams.set('search', e.target.value);
         window.history.pushState({}, '', url.toString());
+    }
+
+    function handleSwitchToggle(item: Subject) {
+        const data = new FormData();
+        data.append('active', String(!item.active));
+        updateSubjectMutation.mutate({ id: item.id, data });
     }
 
     return (
@@ -134,7 +150,9 @@ export const SubjectsList: React.FC = () => {
                                 <TableRow key={item.id}>
                                     <TableCell>{item.id}</TableCell>
                                     <TableCell>{item.name}</TableCell>
-                                    <TableCell>{item.active ? 'Sim' : 'Não'}</TableCell>
+                                    <TableCell>
+                                        <Switch defaultChecked={item.active} onChange={() => handleSwitchToggle(item)} />
+                                    </TableCell>
                                     <TableCell>
                                         <ButtonGroup>
                                             <IconButton component={Link} to={`/subjects/${item.id}`}>
