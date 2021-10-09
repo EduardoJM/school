@@ -1,0 +1,9 @@
+FROM node:14-alpine
+
+WORKDIR /app
+ADD ./package.json /app/package.json
+ADD ./packages/core/api/package.json /app/packages/core/api/package.json
+ADD ./yarn.lock /app/yarn.lock
+RUN yarn install
+ADD ./packages/core/api /app/packages/core/api
+RUN yarn workspace @inventare/api build

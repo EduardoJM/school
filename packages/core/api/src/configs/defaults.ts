@@ -7,6 +7,9 @@ const defaults = {
     sqlPassword: 'root',
     sqlDatabase: 'inventare',
 
+    elasticHost: 'localhost',
+    elasticPort: 9200,
+
     jwtSecret: '762b9429b9543322317131a1caeea751',
 
     itensPerPage: 10,
