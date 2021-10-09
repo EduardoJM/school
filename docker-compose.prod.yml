@@ -8,8 +8,6 @@ services:
       - discovery.type=single-node
     volumes:
       - data_es:/usr/share/elasticsearch/data
-    ports:
-      - 9200:9200
     networks:
       - backend
     
@@ -31,7 +29,7 @@ services:
       context: .
       dockerfile: Dockerfile.api
     container_name: api
-    command: yarn workspace @inventare/api dev
+    command: yarn workspace @inventare/api prod
     networks:
       - backend
     depends_on:
@@ -46,6 +44,16 @@ services:
       SQL_DATABASE: inventare
       ELASTIC_SEARCH_HOST: elasticsearch
       ELASTIC_SEARCH_PORT: 9200
+    
+  admin_prod:
+    build:
+      context: .
+      dockerfile: Dockerfile.admin.prod
+    container_name: admin
+    depends_on:
+      - api
+    ports:
+      - 8080:80
 
 volumes:
   data_es:

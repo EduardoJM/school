@@ -1,0 +1,69 @@
+version: "3"
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.2
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+    volumes:
+      - data_es:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - backend
+    
+  database:
+    image: mariadb
+    container_name: database
+    volumes:
+      - data_sql:/var/lib/mysql
+    networks:
+      - backend
+    environment:
+      MYSQL_DATABASE: inventare
+      MYSQL_ROOT_PASSWORD: root
+    depends_on: 
+      - elasticsearch
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: api
+    command: yarn workspace @inventare/api dev
+    networks:
+      - backend
+    depends_on:
+      - elasticsearch
+      - database
+    ports:
+      - 3333:3333
+    environment: 
+      SQL_HOST: database
+      SQL_USER: root
+      SQL_PASSWORD: root
+      SQL_DATABASE: inventare
+      ELASTIC_SEARCH_HOST: elasticsearch
+      ELASTIC_SEARCH_PORT: 9200
+    
+  admin:
+    build:
+      context: .
+      dockerfile: Dockerfile.admin
+    container_name: admin
+    command: yarn workspace @inventare/admin start
+    depends_on:
+      - api
+    ports:
+      - 3000:3000
+
+volumes:
+  data_es:
+    driver: local
+  data_sql:
+    driver: local
+
+networks:
+  backend:
+    driver: bridge

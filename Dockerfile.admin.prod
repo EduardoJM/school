@@ -1,0 +1,14 @@
+FROM node:14-alpine as build
+
+WORKDIR /app
+ENV PATH /app/node_modules/.bin:$PATH
+ADD ./package.json /app/package.json
+ADD ./packages/core/admin/package.json /app/packages/core/admin/package.json
+ADD ./yarn.lock /app/yarn.lock
+RUN yarn install
+ADD ./packages/core/admin /app/packages/core/admin
+RUN yarn workspace @inventare/admin build
+
+FROM nginx:1.16.0-alpine
+COPY --from=build /app/packages/core/admin/build /usr/share/nginx/html
+CMD ["nginx", "-g", "daemon off;"]
