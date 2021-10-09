@@ -13,6 +13,7 @@
     "bcryptjs": "^2.4.3",
     "celebrate": "^15.0.0",
     "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "elasticsearch": "^16.7.2",
     "express": "^4.17.1",
     "joi-translation-pt-br": "^0.0.6",

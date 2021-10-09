@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
+import dotenv from 'dotenv';
 
 import createConnection from './connection';
 import { defaults } from './configs';
@@ -12,6 +13,10 @@ createConnection().then(async (connection) => {
     if (!connection) {
         return;
     }
+    dotenv.config();
+
+    console.log(process.env.JWT_SECRET);
+
     const app = express();
 
     // TODO: configure cors here
@@ -23,7 +28,7 @@ createConnection().then(async (connection) => {
 
     app.use(errors());
 
-    const port = process.env.SERVER_PORT || defaults.port;
+    const port = Number(process.env.SERVER_PORT || defaults.port);
 
     app.listen(port, () => {
         console.log(`Inventare api running at http://localhost:${port}`);
