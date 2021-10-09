@@ -1,2 +1,2 @@
-export * from './tags/TagEntity';
+export * from './tags/TagsEntity';
 export * from './subjects/SubjectsEntity';

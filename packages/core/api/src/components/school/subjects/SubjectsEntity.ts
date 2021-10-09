@@ -6,7 +6,7 @@ import {
     UpdateDateColumn,
     OneToMany,
 } from 'typeorm';
-import { Tag } from '../tags/TagEntity';
+import { Tag } from '../tags/TagsEntity';
 import { buildUrl } from '../../../utils/urls';
 
 @Entity()
