@@ -59,6 +59,11 @@ services:
       - api
     ports:
       - 3000:3000
+    volumes:
+      - ./packages/core/admin/public:/app/packages/core/admin/public
+      - ./packages/core/admin/src:/app/packages/core/admin/src
+      - ./packages/core/admin/package.json:/app/packages/core/admin/package.json
+      - ./packages/core/admin/tsconfig.json:/app/packages/core/admin/tsconfig.json
 
 volumes:
   data_es:
