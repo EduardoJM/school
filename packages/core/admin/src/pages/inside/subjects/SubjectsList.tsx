@@ -121,10 +121,10 @@ export const SubjectsList: React.FC = () => {
             <Table sx={{ minWidth: 650 }}>
                 <TableHead>
                     <TableRow>
-                        <TableCell>ID</TableCell>
+                        <TableCell width="30px">ID</TableCell>
                         <TableCell>Nome</TableCell>
-                        <TableCell>Ativo</TableCell>
-                        <TableCell>Ações</TableCell>
+                        <TableCell width="70px">Ativo</TableCell>
+                        <TableCell width="300px">Ações</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -150,7 +150,7 @@ export const SubjectsList: React.FC = () => {
                                 <TableRow key={item.id}>
                                     <TableCell>{item.id}</TableCell>
                                     <TableCell>{item.name}</TableCell>
-                                    <TableCell>
+                                    <TableCell sx={{ padding: 0 }}>
                                         <Switch defaultChecked={item.active} onChange={() => handleSwitchToggle(item)} />
                                     </TableCell>
                                     <TableCell>
