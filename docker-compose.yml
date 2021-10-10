@@ -39,6 +39,8 @@ services:
       - database
     ports:
       - 3333:3333
+    volumes:
+      - ./packages/core/api/src:/app/packages/core/api/src
     environment: 
       SQL_HOST: database
       SQL_USER: root

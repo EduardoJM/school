@@ -5,7 +5,6 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     ManyToOne,
-    OneToMany,
 } from 'typeorm';
 import { Subject } from '../subjects/SubjectsEntity';
 
@@ -33,9 +32,10 @@ export class Tag {
     @Column()
     active!: boolean;
 
-    @ManyToOne(() => Tag, (tag) => tag.children)
-    parent!: Tag;
-
-    @OneToMany(() => Tag, (tag) => tag.parent)
-    children!: Tag[];
+    getHierarchicalActive() {
+        if (!this.active || !this.subject || !this.subject.active) {
+            return false;
+        }
+        return this.active;
+    }
 }
