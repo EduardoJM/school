@@ -10,7 +10,7 @@ export const primaryColor = {
 
 export const theme = createTheme({
     palette: {
-        mode: 'dark',
+        mode: 'light',
         primary: primaryColor,
     },
     components: {
