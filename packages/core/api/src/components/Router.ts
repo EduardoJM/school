@@ -2,7 +2,7 @@ import express from 'express';
 import { PeoplesRouter } from './peoples/PeoplesRouter';
 import { SchoolRouter } from './school/SchoolRouter';
 import { IntegrationsRouter } from './integrations/IntegrationsRouter';
-import { GeographicRouter } from './geographic/GeographicRouter';
+import { GeographicRouter } from './geographics/GeographicRouter';
 
 const Router = express.Router();
 
