@@ -1,5 +1,7 @@
 import React, { ChangeEvent, useState } from 'react';
 import {
+    Avatar,
+
     Table,
     Box,
     Button,
@@ -121,6 +123,7 @@ export const SubjectsList: React.FC = () => {
             <Table sx={{ minWidth: 650 }}>
                 <TableHead>
                     <TableRow>
+                        <TableCell width="80px">&nbsp;</TableCell>
                         <TableCell width="30px">ID</TableCell>
                         <TableCell>Nome</TableCell>
                         <TableCell width="70px">Ativo</TableCell>
@@ -130,7 +133,7 @@ export const SubjectsList: React.FC = () => {
                 <TableBody>
                     {query.isLoading ? (
                         <TableRow>
-                            <TableCell colSpan={4}>
+                            <TableCell colSpan={5}>
                                 <Box mt={3} mb={3} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                     <CircularProgress color="primary" />
                                 </Box>
@@ -138,7 +141,7 @@ export const SubjectsList: React.FC = () => {
                         </TableRow>
                     ) : query.isError ? (
                         <TableRow>
-                            <TableCell colSpan={4}>
+                            <TableCell colSpan={5}>
                                 <Box mt={3} mb={3} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
                                     <Alert severity="error">{getDisplayErrorMessage(query.error)}</Alert>
                                 </Box>
@@ -148,6 +151,9 @@ export const SubjectsList: React.FC = () => {
                         <>
                             {query.data?.results.map((item) => (
                                 <TableRow key={item.id}>
+                                    <TableCell>
+                                        <Avatar src={item.icon} alt={item.name} sx={{ width: 80, height: 80 }} />
+                                    </TableCell>
                                     <TableCell>{item.id}</TableCell>
                                     <TableCell>{item.name}</TableCell>
                                     <TableCell sx={{ padding: 0 }}>
