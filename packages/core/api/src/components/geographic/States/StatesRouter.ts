@@ -14,6 +14,6 @@ StatesRouter.get(
     '/:uf/',
     IsUserAuthenticated,
     controller.listCities,
-)
+);
 
 export { StatesRouter };

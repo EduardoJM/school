@@ -21,10 +21,19 @@ export class StatesController {
         const { uf } = request.params;
         try {
             const stateRepo = getRepository(State);
-            const state = await stateRepo.findOne({
-                where: { uf: uf.toUpperCase().trim() },
-                relations: ['cities'],
-            });
+            let state: State | undefined = undefined;
+            if (/\d+/.test(uf)) {
+                const ufCode = parseInt(uf, 10);
+                state = await stateRepo.findOne({
+                    where: { code: ufCode },
+                    relations: ['cities'],
+                });
+            } else {
+                state = await stateRepo.findOne({
+                    where: { uf: uf.toUpperCase().trim() },
+                    relations: ['cities'],
+                });
+            }
             if (!state) {
                 return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
             }
