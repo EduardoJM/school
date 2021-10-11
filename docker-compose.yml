@@ -41,6 +41,7 @@ services:
       - 3333:3333
     volumes:
       - ./packages/core/api/src:/app/packages/core/api/src
+      - ./packages/core/api/scripts:/app/packages/core/api/scripts
       - ./packages/core/api/media:/app/packages/core/api/media
       - ./packages/core/api/nodemon.json:/app/packages/core/api/nodemon.json
       - ./packages/core/api/package.json:/app/packages/core/api/package.json
