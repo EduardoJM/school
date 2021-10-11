@@ -9,7 +9,7 @@ export const SubjectsElasticSearch = {
             index: 'subjects',
             type: '_doc',
             id: String(subject.id),
-            body: subject,
+            body: subject.serialize(),
         });
     },
     async deleteIndexes(id: string) {
