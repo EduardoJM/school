@@ -19,6 +19,7 @@ export const theme = createTheme({
                 paper: {
                     backgroundColor: primaryColor.main,
                     color: '#FFF',
+                    borderRight: 'none',
                 },
             },
         },
