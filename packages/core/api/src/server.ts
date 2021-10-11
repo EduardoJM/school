@@ -15,8 +15,6 @@ createConnection().then(async (connection) => {
     }
     dotenv.config();
 
-    console.log(process.env.JWT_SECRET);
-
     const app = express();
 
     // TODO: configure cors here

@@ -1,0 +1,40 @@
+import { Request, Response } from 'express';
+import { ParamsDictionary } from 'express-serve-static-core';
+import { getRepository } from 'typeorm';
+import { State } from './StatesEntity';
+import { HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR, responses } from '../../../constants';
+
+export interface StateParamsDictionary extends ParamsDictionary {
+    uf: string;
+}
+
+export class StatesController {
+    async list(request: Request, response: Response) {
+        const stateRepo = getRepository(State);
+        const results = await stateRepo.find();
+        return response.json({
+            results,
+        });
+    }
+
+    async listCities(request: Request<StateParamsDictionary, any, any>, response: Response) {
+        const { uf } = request.params;
+        try {
+            const stateRepo = getRepository(State);
+            const state = await stateRepo.findOne({
+                where: { uf: uf.toUpperCase().trim() },
+                relations: ['cities'],
+            });
+            if (!state) {
+                return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
+            }
+            return response.json({
+                results: state.cities,
+            });
+        } catch (err) {
+            console.log('Error trying to load cities list');
+            console.log(JSON.stringify(err));
+            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
+        }
+    }
+}
