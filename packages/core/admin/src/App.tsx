@@ -2,7 +2,7 @@ import React from 'react';
 import { SnackbarProvider } from 'notistack';
 import { ThemeProvider } from '@mui/material';
 import Router from './routes';
-import { AuthProvider } from './contexts/auth';
+import { AuthProvider } from './contexts';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { theme } from './configs';
 

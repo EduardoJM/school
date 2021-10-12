@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import {
     useTheme,
 
@@ -11,18 +11,25 @@ import {
 import {
     Menu,
 } from '@mui/icons-material';
-import { IconButton } from '../MaterialUI';
+import { IconButton, SearchTextField } from '../MaterialUI';
 import { DRAWER_WIDTH } from '../../../configs';
 import { Sidebar } from '../Sidebar';
+import { useSearchParams } from '../../../contexts';
 
 const Dashboard: React.FC = ({ children }) => {
+    const { updateParam } = useSearchParams();
     const [mobileOpen, setMobileOpen] = useState(false);
-    const container = document.body;
+    const [search, setSearch] = useState('');
     const theme = useTheme();
 
     function handleDrawerToggle(){
         setMobileOpen((state) => !state);
-    };
+    }
+
+    function handleChangeSearchText(e: ChangeEvent<HTMLInputElement>) {
+        setSearch(e.target.value);
+        updateParam('search', e.target.value);
+    }
 
     return (
         <Box sx={{
@@ -47,6 +54,11 @@ const Dashboard: React.FC = ({ children }) => {
                     >
                         <Menu />
                     </IconButton>
+                    <SearchTextField
+                        placeholder="Pesquisar..."
+                        onChange={handleChangeSearchText}
+                        value={search}
+                    />
                 </Toolbar>
                 <Box
                     sx={{
@@ -78,7 +90,6 @@ const Dashboard: React.FC = ({ children }) => {
                 sx={{ width: { sm: DRAWER_WIDTH }, flexShrink: { sm: 0 } }}
             >
                 <Drawer
-                    container={container}
                     variant="temporary"
                     open={mobileOpen}
                     onClose={handleDrawerToggle}

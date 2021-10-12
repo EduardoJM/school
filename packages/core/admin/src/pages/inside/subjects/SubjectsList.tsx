@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { useState } from 'react';
 import {
     Avatar,
 
@@ -13,7 +13,6 @@ import {
     IconButton,
     Pagination,
     PaginationItem,
-    TextField,
 
     Switch,
 
@@ -33,20 +32,19 @@ import {
 import { useSnackbar } from 'notistack';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { useHistory, Link } from 'react-router-dom';
-import { useSearchQuery } from '../../../hooks';
+import { useSearchParamsDictionary } from '../../../contexts';
 import { getSubjects, deleteSubject, partialUpdateSubject } from '../../../services/school';
 import { Subject } from '../../../entities';
 import { getDisplayErrorMessage } from '../../../utils/error';
 
 export const SubjectsList: React.FC = () => {
     const { enqueueSnackbar } = useSnackbar();
-    const searchOptions = useSearchQuery({
+    const searchOptions = useSearchParamsDictionary({
         page: undefined,
         search: undefined,
     });
-    const [search, setSearch] = useState(searchOptions.search || '');
     const queryClient = useQueryClient();
-    const query = useQuery(['subjects', [searchOptions, search]], async () => getSubjects({ ...searchOptions, search }) );
+    const query = useQuery(['subjects', searchOptions], async () => getSubjects({ ...searchOptions }) );
     const history = useHistory();
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [deletingItem, setDeletingItem] = useState<Subject | null>(null);
@@ -89,13 +87,6 @@ export const SubjectsList: React.FC = () => {
         history.push('/subjects/add/');
     }
 
-    function handleChangeSearchText(e: ChangeEvent<HTMLInputElement>) {
-        setSearch(e.target.value);
-        const url = new URL(window.location.href);
-        url.searchParams.set('search', e.target.value);
-        window.history.pushState({}, '', url.toString());
-    }
-
     function handleSwitchToggle(item: Subject) {
         const data = new FormData();
         data.append('active', String(!item.active));
@@ -109,15 +100,6 @@ export const SubjectsList: React.FC = () => {
                 flexDirection: 'row-reverse',
             }}>
                 <Button variant="contained" onClick={handleAdd}>Adicionar</Button>
-            </Box>
-            <Box mt={3} mb={3}>
-                <TextField
-                    label="Pesquisar..."
-                    variant="standard"
-                    onChange={handleChangeSearchText}
-                    value={search}
-                    fullWidth
-                />
             </Box>
             
             <Table sx={{ minWidth: 650 }}>
@@ -149,6 +131,15 @@ export const SubjectsList: React.FC = () => {
                         </TableRow>
                     ) : (
                         <>
+                            {query.data?.results.length === 0 && (
+                                <TableRow>
+                                    <TableCell colSpan={5}>
+                                        <Box mt={3} mb={3} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
+                                            <Alert severity="info">Não foram encontrados registros.</Alert>
+                                        </Box>
+                                    </TableCell>
+                                </TableRow>
+                            )}
                             {query.data?.results.map((item) => (
                                 <TableRow key={item.id}>
                                     <TableCell>
@@ -218,4 +209,3 @@ export const SubjectsList: React.FC = () => {
         </>
     );
 };
-
