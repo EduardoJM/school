@@ -27,6 +27,7 @@ export interface TagsIdParams extends ParamsDictionary{
 export interface PaginationParams {
     page?: string;
     search?: string;
+    subject?: string;
 }
 
 export class TagsController {
@@ -195,13 +196,15 @@ export class TagsController {
         const {
             page,
             search,
+            subject,
         } = request.query;
         const { user } = request;
 
         const pageNumber = parseInt(page || '1', 10);
+        const subjectId = parseInt(subject || '-1', 10);
 
         try {
-            const result = await TagsElasticSearch.search(search || '', pageNumber, user);
+            const result = await TagsElasticSearch.search(search || '', pageNumber, subjectId, user);
             return response.json(result);
         } catch(err) {
             console.log(`ERROR: trying to search subjects from elasticsearch.\r\n\r\n ${JSON.stringify(err)}`);
