@@ -153,6 +153,9 @@ export class TagsController {
     async delete(request: Request<TagsIdParams, any, any>, response: Response) {
         const { id: idStr } = request.params;
         const id = parseInt(idStr);
+
+        await TagsElasticSearch.deleteIndexes(idStr);
+
         const tagRepo = getRepository(Tag);
         try {
             const tag = await tagRepo.findOne({ id });
@@ -164,8 +167,6 @@ export class TagsController {
             console.log(`ERROR: trying to delete a tag.\r\n\r\n ${JSON.stringify(err)}`);
             return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
         }
-
-        await TagsElasticSearch.deleteIndexes(String(id));
 
         return response.status(HTTP_204_NO_CONTENT).send();
     }

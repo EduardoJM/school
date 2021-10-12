@@ -158,6 +158,9 @@ export class SubjectsController {
     async delete(request: Request<SubjectsIdParams, any, SubjectCreateRequestBody>, response: Response) {
         const { id: idStr } = request.params;
         const id = parseInt(idStr);
+
+        await SubjectsElasticSearch.deleteIndexes(idStr);
+
         const subjectRepo = getRepository(Subject);
         try {
             const subject = await subjectRepo.findOne({ id });
@@ -172,8 +175,6 @@ export class SubjectsController {
             console.log(`ERROR: trying to delete a subject.\r\n\r\n ${JSON.stringify(err)}`);
             return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
         }
-
-        await SubjectsElasticSearch.deleteIndexes(String(id));
 
         return response.status(HTTP_204_NO_CONTENT).send();
     }
