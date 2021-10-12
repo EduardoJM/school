@@ -158,6 +158,9 @@ export const SubjectsList: React.FC = () => {
                                             <IconButton onClick={() => handleOpenDeleteDialog(item)}>
                                                 <Delete />
                                             </IconButton>
+                                            <Button component={Link} to={`/tags/${item.id}`}>
+                                                Tags
+                                            </Button>
                                         </ButtonGroup>
                                     </TableCell>
                                 </TableRow>

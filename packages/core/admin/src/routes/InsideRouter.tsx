@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Dashboard from '../components/dashboard/Dashboard';
-import SubjectsSwitch from '../pages/inside/subjects/SubjectsSwitch';
+import { SubjectsRouter, TagsRouter } from '../pages/inside';
 import { SearchParamsProvider } from '../contexts';
 
 const InsideRouter: React.FC = () => {
@@ -14,7 +14,10 @@ const InsideRouter: React.FC = () => {
                             Testing
                         </Route>
                         <Route path="/subjects">
-                            <SubjectsSwitch />
+                            <SubjectsRouter />
+                        </Route>
+                        <Route path="/tags">
+                            <TagsRouter />
                         </Route>
                     </Switch>
                 </Dashboard>
