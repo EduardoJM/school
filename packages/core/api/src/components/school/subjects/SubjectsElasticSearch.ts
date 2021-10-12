@@ -1,6 +1,7 @@
 import { defaults, getElasticSearchClient } from '../../../configs';
 import { User } from '../../peoples/PeoplesEntities';
 import { Subject } from './SubjectsEntity';
+import { ElasticSearchQueryBuilder } from '../../../utils/elasticsearch';
 
 export const SubjectsElasticSearch = {
     async updateIndexes(subject: Subject) {
@@ -24,53 +25,21 @@ export const SubjectsElasticSearch = {
     },
     async search(search: string, page: number, user?: User) {
         const itensPerPage = Number(process.env.ITENS_PER_PAGE || defaults.itensPerPage);
-        let body: any = undefined;
         let sort: any = undefined;
-        if (search) {
-            if (user && user.getUserType() === 'STUDENT') {
-                body = {
-                    query: {
-                        bool: {
-                            must: {
-                                match: {
-                                    name: {
-                                        query: search,
-                                        operator: 'and',
-                                        fuzziness: 2,
-                                    },
-                                },
-                            },
-                            filter: {
-                                term: { active: true },
-                            },
-                        },
-                    },
-                };
-            } else {
-                body = {
-                    query: {
-                        match: {
-                            name: {
-                                query: search,
-                                operator: 'and',
-                                fuzziness: 2,
-                            },
-                        },
-                    },
-                };
-            }
-        } else if (user && user.getUserType() === 'STUDENT') {
-            body = {
-                query: {
-                    match: {
-                        active: true,
-                    },
-                },
-            };
-            sort = ['id:desc'];
-        } else {
+
+        if (!search) {
             sort = ['id:desc'];
         }
+
+        const queryBuilder = ElasticSearchQueryBuilder.begin();
+        if (search) {
+            queryBuilder.query.fuzzinessAnd('name', search);
+        }
+        if (user && user.getUserType() === 'STUDENT') {
+            queryBuilder.filter.term('active', true);
+        }
+        const body = queryBuilder.getBody();
+
         const esClient = getElasticSearchClient();
         const result = await esClient.search({
             index: 'subjects',

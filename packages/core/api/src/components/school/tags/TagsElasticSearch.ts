@@ -28,20 +28,12 @@ export const TagsElasticSearch = {
     },
     async search(search: string, page: number, subjectId: number, user?: User) {
         const itensPerPage = Number(process.env.ITENS_PER_PAGE || defaults.itensPerPage);
-        //let body: any = undefined;
+
         let sort: any = undefined;
         if (!search) {
             sort = ['id:desc'];
         }
-        /*
-        const match = {
-            name: {
-                query: search,
-                operator: 'and',
-                fuzziness: 2,
-            },
-        };
-        */
+        
         const queryBuilder = ElasticSearchQueryBuilder.begin();
         if (search) {
             queryBuilder.query.fuzzinessAnd('name', search);
@@ -53,97 +45,7 @@ export const TagsElasticSearch = {
             queryBuilder.filter.term('subject', subjectId);
         }
         const body = queryBuilder.getBody();
-        console.log(JSON.stringify(body));
 
-        /*
-        if (search) {
-            if (user && user.getUserType() === 'STUDENT') {
-                if (subjectId > 0) {
-                    body = {
-                        query: {
-                            bool: {
-                                must: [
-                                    { match }
-                                ],
-                                filter: {
-                                    bool: {
-                                        must: [
-                                            { term: { active: true } },
-                                            { term: { subject: subjectId } },
-                                        ]
-                                    }
-                                },
-                            },
-                        },
-                    };
-                } else {
-                    body = {
-                        query: {
-                            bool: {
-                                must: [
-                                    { match }
-                                ],
-                                filter: {
-                                    term: {
-                                        active: true,
-                                    },
-                                },
-                            },
-                        },
-                    };
-                }
-            } else {
-                if (subjectId > 0) {
-                    body = {
-                        query: {
-                            bool: {
-                                must: [{ match }],
-                                filter: {
-                                    term: {
-                                        subject: subjectId
-                                    }
-                                }
-                            },
-                        },
-                    };
-                } else {
-                    body = { query: { match } };
-                }
-            }
-        } else if (user && user.getUserType() === 'STUDENT') {
-            if (subjectId > 0) {
-                body = {
-                    query: {
-                        bool: {
-                            must: [
-                                {
-                                    match: {
-                                        active: true,
-                                    },
-                                }
-                            ],
-                            filter: {
-                                term: {
-                                    subject: subjectId
-                                }
-                            }
-                        }
-                    },
-                };
-            } else {
-                body = {
-                    query: {
-                        match: {
-                            active: true,
-                        },
-                    },
-                };
-            }
-            sort = ['id:desc'];
-        } else {
-            sort = ['id:desc'];
-        }
-        */
         const esClient = getElasticSearchClient();
         const result = await esClient.search({
             index: 'tags',
