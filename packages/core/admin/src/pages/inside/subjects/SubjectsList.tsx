@@ -24,6 +24,8 @@ import {
     DialogContent,
     DialogContentText,
     DialogActions,
+
+    Typography,
 } from '@mui/material';
 import {
     Delete,
@@ -95,15 +97,16 @@ export const SubjectsList: React.FC = () => {
 
     return (
         <>
-            <Box mt={3} sx={{
-                display: 'flex',
-                flexDirection: 'row-reverse',
-            }}>
-                <Button variant="contained" onClick={handleAdd}>Adicionar</Button>
-            </Box>
-            
             <Table sx={{ minWidth: 650 }}>
                 <TableHead>
+                    <TableRow>
+                        <TableCell colSpan={4}>
+                            <Typography component="h1" variant="h5">Disciplinas</Typography>
+                        </TableCell>
+                        <TableCell sx={{ textAlign: 'right' }}>
+                            <Button variant="text" onClick={handleAdd}>Adicionar</Button>
+                        </TableCell>
+                    </TableRow>
                     <TableRow>
                         <TableCell width="80px">&nbsp;</TableCell>
                         <TableCell width="30px">ID</TableCell>
