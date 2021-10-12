@@ -24,7 +24,7 @@ export const SubjectsAdd: React.FC = () => {
     const queryClient = useQueryClient();
     const createSubjectMutation = useMutation(createSubject, {
         onSuccess: () => {
-            queryClient.invalidateQueries('subjects');
+            setTimeout(() => queryClient.invalidateQueries('subjects'), 1000);
             history.push('/subjects/');
         },
         onError: (err) => {
@@ -33,7 +33,7 @@ export const SubjectsAdd: React.FC = () => {
     });
     const updateSubjectMutation = useMutation(partialUpdateSubject, {
         onSuccess: () => {
-            queryClient.invalidateQueries('subjects');
+            setTimeout(() => queryClient.invalidateQueries('subjects'), 1000);
             history.push('/subjects/');
         },
         onError: (err) => {

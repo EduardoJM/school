@@ -19,12 +19,12 @@ import {
     Settings as IconSettings,
     Logout as IconLogout,
 } from '@mui/icons-material';
-import { IconButton, SearchTextField, FlexFill } from '../MaterialUI';
+import { IconButton, SearchTextField, FlexFill } from './MaterialUI';
 import { DRAWER_WIDTH } from '../../../configs';
-import { Sidebar } from '../Sidebar';
+import { Sidebar } from './Sidebar';
 import { useSearchParams, useAuth } from '../../../contexts';
 
-const Dashboard: React.FC = ({ children }) => {
+export const Dashboard: React.FC = ({ children }) => {
     const { updateParam } = useSearchParams();
     const [mobileOpen, setMobileOpen] = useState(false);
     const [search, setSearch] = useState('');
@@ -225,5 +225,3 @@ const Dashboard: React.FC = ({ children }) => {
         </Box>
     );
 };
-
-export default Dashboard;

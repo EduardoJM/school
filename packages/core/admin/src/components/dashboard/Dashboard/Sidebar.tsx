@@ -20,7 +20,7 @@ import {
     PersonPinCircle as PersonPinCircleIcon,
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
-import { List, ListItemIcon } from '../MaterialUI';
+import { List, ListItemIcon } from './MaterialUI';
 import { Logo } from './Logo';
 
 export const Sidebar: React.FC = () => {
