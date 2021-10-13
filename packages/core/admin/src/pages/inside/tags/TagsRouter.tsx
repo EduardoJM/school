@@ -6,14 +6,14 @@ import { TagsList } from './TagsList';
 export const TagsRouter: React.FC = () => {
     return (
         <Switch>
-            <Route path="/tags/:subject" exact>
-                <TagsList />
+            <Route path="/tags/:subject/add" exact>
+                <TagsAdd />
             </Route>
             <Route path="/tags/:subject/:id" exact>
                 <TagsAdd />
             </Route>
-            <Route path="/tags/:subject/add" exact>
-                <TagsAdd />
+            <Route path="/tags/:subject" exact>
+                <TagsList />
             </Route>
         </Switch>
     )

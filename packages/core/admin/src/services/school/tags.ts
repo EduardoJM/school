@@ -1,6 +1,11 @@
 import { api } from '../api';
 import { PaginatedTags, Tag, TagsPaginationOptions } from '../../entities';
 
+export async function createTag(data: FormData): Promise<Tag> {
+    const result = await api.post<Tag>('/school/tags', data);
+    return result.data;
+}
+
 export async function partialUpdateTag({ id, data } : { id: number | string; data: FormData; }): Promise<Tag> {
     const result = await api.patch<Tag>(`/school/tags/${id}`, data);
     return result.data;
@@ -22,6 +27,11 @@ export async function getTags(opts?: TagsPaginationOptions): Promise<PaginatedTa
         url = `${url}${params}`;
     }
     const result = await api.get<PaginatedTags>(url);
+    return result.data;
+}
+
+export async function getTagById(id: number | string): Promise<Tag> {
+    const result = await api.get<Tag>(`/school/tags/${id}`);
     return result.data;
 }
 
