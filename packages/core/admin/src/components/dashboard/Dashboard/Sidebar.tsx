@@ -12,7 +12,6 @@ import {
 
     Dashboard as DashboardIcon,
     School as SchoolIcon,
-    Label as LabelIcon,
     LibraryBooks as LibraryBooksIcon,
     Group as GroupIcon,
     SupervisedUserCircle as SupervisedUserCircleIcon,
@@ -94,12 +93,6 @@ export const Sidebar: React.FC = () => {
                                 <LibraryBooksIcon />
                             </ListItemIcon>
                             <ListItemText primary="Disciplinas" />
-                        </ListItem>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <LabelIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Marcadores" />
                         </ListItem>
                     </List>
                 </Collapse>
