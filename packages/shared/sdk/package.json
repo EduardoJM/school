@@ -1,0 +1,9 @@
+{
+  "name": "@inventare/sdk",
+  "version": "0.0.1",
+  "main": "index.ts",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.4"
+  }
+}
