@@ -70,6 +70,7 @@ services:
       - ./packages/core/admin/src:/app/packages/core/admin/src
       - ./packages/core/admin/package.json:/app/packages/core/admin/package.json
       - ./packages/core/admin/tsconfig.json:/app/packages/core/admin/tsconfig.json
+      - ./packages/shared/sdk:/app/packages/shared/sdk
 
 volumes:
   data_es:

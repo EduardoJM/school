@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
+    "@inventare/sdk": "*",
     "@material-ui/core": "^4.12.3",
     "@mui/icons-material": "^5.0.0",
     "@mui/material": "^5.0.0",
@@ -15,6 +16,7 @@
     "axios": "^0.21.4",
     "notistack": "^1.0.10",
     "react": "^17.0.2",
+    "react-app-rewired": "^2.1.8",
     "react-dom": "^17.0.2",
     "react-dropzone": "^11.4.2",
     "react-query": "^3.24.4",
@@ -33,10 +35,10 @@
     "@types/styled-components": "^5.1.14"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-app-rewired eject"
   },
   "eslintConfig": {
     "extends": [

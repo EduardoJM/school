@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { User } from '../entities';
-import { api } from '../services/api';
-import { login, validate } from '../services/peoples/auth';
+//import { User } from '../entities';
+//import { api } from '../services/api';
+//import { login, validate } from '../services/peoples/auth';
+import { AuthServices, User, api } from '@inventare/sdk';
 import { getDisplayErrorMessage } from '../utils/error';
 
 export interface AuthContextData {
@@ -23,7 +24,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     async function handleLogin(email: string, password: string) {
         try {
             setLoading(true);
-            const userResponse = await login(email, password);
+            const userResponse = await AuthServices.login(email, password);
             setUser(userResponse.user);
 
             api.defaults.headers.Authorization = `Bearer ${userResponse.token}`;
@@ -52,7 +53,8 @@ export const AuthProvider: React.FC = ({ children }) => {
             api.defaults.headers.Authorization = `Bearer ${jwt}`;
 
             try {
-                const user = await validate();
+                //const user = await validate();
+                const user = await AuthServices.validate();
                 setUser(user);
                 setLoading(false);
             } catch(err) {

@@ -35,8 +35,7 @@ import { useSnackbar } from 'notistack';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { useHistory, Link } from 'react-router-dom';
 import { useSearchParamsDictionary } from '../../../contexts';
-import { getSubjects, deleteSubject, partialUpdateSubject } from '../../../services/school';
-import { Subject } from '../../../entities';
+import { Subject, SubjectServices } from '@inventare/sdk';
 import { getDisplayErrorMessage } from '../../../utils/error';
 
 export const SubjectsList: React.FC = () => {
@@ -46,11 +45,11 @@ export const SubjectsList: React.FC = () => {
         search: undefined,
     });
     const queryClient = useQueryClient();
-    const query = useQuery(['subjects', searchOptions], async () => getSubjects({ ...searchOptions }) );
+    const query = useQuery(['subjects', searchOptions], async () => SubjectServices.list({ ...searchOptions }) );
     const history = useHistory();
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [deletingItem, setDeletingItem] = useState<Subject | null>(null);
-    const deleteSubjectMutation = useMutation(deleteSubject, {
+    const deleteSubjectMutation = useMutation(SubjectServices.delete, {
         onSuccess: () => {
             queryClient.invalidateQueries('subjects');
         },
@@ -58,7 +57,7 @@ export const SubjectsList: React.FC = () => {
             enqueueSnackbar(getDisplayErrorMessage(err), { variant: 'error' });
         },
     });
-    const updateSubjectMutation = useMutation(partialUpdateSubject, {
+    const updateSubjectMutation = useMutation(SubjectServices.partialUpdate, {
         onSuccess: () => {
             queryClient.invalidateQueries('subjects');
         },
