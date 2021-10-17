@@ -1,4 +1,5 @@
-import { defaults, getElasticSearchClient } from '../../../configs';
+import { defaults } from '../../../configs';
+import { getElasticSearchClient } from '../../../integrations';
 import { User } from '../../peoples/PeoplesEntities';
 import { Subject } from './SubjectsEntity';
 import { ElasticSearchQueryBuilder } from '../../../utils/elasticsearch';

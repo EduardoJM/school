@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Client } from 'elasticsearch';
 import { getRepository } from 'typeorm';
-import { getElasticSearchClient } from '../../../configs';
+import { getElasticSearchClient } from '../../../integrations';
 import { Subject, Tag } from '../../school/SchoolEntities';
 import { TagsElasticSearch } from '../../school/tags/TagsElasticSearch';
 import { SubjectsElasticSearch } from '../../school/subjects/SubjectsElasticSearch';
