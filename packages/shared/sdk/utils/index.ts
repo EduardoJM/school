@@ -1,1 +1,1 @@
-export * from './errorsUtils';
+export * from './errorUtils';

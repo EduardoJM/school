@@ -31,7 +31,7 @@ import {
 import { useSnackbar } from 'notistack';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { Link } from 'react-router-dom';
-import { getDisplayErrorMessage } from '../../../utils/error';
+import { errorUtils } from '@inventare/sdk';
 
 export interface ResourcesFetchItem<FetchOptions = any, FetchResult = { results: any[]; pages: number; }> {
     fields: {
@@ -96,7 +96,7 @@ export const ResourcesTableList: React.FC<ResourcesTableListProps> = (props) => 
             setTimeout(() => queryClient.invalidateQueries(resourceIdentifier), 1000);
         },
         onError: (err) => {
-            enqueueSnackbar(getDisplayErrorMessage(err), { variant: 'error' });
+            enqueueSnackbar(errorUtils.getDisplayErrorMessage(err), { variant: 'error' });
         },
     });
 
@@ -162,7 +162,7 @@ export const ResourcesTableList: React.FC<ResourcesTableListProps> = (props) => 
                         <TableRow>
                             <TableCell colSpan={fields.length + (hasActions ? 1 : 0)}>
                                 <Box mt={3} mb={3} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
-                                    <Alert severity="error">{getDisplayErrorMessage(query.error)}</Alert>
+                                    <Alert severity="error">{errorUtils.getDisplayErrorMessage(query.error)}</Alert>
                                 </Box>
                             </TableCell>
                         </TableRow>

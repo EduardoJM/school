@@ -1,6 +1,6 @@
-import { errorUtils } from './errorsUtils';
+import { errorUtils } from './errorUtils';
 
-describe('errorsUtils', () => {
+describe('errorUtils', () => {
     it('The getDisplayErrorMessage must be return the default message if err.response.data.message not exists', () => {
         expect(errorUtils.getDisplayErrorMessage(undefined, 'TEST')).toBe('TEST');
 

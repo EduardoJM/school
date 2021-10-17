@@ -1,8 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { AuthServices, User, api } from '@inventare/sdk';
-import { getDisplayErrorMessage } from '../utils/error';
+import { AuthServices, User, api, errorUtils } from '@inventare/sdk';
 
 export interface AuthContextData {
     loggedIn: boolean;
@@ -30,7 +29,7 @@ export const AuthProvider: React.FC = ({ children }) => {
             setLoading(false);
         } catch(err) {
             setLoading(false);
-            enqueueSnackbar(getDisplayErrorMessage(err), { variant: 'error' });
+            enqueueSnackbar(errorUtils.getDisplayErrorMessage(err), { variant: 'error' });
         }
     }
 
@@ -55,7 +54,7 @@ export const AuthProvider: React.FC = ({ children }) => {
                 setUser(user);
                 setLoading(false);
             } catch(err) {
-                enqueueSnackbar(getDisplayErrorMessage(err), { variant: 'error' });
+                enqueueSnackbar(errorUtils.getDisplayErrorMessage(err), { variant: 'error' });
                 api.defaults.headers.Authorization = undefined;
                 localStorage.removeItem('@INVENTARE:JWT');
                 setLoading(false);
