@@ -55,4 +55,6 @@ createConnection().then(async (connection) => {
         const state = codeState[city.state];
         await createCity(city, state);
     }
+
+    await connection.close();
 });
