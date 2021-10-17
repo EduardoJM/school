@@ -53,7 +53,8 @@ export class ElasticSearchQueryBuilder {
     }
 
     private appendFilter(term: any) {
-        if (!Object.prototype.hasOwnProperty.call(this.object, 'filter')) {
+        if (!Object.prototype.hasOwnProperty.call(this.object, 'filter') ||
+            !Object.prototype.hasOwnProperty.call(this.object.filter, 'term')) {
             this.object.filter = { term };
         } else {
             let filter = this.object.filter;
@@ -66,20 +67,6 @@ export class ElasticSearchQueryBuilder {
                         must: [ { term: otherTerm }, { term } ],
                     },
                 };
-            } else {
-                let appended = false;
-                if (Object.prototype.hasOwnProperty.call(filter, 'bool')) {
-                    if (Object.prototype.hasOwnProperty.call(filter.bool, 'must')) {
-                        appended = true;
-                        filter.bool.must = [
-                            ...filter.bool.must,
-                            { term },
-                        ];
-                    }
-                }
-                if (!appended) {
-                    filter = { ...filter, term };
-                }
             }
             this.object.filter = filter;
         }
