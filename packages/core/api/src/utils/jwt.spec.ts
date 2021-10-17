@@ -16,4 +16,11 @@ describe("JSON Web Token Utils", () => {
             id: param,
         });
     });
+
+    it('The decodeToken must be reject the promise if the token is invalid', async () => {
+        const token = '123456';
+        const promise = decodeToken(token);
+        expect(promise).rejects.not.toBe(null);
+        expect(promise).rejects.not.toBe(undefined);
+    });
 });
