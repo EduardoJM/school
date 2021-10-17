@@ -4,15 +4,15 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 // With JSDoc @type annotations, IDEs can provide config autocompletion
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 (module.exports = {
-  title: 'Instituto Inventare',
-  tagline: 'Documentação técnica e de negócios acerca da Plataforma do Instituto Inventare',
+  title: 'Engenharia do Instituto Inventare',
+  tagline: 'Documentação técnica e de negócios acumulada durante o desenvolvimento da Plataforma do Instituto Inventare',
   url: 'https://your-docusaurus-test-site.com',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  organizationName: 'inventare', // Usually your GitHub org/user name.
+  projectName: 'school', // Usually your repo name.
 
   presets: [
     [
@@ -41,11 +41,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'My Site',
-        logo: {
-          alt: 'My Site Logo',
-          src: 'img/logo.svg',
-        },
+        title: 'Inventare',
         items: [
           {
             type: 'doc',
@@ -55,7 +51,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
           },
           {to: '/blog', label: 'Blog', position: 'left'},
           {
-            href: 'https://github.com/facebook/docusaurus',
+            href: 'https://github.com/EduardoJM/school',
             label: 'GitHub',
             position: 'right',
           },
@@ -65,8 +61,12 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
         style: 'dark',
         links: [
           {
-            title: 'Docs',
+            title: 'Documentação',
             items: [
+              {
+                label: 'Blog de Engenharia',
+                to: '/blog',
+              },
               {
                 label: 'Tutorial',
                 to: '/docs/intro',
@@ -74,37 +74,33 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
             ],
           },
           {
-            title: 'Community',
+            title: 'Engenharia',
             items: [
               {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-              },
-              {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
-              },
-              {
-                label: 'Twitter',
-                href: 'https://twitter.com/docusaurus',
+                label: 'GitHub',
+                href: 'https://github.com/inventare',
               },
             ],
           },
           {
-            title: 'More',
+            title: 'Inventare',
             items: [
               {
-                label: 'Blog',
-                to: '/blog',
+                label: 'Instituto Inventare',
+                href: 'https://institutoinventare.com.br/',
               },
               {
-                label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
+                label: 'Blog do Inventare',
+                href: 'https://blog.institutoinventare.com.br/',
+              },
+              {
+                label: 'Instagram',
+                href: 'https://www.instagram.com/instituto.inventare/',
               },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Engenharia do Instituto Inventare, Inc. Built with Docusaurus.`,
       },
       prism: {
         theme: lightCodeTheme,
