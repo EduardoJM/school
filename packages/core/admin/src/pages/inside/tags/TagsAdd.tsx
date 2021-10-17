@@ -14,16 +14,14 @@ import { useMutation, useQueryClient } from 'react-query';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import { TextField, Checkbox } from '../../../components/forms';
-import { getDisplayErrorMessage } from '../../../utils/error';
-import { createTag, getTagById, partialUpdateTag } from '../../../services/school'
-import { Tag } from '../../../entities';
+import { Tag, TagServices, errorUtils } from '@inventare/sdk';
 
 export const TagsAdd: React.FC = () => {
     const { enqueueSnackbar } = useSnackbar();
     const history = useHistory();
     const { subject, id } = useParams<{ subject?: string; id?: string; }>();
     const queryClient = useQueryClient();
-    const createTagMutation = useMutation(createTag, {
+    const createTagMutation = useMutation(TagServices.create, {
         onSuccess: () => {
             return new Promise((resolve) => {
                 setTimeout(() => {
@@ -34,10 +32,10 @@ export const TagsAdd: React.FC = () => {
             });
         },
         onError: (err) => {
-            enqueueSnackbar(getDisplayErrorMessage(err), { variant: 'error' });
+            enqueueSnackbar(errorUtils.getDisplayErrorMessage(err), { variant: 'error' });
         },
     });
-    const updateTagMutation = useMutation(partialUpdateTag, {
+    const updateTagMutation = useMutation(TagServices.partialUpdate, {
         onSuccess: () => {
             return new Promise((resolve) => {
                 setTimeout(() => {
@@ -48,7 +46,7 @@ export const TagsAdd: React.FC = () => {
             });
         },
         onError: (err) => {
-            enqueueSnackbar(getDisplayErrorMessage(err), { variant: 'error' });
+            enqueueSnackbar(errorUtils.getDisplayErrorMessage(err), { variant: 'error' });
         },
     });
     const [tag, setTag] = useState<Tag | null>(null);
@@ -60,12 +58,20 @@ export const TagsAdd: React.FC = () => {
                 return;
             }
             try {
-                const item = await getTagById(id);
-                // TODO: check if item subject id and param subject id are equals
+                const item = await TagServices.getById(id);
+                if (typeof item.subject === 'number') {
+                    if (String(item.subject) !== String(subject)) {
+                        history.push(`/tags/${subject}`);
+                    }
+                } else {
+                    if (String(item.subject.id) !== String(subject)) {
+                        history.push(`/tags/${subject}`);
+                    }
+                }
                 formRef.current?.setData(item);
                 setTag(item);
             } catch (err) {
-                enqueueSnackbar(getDisplayErrorMessage(err), { variant: 'error' });
+                enqueueSnackbar(errorUtils.getDisplayErrorMessage(err), { variant: 'error' });
                 history.push(`/tags/${subject}`);
             }
         }

@@ -35,8 +35,7 @@ import { useSnackbar } from 'notistack';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { useHistory, Link } from 'react-router-dom';
 import { useSearchParamsDictionary } from '../../../contexts';
-import { Subject, SubjectServices } from '@inventare/sdk';
-import { getDisplayErrorMessage } from '../../../utils/error';
+import { Subject, SubjectServices, errorUtils } from '@inventare/sdk';
 
 export const SubjectsList: React.FC = () => {
     const { enqueueSnackbar } = useSnackbar();
@@ -54,7 +53,7 @@ export const SubjectsList: React.FC = () => {
             queryClient.invalidateQueries('subjects');
         },
         onError: (err) => {
-            enqueueSnackbar(getDisplayErrorMessage(err), { variant: 'error' });
+            enqueueSnackbar(errorUtils.getDisplayErrorMessage(err), { variant: 'error' });
         },
     });
     const updateSubjectMutation = useMutation(SubjectServices.partialUpdate, {
@@ -62,7 +61,7 @@ export const SubjectsList: React.FC = () => {
             queryClient.invalidateQueries('subjects');
         },
         onError: (err) => {
-            enqueueSnackbar(getDisplayErrorMessage(err), { variant: 'error' });
+            enqueueSnackbar(errorUtils.getDisplayErrorMessage(err), { variant: 'error' });
         },
     });
 
@@ -127,7 +126,7 @@ export const SubjectsList: React.FC = () => {
                         <TableRow>
                             <TableCell colSpan={5}>
                                 <Box mt={3} mb={3} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
-                                    <Alert severity="error">{getDisplayErrorMessage(query.error)}</Alert>
+                                    <Alert severity="error">{errorUtils.getDisplayErrorMessage(query.error)}</Alert>
                                 </Box>
                             </TableCell>
                         </TableRow>

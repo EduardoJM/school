@@ -1,9 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { useSnackbar } from 'notistack';
-//import { User } from '../entities';
-//import { api } from '../services/api';
-//import { login, validate } from '../services/peoples/auth';
 import { AuthServices, User, api } from '@inventare/sdk';
 import { getDisplayErrorMessage } from '../utils/error';
 

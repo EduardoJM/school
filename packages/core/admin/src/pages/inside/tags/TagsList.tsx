@@ -4,9 +4,8 @@ import { useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { useMutation, useQueryClient } from 'react-query';
 import { useSearchParamsDictionary } from '../../../contexts';
-import { getTags, deleteTag, partialUpdateTag } from '../../../services/school';
 import { ResourcesTableList } from '../../../components/dashboard/ResourcesTableList/ResourcesTableList';
-import { getDisplayErrorMessage } from '../../../utils/error';
+import { errorUtils, TagServices } from '@inventare/sdk';
 
 export const TagsList: React.FC = () => {
     const { enqueueSnackbar } = useSnackbar();
@@ -16,12 +15,12 @@ export const TagsList: React.FC = () => {
         search: undefined,
     });
     const queryClient = useQueryClient();
-    const updateTagMutation = useMutation(partialUpdateTag, {
+    const updateTagMutation = useMutation(TagServices.partialUpdate, {
         onSuccess: () => {
             setTimeout(() => queryClient.invalidateQueries('tags'), 1000);
         },
         onError: (err) => {
-            enqueueSnackbar(getDisplayErrorMessage(err), { variant: 'error' });
+            enqueueSnackbar(errorUtils.getDisplayErrorMessage(err), { variant: 'error' });
         },
     });
 
@@ -59,12 +58,12 @@ export const TagsList: React.FC = () => {
                         },
                     ],
                     fetchOptions: { ...searchOptions, subject },
-                    fetchFunction: getTags,
+                    fetchFunction: TagServices.list,
                 }}
                 hasActions={true}
                 addLink={`/tags/${subject}/add`}
                 canDelete={true}
-                deleteFunction={deleteTag}
+                deleteFunction={TagServices.delete}
                 canEdit={true}
                 editLinkPrefix={`/tags/${subject}/`}
                 searchLinkPrefix={`/tags/${subject}`}

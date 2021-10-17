@@ -13,31 +13,29 @@ import { useMutation, useQueryClient } from 'react-query';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import { useParams } from 'react-router-dom';
+import { Subject, SubjectServices, errorUtils } from '@inventare/sdk';
 import { TextField, ImageDropzone, Checkbox } from '../../../components/forms';
-import { createSubject, partialUpdateSubject, getSubjectById } from '../../../services/school';
-import { getDisplayErrorMessage } from '../../../utils/error';
-import { Subject } from '../../../entities';
 
 export const SubjectsAdd: React.FC = () => {
     const { enqueueSnackbar } = useSnackbar();
     const history = useHistory();
     const queryClient = useQueryClient();
-    const createSubjectMutation = useMutation(createSubject, {
+    const createSubjectMutation = useMutation(SubjectServices.create, {
         onSuccess: () => {
             setTimeout(() => queryClient.invalidateQueries('subjects'), 1000);
             history.push('/subjects/');
         },
         onError: (err) => {
-            enqueueSnackbar(getDisplayErrorMessage(err), { variant: 'error' });
+            enqueueSnackbar(errorUtils.getDisplayErrorMessage(err), { variant: 'error' });
         },
     });
-    const updateSubjectMutation = useMutation(partialUpdateSubject, {
+    const updateSubjectMutation = useMutation(SubjectServices.partialUpdate, {
         onSuccess: () => {
             setTimeout(() => queryClient.invalidateQueries('subjects'), 1000);
             history.push('/subjects/');
         },
         onError: (err) => {
-            enqueueSnackbar(getDisplayErrorMessage(err), { variant: 'error' });
+            enqueueSnackbar(errorUtils.getDisplayErrorMessage(err), { variant: 'error' });
         },
     });
     const { id } = useParams<{ id?: string }>();
@@ -50,11 +48,11 @@ export const SubjectsAdd: React.FC = () => {
                 return;
             }
             try {
-                const item = await getSubjectById(id);
+                const item = await SubjectServices.getById(id);
                 formRef.current?.setData(item);
                 setSubject(item);
             } catch (err) {
-                enqueueSnackbar(getDisplayErrorMessage(err), { variant: 'error' });
+                enqueueSnackbar(errorUtils.getDisplayErrorMessage(err), { variant: 'error' });
                 history.push('/subjects/');
             }
         }
