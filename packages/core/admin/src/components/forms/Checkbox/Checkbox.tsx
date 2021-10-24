@@ -9,7 +9,6 @@ export const Checkbox: React.FC<MaterialCheckboxProps> = (props) => {
     const { name, ...rest } = props;
     const inputRef = useRef<HTMLButtonElement>(null);
     const { fieldName, registerField, defaultValue } = useField(name || 'checkbox-input');
-    const [checked, setChecked] = useState<boolean>(defaultValue);
 
     useEffect(() => {
         function getInput(base: HTMLSpanElement | null) {
@@ -37,14 +36,12 @@ export const Checkbox: React.FC<MaterialCheckboxProps> = (props) => {
                 const input = getInput(ref.current);
                 if (input) {
                     input.checked = value;
-                    setChecked(value);
                 }
             },
             clearValue: (ref) => {
                 const input = getInput(ref.current);
                 if (input) {
                     input.checked = defaultValue;
-                    setChecked(defaultValue);
                 }
             },
         })
@@ -54,8 +51,7 @@ export const Checkbox: React.FC<MaterialCheckboxProps> = (props) => {
         <MaterialCheckbox
             name={name}
             ref={inputRef}
-            checked={checked}
-            onChange={(e) => setChecked(e.target.checked)}
+            defaultValue={defaultValue}
             {...rest}
         />
     )
