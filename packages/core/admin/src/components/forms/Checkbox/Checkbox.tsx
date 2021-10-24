@@ -8,10 +8,9 @@ import {
 export const Checkbox: React.FC<MaterialCheckboxProps> = (props) => {
     const { name, ...rest } = props;
     const inputRef = useRef<HTMLButtonElement>(null);
-    const [checked, setChecked] = useState(() => props.checked ? true : false);
-    
-    const { fieldName, registerField } = useField(name || 'checkbox-input');
-    
+    const { fieldName, registerField, defaultValue } = useField(name || 'checkbox-input');
+    const [checked, setChecked] = useState<boolean>(defaultValue);
+
     useEffect(() => {
         function getInput(base: HTMLSpanElement | null) {
             if (!base) {
@@ -44,8 +43,8 @@ export const Checkbox: React.FC<MaterialCheckboxProps> = (props) => {
             clearValue: (ref) => {
                 const input = getInput(ref.current);
                 if (input) {
-                    input.checked = false;
-                    setChecked(false);
+                    input.checked = defaultValue;
+                    setChecked(defaultValue);
                 }
             },
         })
