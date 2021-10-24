@@ -92,15 +92,14 @@ export const SubjectsAdd: React.FC = () => {
                 </Typography>
                 
                 <Box mb={3}>
-                    <FormControl fullWidth>
-                        <TextField
-                            id="subject-name"
-                            name="name"
-                            label="Nome da Disciplina"
-                            helperText="Adicione o nome da nova disciplina"
-                            variant="standard"
-                        />
-                    </FormControl>
+                    <TextField
+                        id="subject-name"
+                        name="name"
+                        label="Nome da Disciplina"
+                        helperText="Adicione o nome da nova disciplina"
+                        variant="standard"
+                        fullWidth
+                    />
                 </Box>
 
                 <Box mb={3}>
