@@ -8,9 +8,8 @@ import {
 export const TextField: React.FC<MaterialTextFieldProps> = (props) => {
     const { name, ...rest } = props;
     const inputRef = useRef<HTMLDivElement>(null);
-    const [value, setValue] = useState(props.value ? props.value : '');
-
-    const { fieldName, registerField } = useField(name || 'text-field-input');
+    const { fieldName, registerField, defaultValue } = useField(name || 'text-field-input');
+    const [value, setValue] = useState<string>(defaultValue);
 
     useEffect(() => {
         function getInput(base: HTMLDivElement | null) {
@@ -41,8 +40,8 @@ export const TextField: React.FC<MaterialTextFieldProps> = (props) => {
             clearValue: (ref) => {
                 const input = getInput(ref.current);
                 if (input) {
-                    input.value = '';
-                    setValue('');
+                    input.value = defaultValue;
+                    setValue(defaultValue);
                 }
             },
         })
