@@ -1,12 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-    styled,
-    Box,
-    Typography,
-} from '@mui/material';
+import { Typography } from '@mui/material';
 import { Landscape } from '@mui/icons-material';
 import { useDropzone } from 'react-dropzone';
 import { useField } from '@unform/core';
+import { ImageDropzoneContainer, ImagePreview } from './styles';
 
 interface ImageDropzoneProps {
     name: string;
@@ -15,31 +12,6 @@ interface ImageDropzoneProps {
 interface InputRefProps extends HTMLInputElement {
     acceptedFile: File | null;
 }
-
-const ImageDropzoneContainer = styled(Box)(({ theme }) => ({
-    height: 200,
-    borderColor: theme.palette.primary.main,
-    borderWidth: 2,
-    borderStyle: 'dashed',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-}));
-
-interface ImagePreviewProps {
-    src: string;
-}
-
-const ImagePreview = styled(Box)<ImagePreviewProps>(({ theme, src }) => ({
-    width: 150,
-    height: 150,
-    backgroundImage: `url(${src})`,
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
-    backgroundPOsition: 'center',
-}));
 
 export const ImageDropzone: React.FC<ImageDropzoneProps> = (props) => {
     const { name } = props;
