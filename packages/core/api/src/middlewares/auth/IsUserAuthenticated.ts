@@ -4,6 +4,7 @@ import { User } from '../../components/Entities';
 import {
     HTTP_401_UNAUTHORIZED,
     HTTP_404_NOT_FOUND,
+    HTTP_500_INTERNAL_SERVER_ERROR,
     responses,
 } from '../../constants';
 import { decodeToken } from '../../utils/jwt';
@@ -36,14 +37,18 @@ export async function IsUserAuthenticated(request: Request, response: Response, 
     } catch(err) {
         return response.status(HTTP_401_UNAUTHORIZED).json(responses.AUTH_EXPIRED_TOKEN);
     }
-    const userRepo = getRepository(User);
-    const user = await userRepo.findOne({
-        where: { id },
-        relations: ['student', 'admin'],
-    });
-    if (!user) {
-        return response.status(HTTP_404_NOT_FOUND).json(responses.AUTH_USER_NOT_FOUND);
+    try {
+        const userRepo = getRepository(User);
+        const user = await userRepo.findOne({
+            where: { id },
+            relations: ['student', 'admin'],
+        });
+        if (!user) {
+            return response.status(HTTP_404_NOT_FOUND).json(responses.AUTH_USER_NOT_FOUND);
+        }
+        request.user = user;
+        return next();
+    } catch(err) {
+        return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.DATABASE_NOT_CONNECTED);
     }
-    request.user = user;
-    return next();
 };
