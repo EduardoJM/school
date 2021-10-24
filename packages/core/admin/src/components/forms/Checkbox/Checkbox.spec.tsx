@@ -1,5 +1,5 @@
 import { RefObject, useRef } from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { act, render, fireEvent } from '@testing-library/react';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import { Checkbox } from './Checkbox';
@@ -58,7 +58,9 @@ describe('components/forms/Checkbox', () => {
         expect(checkbox.checked).toBe(true);
         expect(formRef?.current?.getData()).toMatchObject({ checkbox: true });
         
-        formRef?.current?.setData({ checkbox: false });
+        act(() => {
+            formRef?.current?.setData({ checkbox: false });
+        });
         
         expect(checkbox.checked).toBe(false);
         expect(formRef?.current?.getData()).toMatchObject({ checkbox: false });
@@ -83,7 +85,9 @@ describe('components/forms/Checkbox', () => {
         expect(checkbox.checked).toBe(true);
         expect(formRef?.current?.getData()).toMatchObject({ checkbox: true });
 
-        fireEvent.click(checkbox);
+        act(() => {
+            fireEvent.click(checkbox)
+        });
 
         expect(checkbox.checked).toBe(false);
         expect(formRef?.current?.getData()).toMatchObject({ checkbox: false });
@@ -106,12 +110,16 @@ describe('components/forms/Checkbox', () => {
 
         expect(formRef).not.toBeUndefined();
 
-        formRef?.current?.setData({ checkbox: false });
+        act(() => {
+            formRef?.current?.setData({ checkbox: false });
+        });
 
         expect(checkbox.checked).toBe(false);
         expect(formRef?.current?.getData()).toMatchObject({ checkbox: false });
 
-        formRef?.current?.clearField('checkbox');
+        act(() => {
+            formRef?.current?.clearField('checkbox');
+        });
 
         expect(checkbox.checked).toBe(true);
         expect(formRef?.current?.getData()).toMatchObject({ checkbox: true });
