@@ -57,7 +57,7 @@ export const ImageDropzone: React.FC<ImageDropzoneProps> = (props) => {
             {...getRootProps()}
             onClick={() => inputRef.current?.click()}
         >
-            <input {...getInputProps()} accept="image/*" ref={inputRef} />
+            <input data-testid="input" {...getInputProps()} accept="image/*" ref={inputRef} />
 
             {currentFileUrl ? (
                 <ImagePreview src={currentFileUrl} />
