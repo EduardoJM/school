@@ -17,6 +17,8 @@ export const codes = {
     
     RESOURCE_NAME_ALREADY_USED: 'RESOURCE_NAME_ALREADY_USED',
     RESOURCE_NOT_FOUND: 'RESOURCE_NOT_FOUND',
+
+    DATABASE_NOT_CONNECTED: 'DATABASE_NOT_CONNECTED',
 };
 
 export const messages = {
@@ -38,6 +40,8 @@ export const messages = {
 
     RESOURCE_NAME_ALREADY_USED: 'Esse nome já está sendo utilizado por outro item',
     RESOURCE_NOT_FOUND: 'Recurso não encontrado',
+
+    DATABASE_NOT_CONNECTED: 'Houve um erro no banco de dados, entre em contato com o suporte.',
 };
 
 export const responses = {
@@ -93,5 +97,9 @@ export const responses = {
     UPLOADER_FILE_TOO_LARGE_1MB: {
         error: codes.UPLOADER_FILE_TOO_LARGE_1MB,
         message: messages.UPLOADER_FILE_TOO_LARGE_1MB,
+    },
+    DATABASE_NOT_CONNECTED: {
+        error: codes.DATABASE_NOT_CONNECTED,
+        message: messages.DATABASE_NOT_CONNECTED,
     },
 };
