@@ -11,6 +11,7 @@ declare global {
             SQL_PASSWORD?: string;
             SQL_DATABASE?: string;
             JWT_SECRET?: string;
+            NODE_ENV?: string;
         }
     }
 }
