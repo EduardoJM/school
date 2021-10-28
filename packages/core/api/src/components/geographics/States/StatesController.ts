@@ -19,31 +19,25 @@ export class StatesController {
 
     async listCities(request: Request<StateParamsDictionary, any, any>, response: Response) {
         const { uf } = request.params;
-        try {
-            const stateRepo = getRepository(State);
-            let state: State | undefined = undefined;
-            if (/\d+/.test(uf)) {
-                const ufCode = parseInt(uf, 10);
-                state = await stateRepo.findOne({
-                    where: { code: ufCode },
-                    relations: ['cities'],
-                });
-            } else {
-                state = await stateRepo.findOne({
-                    where: { uf: uf.toUpperCase().trim() },
-                    relations: ['cities'],
-                });
-            }
-            if (!state) {
-                return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
-            }
-            return response.json({
-                results: state.cities,
+        const stateRepo = getRepository(State);
+        let state: State | undefined = undefined;
+        if (/\d+/.test(uf)) {
+            const ufCode = parseInt(uf, 10);
+            state = await stateRepo.findOne({
+                where: { code: ufCode },
+                relations: ['cities'],
             });
-        } catch (err) {
-            console.log('Error trying to load cities list');
-            console.log(JSON.stringify(err));
-            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
+        } else {
+            state = await stateRepo.findOne({
+                where: { uf: uf.toUpperCase().trim() },
+                relations: ['cities'],
+            });
         }
+        if (!state) {
+            return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
+        }
+        return response.json({
+            results: state.cities,
+        });
     }
 }

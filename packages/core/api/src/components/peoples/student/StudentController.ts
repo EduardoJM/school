@@ -48,35 +48,12 @@ export class StudentController {
 
         const connection = getConnection();
         let result: any;
-        try {
-            await connection.transaction(async (entityManager) => {
-                const student = new Student();
-                student.user = await entityManager.save(user);
-                const resultStudent = await entityManager.save(student);
-                result = await resultStudent.serialize();
-            });
-            return response.status(HTTP_201_CREATED).json(result);
-        } catch(err) {
-            console.log(`ERROR: trying to save a new student.\r\n\r\n ${JSON.stringify(err)}`);
-            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
-        }
-    }
-
-    async list(request: Request, response: Response) {
-        // TODO: add try/catch on needed statements
-        // TODO: TEMPORARY ROUTE
-        const repository = getRepository(Student);
-        const results = await repository.find({
-            relations: ['user'],
+        await connection.transaction(async (entityManager) => {
+            const student = new Student();
+            student.user = await entityManager.save(user);
+            const resultStudent = await entityManager.save(student);
+            result = await resultStudent.serialize();
         });
-        const result = await Promise.all(results.map(async(student) => await student.serialize()));
-        return response.json(result);
-        /*
-        try {
-        } catch (err) {
-            console.log(`ERROR: trying to load students.\r\n\r\n ${JSON.stringify(err)}`);
-            // TODO: add a better error message here.
-            return response.status(500).json({});
-        }*/
+        return response.status(HTTP_201_CREATED).json(result);
     }
 }

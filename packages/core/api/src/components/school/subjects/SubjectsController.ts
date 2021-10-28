@@ -40,29 +40,20 @@ export class SubjectsController {
             name, icon, active
         } = request.body;
         const subjectRepo = getRepository(Subject);
-        try {
-            const alreadyNamed = await subjectRepo.findOne({ name });
-            if (alreadyNamed) {
-                return response.status(HTTP_409_CONFLICT).json(responses.RESOURCE_NAME_ALREADY_USED);
-            }
-        } catch (err) {
-            console.log(`ERROR: trying to check if a subject with determinated name are already registered.\r\n\r\n ${JSON.stringify(err)}`);
-            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
+        
+        const alreadyNamed = await subjectRepo.findOne({ name });
+        if (alreadyNamed) {
+            return response.status(HTTP_409_CONFLICT).json(responses.RESOURCE_NAME_ALREADY_USED);
         }
+
         const subject = new Subject();
         subject.name = name;
         subject.icon = icon;
         subject.active = active;
-        try {
-            const result = await subjectRepo.save(subject);
-            
-            await SubjectsElasticSearch.updateIndexes(result);
 
-            return response.status(HTTP_201_CREATED).json(result);
-        } catch (err) {
-            console.log(`ERROR: trying to save a subject.\r\n\r\n ${JSON.stringify(err)}`);
-            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
-        }
+        const result = await subjectRepo.save(subject);
+        await SubjectsElasticSearch.updateIndexes(result);
+        return response.status(HTTP_201_CREATED).json(result);
     }
 
     async updateComplete(request: Request<SubjectsIdParams, any, SubjectCreateRequestBody>, response: Response) {
@@ -71,37 +62,32 @@ export class SubjectsController {
         } = request.body;
         const { id: idStr } = request.params;
         const id = parseInt(idStr);
+
         const subjectRepo = getRepository(Subject);
-        try {
-            const subject = await subjectRepo.findOne({ id });
-            if (!subject) {
-                removeFileIfExists(path.resolve(
-                    __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', icon,
-                ));
-                return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
-            }
-            const alreadyNamed = await subjectRepo.findOne({ name });
-            if (alreadyNamed && alreadyNamed.id !== subject.id) {
-                removeFileIfExists(path.resolve(
-                    __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', icon,
-                ));
-                return response.status(HTTP_409_CONFLICT).json(responses.RESOURCE_NAME_ALREADY_USED);
-            }
+        const subject = await subjectRepo.findOne({ id });
+        if (!subject) {
             removeFileIfExists(path.resolve(
-                __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', subject.icon,
+                __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', icon,
             ));
-            subject.name = name;
-            subject.icon = icon;
-            subject.active = active;
-            const result = await subjectRepo.save(subject);
-
-            await SubjectsElasticSearch.updateIndexes(result);
-
-            return response.status(HTTP_200_OK).json(result);
-        } catch (err) {
-            console.log(`ERROR: trying to update a subject.\r\n\r\n ${JSON.stringify(err)}`);
-            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
+            return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
         }
+        const alreadyNamed = await subjectRepo.findOne({ name });
+        if (alreadyNamed && alreadyNamed.id !== subject.id) {
+            removeFileIfExists(path.resolve(
+                __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', icon,
+            ));
+            return response.status(HTTP_409_CONFLICT).json(responses.RESOURCE_NAME_ALREADY_USED);
+        }
+        removeFileIfExists(path.resolve(
+            __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', subject.icon,
+        ));
+        subject.name = name;
+        subject.icon = icon;
+        subject.active = active;
+
+        const result = await subjectRepo.save(subject);
+        await SubjectsElasticSearch.updateIndexes(result);
+        return response.status(HTTP_200_OK).json(result);
     }
 
     async updatePartial(request: Request<SubjectsIdParams, any, Partial<SubjectCreateRequestBody>>, response: Response) {
@@ -110,49 +96,46 @@ export class SubjectsController {
         } = request.body;
         const { id: idStr } = request.params;
         const id = parseInt(idStr);
+
         const subjectRepo = getRepository(Subject);
-        try {
-            const subject = await subjectRepo.findOne({ id });
-            if (!subject) {
+        const subject = await subjectRepo.findOne({ id });
+
+        if (!subject) {
+            if (icon) {
+                removeFileIfExists(path.resolve(
+                    __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', icon,
+                ));
+            }
+            return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
+        }
+        if (name) {
+            const alreadyNamed = await subjectRepo.findOne({ name });
+            if (alreadyNamed && alreadyNamed.id !== subject.id) {
                 if (icon) {
                     removeFileIfExists(path.resolve(
                         __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', icon,
                     ));
                 }
-                return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
+                return response.status(HTTP_409_CONFLICT).json(responses.RESOURCE_NAME_ALREADY_USED);
             }
-            if (name) {
-                const alreadyNamed = await subjectRepo.findOne({ name });
-                if (alreadyNamed && alreadyNamed.id !== subject.id) {
-                    if (icon) {
-                        removeFileIfExists(path.resolve(
-                            __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', icon,
-                        ));
-                    }
-                    return response.status(HTTP_409_CONFLICT).json(responses.RESOURCE_NAME_ALREADY_USED);
-                }
-            }
-            if (icon) {
-                removeFileIfExists(path.resolve(
-                    __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', subject.icon,
-                ));
-                subject.icon = icon;
-            }
-            if (name) {
-                subject.name = name;
-            }
-            if (active !== undefined) {
-                subject.active = active;
-            }
-            const result = await subjectRepo.save(subject);
-
-            await SubjectsElasticSearch.updateIndexes(result);
-
-            return response.status(HTTP_200_OK).json(result);
-        } catch (err) {
-            console.log(`ERROR: trying to update a subject.\r\n\r\n ${JSON.stringify(err)}`);
-            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
         }
+        if (icon) {
+            removeFileIfExists(path.resolve(
+                __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', subject.icon,
+            ));
+            subject.icon = icon;
+        }
+        if (name) {
+            subject.name = name;
+        }
+        if (active !== undefined) {
+            subject.active = active;
+        }
+
+        const result = await subjectRepo.save(subject);
+        await SubjectsElasticSearch.updateIndexes(result);
+
+        return response.status(HTTP_200_OK).json(result);
     }
 
     async delete(request: Request<SubjectsIdParams, any, SubjectCreateRequestBody>, response: Response) {
@@ -162,19 +145,15 @@ export class SubjectsController {
         await SubjectsElasticSearch.deleteIndexes(idStr);
 
         const subjectRepo = getRepository(Subject);
-        try {
-            const subject = await subjectRepo.findOne({ id });
-            if (!subject) {
-                return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
-            }
-            removeFileIfExists(path.resolve(
-                __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', subject.icon,
-            ));
-            await subjectRepo.remove(subject);
-        } catch (err) {
-            console.log(`ERROR: trying to delete a subject.\r\n\r\n ${JSON.stringify(err)}`);
-            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
+        
+        const subject = await subjectRepo.findOne({ id });
+        if (!subject) {
+            return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
         }
+        removeFileIfExists(path.resolve(
+            __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', subject.icon,
+        ));
+        await subjectRepo.remove(subject);
 
         return response.status(HTTP_204_NO_CONTENT).send();
     }
@@ -184,21 +163,17 @@ export class SubjectsController {
         const { id: idStr } = request.params;
         const id = parseInt(idStr);
         const subjectRepo = getRepository(Subject);
-        try {
-            const subject = await subjectRepo.findOne({ id });
-            if (!subject) {
+        
+        const subject = await subjectRepo.findOne({ id });
+        if (!subject) {
+            return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
+        }
+        if (user && user.getUserType() === 'STUDENT') {
+            if (!subject.active) {
                 return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
             }
-            if (user && user.getUserType() === 'STUDENT') {
-                if (!subject.active) {
-                    return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
-                }
-            }
-            return response.status(HTTP_200_OK).json(subject.serialize());
-        } catch (err) {
-            console.log(`ERROR: trying to get a subject.\r\n\r\n ${JSON.stringify(err)}`);
-            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
         }
+        return response.status(HTTP_200_OK).json(subject.serialize());
     }
 
     async list(request: Request<any, any, any, PaginationParams>, response: Response) {
@@ -210,12 +185,7 @@ export class SubjectsController {
 
         const pageNumber = parseInt(page || '1', 10);
 
-        try {
-            const result = await SubjectsElasticSearch.search(search || '', pageNumber, user);
-            return response.json(result);
-        } catch(err) {
-            console.log(`ERROR: trying to search subjects from elasticsearch.\r\n\r\n ${JSON.stringify(err)}`);
-            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
-        }
+        const result = await SubjectsElasticSearch.search(search || '', pageNumber, user);
+        return response.json(result);
     }
 }

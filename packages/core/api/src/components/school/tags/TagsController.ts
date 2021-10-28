@@ -35,41 +35,26 @@ export class TagsController {
         const { name, subject, active } = request.body;
         const tagsRepo = getRepository(Tag);
 
-        try {
-            const alreadyNamed = await tagsRepo.findOne({ name });
-            if (alreadyNamed) {
-                return response.status(HTTP_409_CONFLICT).json(responses.RESOURCE_NAME_ALREADY_USED);
-            }
-        } catch (err) {
-            console.log(`ERROR: trying to check if a tag with determinated name are already registered.\r\n\r\n ${JSON.stringify(err)}`);
-            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
+        const alreadyNamed = await tagsRepo.findOne({ name });
+        if (alreadyNamed) {
+            return response.status(HTTP_409_CONFLICT).json(responses.RESOURCE_NAME_ALREADY_USED);
         }
 
         const tag = new Tag();
         const subjectRepo = getRepository(Subject);
-        try {
-            const subjectItem = await subjectRepo.findOne({ where: { id: subject } });
-            if (!subjectItem) {
-                return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
-            }
-            tag.subject = subjectItem;
-        } catch(err) {
-            console.log(`ERROR: trying to check if a subject exists.\r\n\r\n ${JSON.stringify(err)}`);
-            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
+        const subjectItem = await subjectRepo.findOne({ where: { id: subject } });
+        if (!subjectItem) {
+            return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
         }
+        tag.subject = subjectItem;
         tag.name = name;
         tag.active = active;
 
-        try {
-            const result = await tagsRepo.save(tag);
+        const result = await tagsRepo.save(tag);
 
-            TagsElasticSearch.updateIndexes(result);
+        TagsElasticSearch.updateIndexes(result);
 
-            return response.status(HTTP_201_CREATED).json(result);
-        } catch (err) {
-            console.log(`ERROR: trying to save a tag.\r\n\r\n ${JSON.stringify(err)}`);
-            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
-        }
+        return response.status(HTTP_201_CREATED).json(result);
     }
 
     async updateComplete(request: Request<TagsIdParams, any, TagCreateRequestBody>, response: Response) {
@@ -80,32 +65,27 @@ export class TagsController {
         const id = parseInt(idStr);
         const tagRepo = getRepository(Tag);
         const subjectRepo = getRepository(Subject);
-        try {
-            const tag = await tagRepo.findOne({ id });
-            if (!tag) {
-                return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
-            }
-            const alreadyNamed = await tagRepo.findOne({ name });
-            if (alreadyNamed && alreadyNamed.id !== tag.id) {
-                return response.status(HTTP_409_CONFLICT).json(responses.RESOURCE_NAME_ALREADY_USED);
-            }
-            const subjectItem = await subjectRepo.findOne({ id: subject });
-            if (!subjectItem) {
-                return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
-            }
-            tag.subject = subjectItem;
-            tag.active = active;
-            tag.name = name;
-
-            const result = await tagRepo.save(tag);
-            
-            await TagsElasticSearch.updateIndexes(result);
-
-            return response.status(HTTP_200_OK).json(result);
-        } catch (err) {
-            console.log(`ERROR: trying to update a tag.\r\n\r\n ${JSON.stringify(err)}`);
-            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
+        const tag = await tagRepo.findOne({ id });
+        if (!tag) {
+            return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
         }
+        const alreadyNamed = await tagRepo.findOne({ name });
+        if (alreadyNamed && alreadyNamed.id !== tag.id) {
+            return response.status(HTTP_409_CONFLICT).json(responses.RESOURCE_NAME_ALREADY_USED);
+        }
+        const subjectItem = await subjectRepo.findOne({ id: subject });
+        if (!subjectItem) {
+            return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
+        }
+        tag.subject = subjectItem;
+        tag.active = active;
+        tag.name = name;
+
+        const result = await tagRepo.save(tag);
+        
+        await TagsElasticSearch.updateIndexes(result);
+
+        return response.status(HTTP_200_OK).json(result);
     }
 
     async updatePartial(request: Request<TagsIdParams, any, Partial<TagCreateRequestBody>>, response: Response) {
@@ -116,38 +96,33 @@ export class TagsController {
         const id = parseInt(idStr);
         const tagRepo = getRepository(Tag);
         const subjectRepo = getRepository(Subject);
-        try {
-            const tag = await tagRepo.findOne({ where: { id }, relations: ['subject'] });
-            if (!tag) {
+        const tag = await tagRepo.findOne({ where: { id }, relations: ['subject'] });
+        if (!tag) {
+            return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
+        }
+        if (name) {
+            const alreadyNamed = await tagRepo.findOne({ name });
+            if (alreadyNamed && alreadyNamed.id !== tag.id) {
+                return response.status(HTTP_409_CONFLICT).json(responses.RESOURCE_NAME_ALREADY_USED);
+            }
+            tag.name = name;
+        }
+        if (active !== undefined) {
+            tag.active = active;
+        }
+        if (subject) {
+            const subjectItem = await subjectRepo.findOne({ id: subject });
+            if (!subjectItem) {
                 return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
             }
-            if (name) {
-                const alreadyNamed = await tagRepo.findOne({ name });
-                if (alreadyNamed && alreadyNamed.id !== tag.id) {
-                    return response.status(HTTP_409_CONFLICT).json(responses.RESOURCE_NAME_ALREADY_USED);
-                }
-                tag.name = name;
-            }
-            if (active !== undefined) {
-                tag.active = active;
-            }
-            if (subject) {
-                const subjectItem = await subjectRepo.findOne({ id: subject });
-                if (!subjectItem) {
-                    return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
-                }
-                tag.subject = subjectItem;
-            }
-
-            const result = await tagRepo.save(tag);
-            
-            await TagsElasticSearch.updateIndexes(result);
-
-            return response.status(HTTP_200_OK).json(result);
-        } catch (err) {
-            console.log(`ERROR: trying to update a tag.\r\n\r\n ${JSON.stringify(err)}`);
-            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
+            tag.subject = subjectItem;
         }
+
+        const result = await tagRepo.save(tag);
+        
+        await TagsElasticSearch.updateIndexes(result);
+
+        return response.status(HTTP_200_OK).json(result);
     }
 
     async delete(request: Request<TagsIdParams, any, any>, response: Response) {
@@ -157,17 +132,11 @@ export class TagsController {
         await TagsElasticSearch.deleteIndexes(idStr);
 
         const tagRepo = getRepository(Tag);
-        try {
-            const tag = await tagRepo.findOne({ id });
-            if (!tag) {
-                return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
-            }
-            await tagRepo.remove(tag);
-        } catch (err) {
-            console.log(`ERROR: trying to delete a tag.\r\n\r\n ${JSON.stringify(err)}`);
-            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
+        const tag = await tagRepo.findOne({ id });
+        if (!tag) {
+            return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
         }
-
+        await tagRepo.remove(tag);
         return response.status(HTTP_204_NO_CONTENT).send();
     }
 
@@ -176,21 +145,16 @@ export class TagsController {
         const { id: idStr } = request.params;
         const id = parseInt(idStr);
         const tagRepo = getRepository(Tag);
-        try {
-            const tag = await tagRepo.findOne({ id });
-            if (!tag) {
+        const tag = await tagRepo.findOne({ id });
+        if (!tag) {
+            return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
+        }
+        if (user && user.getUserType() === 'STUDENT') {
+            if (!tag.getHierarchicalActive()) {
                 return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
             }
-            if (user && user.getUserType() === 'STUDENT') {
-                if (!tag.getHierarchicalActive()) {
-                    return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
-                }
-            }
-            return response.status(HTTP_200_OK).json(tag);
-        } catch (err) {
-            console.log(`ERROR: trying to get a subject.\r\n\r\n ${JSON.stringify(err)}`);
-            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
         }
+        return response.status(HTTP_200_OK).json(tag);
     }
 
     async list(request: Request<any, any, any, PaginationParams>, response: Response) {
@@ -204,12 +168,7 @@ export class TagsController {
         const pageNumber = parseInt(page || '1', 10);
         const subjectId = parseInt(subject || '-1', 10);
 
-        try {
-            const result = await TagsElasticSearch.search(search || '', pageNumber, subjectId, user);
-            return response.json(result);
-        } catch(err) {
-            console.log(`ERROR: trying to search subjects from elasticsearch.\r\n\r\n ${JSON.stringify(err)}`);
-            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
-        }
+        const result = await TagsElasticSearch.search(search || '', pageNumber, subjectId, user);
+        return response.json(result);
     }
 }

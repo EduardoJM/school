@@ -11,10 +11,4 @@ StudentsRouter.post(
     controller.create,
 );
 
-StudentsRouter.get(
-    '/',
-    // ADD MIDDLEWARES HERE
-    controller.list
-);
-
 export { StudentsRouter };
