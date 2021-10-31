@@ -14,6 +14,7 @@ export const codes = {
 
     UPLOADER_INVALID_FILE_TYPE: 'UPLOADER_INVALID_FILE_TYPE',
     UPLOADER_FILE_TOO_LARGE_1MB: 'UPLOADER_FILE_TOO_LARGE_1MB',
+    UPLOADER_FILE_TOO_LARGE_5MB: 'UPLOADER_FILE_TOO_LARGE_5MB',
     
     RESOURCE_NAME_ALREADY_USED: 'RESOURCE_NAME_ALREADY_USED',
     RESOURCE_NOT_FOUND: 'RESOURCE_NOT_FOUND',
@@ -37,6 +38,7 @@ export const messages = {
 
     UPLOADER_INVALID_FILE_TYPE: 'Tipo de arquivo não suportado',
     UPLOADER_FILE_TOO_LARGE_1MB: 'O tamanho máximo de arquivo suportado é 1mb',
+    UPLOADER_FILE_TOO_LARGE_5MB: 'O tamanho máximo de arquivo suportado é 5mb',
 
     RESOURCE_NAME_ALREADY_USED: 'Esse nome já está sendo utilizado por outro item',
     RESOURCE_NOT_FOUND: 'Recurso não encontrado',
@@ -97,6 +99,10 @@ export const responses = {
     UPLOADER_FILE_TOO_LARGE_1MB: {
         error: codes.UPLOADER_FILE_TOO_LARGE_1MB,
         message: messages.UPLOADER_FILE_TOO_LARGE_1MB,
+    },
+    UPLOADER_FILE_TOO_LARGE_5MB: {
+        error: codes.UPLOADER_FILE_TOO_LARGE_5MB,
+        message: messages.UPLOADER_FILE_TOO_LARGE_5MB,
     },
     DATABASE_NOT_CONNECTED: {
         error: codes.DATABASE_NOT_CONNECTED,
