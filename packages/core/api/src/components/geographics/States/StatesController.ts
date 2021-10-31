@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { getRepository } from 'typeorm';
 import { State } from './StatesEntity';
-import { HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR, responses } from '../../../constants';
+import { HTTP_404_NOT_FOUND, responses } from '../../../constants';
 
 export interface StateParamsDictionary extends ParamsDictionary {
     uf: string;

@@ -1,10 +1,11 @@
 import request from 'supertest';
-import { getConnection } from 'typeorm';
-import createConnection from '../../../connection';
-import { State } from './StatesEntity';
-import { City } from '../Cities/CitiesEntity';
-import { app } from '../../../app';
-import { generateToken } from '../../../utils/jwt';
+import { getConnection, getRepository } from 'typeorm';
+import { State } from '../StatesEntity';
+import { City } from '../../Cities/CitiesEntity';
+import { User } from '../../../peoples/user/UserEntity';
+import { app } from '../../../../app';
+import { generateToken } from '../../../../utils/jwt';
+import createConnection from '../../../../connection';
 
 describe('Geographics States Controller', () => {
     function createState() : State {
@@ -35,27 +36,36 @@ describe('Geographics States Controller', () => {
 
     let states = [createState()];
     let cities = [...createCities(states[0])];
+    let user = User.create({ fullName: 'User', email: 'user@user.com' });
 
     beforeAll(async () => {
         const conn = await createConnection();
         if (!conn) {
             return;
         }
-        const stateRepo = conn.getRepository(State);
-        const cityRepo = conn.getRepository(City);
+        const stateRepo = getRepository(State);
+        const cityRepo = getRepository(City);
+        const userRepo = getRepository(User);
         states = await stateRepo.save(states);
         cities = await cityRepo.save(cities);
+        user = await userRepo.save(user);
     });
 
     afterAll(async () => {
+        const stateRepo = getRepository(State);
+        const cityRepo = getRepository(City);
+        const userRepo = getRepository(User);
+        await cityRepo.delete({});
+        await stateRepo.delete({});
+        await userRepo.delete({});
         const conn = getConnection();
-        await conn.close();
+        conn.close();
     });
 
     it('Should be list all states', async () => {
         const response = await request(app)
             .get('/geo/states')
-            .set('Authorization', `Bearer ${generateToken({ id: 1 })}`)
+            .set('Authorization', `Bearer ${generateToken({ id: user.id })}`)
             .send();
 
         expect(response.status).toBe(200);
@@ -69,7 +79,7 @@ describe('Geographics States Controller', () => {
         const [state] = states;
         const response = await request(app)
             .get(`/geo/states/${state.code}`)
-            .set('Authorization', `Bearer ${generateToken({ id: 1 })}`)
+            .set('Authorization', `Bearer ${generateToken({ id: user.id })}`)
             .send();
         
         expect(response.status).toBe(200);
@@ -83,7 +93,7 @@ describe('Geographics States Controller', () => {
         const [state] = states;
         const response = await request(app)
             .get(`/geo/states/${state.uf}`)
-            .set('Authorization', `Bearer ${generateToken({ id: 1 })}`)
+            .set('Authorization', `Bearer ${generateToken({ id: user.id })}`)
             .send();
         
         expect(response.status).toBe(200);
@@ -96,7 +106,7 @@ describe('Geographics States Controller', () => {
     it('Should be return 404 if parse a state that not exists', async () => {
         const response = await request(app)
             .get(`/geo/states/ANY`)
-            .set('Authorization', `Bearer ${generateToken({ id: 1 })}`)
+            .set('Authorization', `Bearer ${generateToken({ id: user.id })}`)
             .send();
         
         expect(response.status).toBe(404);

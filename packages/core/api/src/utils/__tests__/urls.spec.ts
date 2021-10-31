@@ -1,5 +1,5 @@
-import { buildUrl } from './urls';
-import { defaults } from '../configs';
+import { buildUrl } from '../urls';
+import { defaults } from '../../configs';
 
 describe("URL Utils", () => {
     it('The buildUrl must be return a string containing the parsed string', () => {

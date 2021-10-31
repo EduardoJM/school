@@ -13,6 +13,17 @@ import { getGravatarImageUrl, checkIfGravatarExists } from '../../../integration
 
 export type UserType = 'UNKNOWN' | 'ADMIN' | 'STUDENT' | 'TEACHER';
 
+export interface UserCreateInformation {
+    fullName: string;
+    displayName?: string;
+    email: string;
+    password?: string;
+    useGravatar?: boolean;
+    avatar?: boolean;
+}
+
+export type UserUpdateInformation = Partial<UserCreateInformation>;
+
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
@@ -126,4 +137,17 @@ export class User {
         };
         return data;
     };
+
+    update(data: UserUpdateInformation): void {
+        Object.assign(this, data);
+        if (data.password) {
+            this.hashPassword();
+        }
+    }
+
+    static create(data: UserCreateInformation): User {
+        const user = new User();
+        user.update(data);
+        return user;
+    }
 }

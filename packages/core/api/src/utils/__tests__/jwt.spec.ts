@@ -1,4 +1,4 @@
-import { decodeToken, generateToken } from './jwt';
+import { decodeToken, generateToken } from '../jwt';
 
 describe("JSON Web Token Utils", () => {
     it('The generateToken must be return a string', () => {

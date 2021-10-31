@@ -1,19 +1,19 @@
 import { Request, Response } from 'express';
 import path from 'path';
-import { getRepository } from 'typeorm';
+import { getCustomRepository } from 'typeorm';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { Subject } from './SubjectsEntity';
+import { SubjectsElasticSearch } from './SubjectsElasticSearch';
+import { SubjectsRepository } from './SubjectsRepository';
 import {
     HTTP_200_OK,
     HTTP_201_CREATED,
     HTTP_204_NO_CONTENT,
     HTTP_404_NOT_FOUND,
     HTTP_409_CONFLICT,
-    HTTP_500_INTERNAL_SERVER_ERROR,
     responses,
 } from '../../../constants';
 import { removeFileIfExists } from '../../../utils/files';
-import { SubjectsElasticSearch } from './SubjectsElasticSearch';
 
 export interface SubjectCreateRequestBody {
     name: string;
@@ -39,18 +39,12 @@ export class SubjectsController {
         const {
             name, icon, active
         } = request.body;
-        const subjectRepo = getRepository(Subject);
-        
-        const alreadyNamed = await subjectRepo.findOne({ name });
-        if (alreadyNamed) {
+        const subjectRepo = getCustomRepository(SubjectsRepository);
+
+        if (await subjectRepo.alreadyNamed(name)) {
             return response.status(HTTP_409_CONFLICT).json(responses.RESOURCE_NAME_ALREADY_USED);
         }
-
-        const subject = new Subject();
-        subject.name = name;
-        subject.icon = icon;
-        subject.active = active;
-
+        const subject = Subject.create({ name, icon, active });
         const result = await subjectRepo.save(subject);
         await SubjectsElasticSearch.updateIndexes(result);
         return response.status(HTTP_201_CREATED).json(result);
@@ -63,7 +57,7 @@ export class SubjectsController {
         const { id: idStr } = request.params;
         const id = parseInt(idStr);
 
-        const subjectRepo = getRepository(Subject);
+        const subjectRepo = getCustomRepository(SubjectsRepository);
         const subject = await subjectRepo.findOne({ id });
         if (!subject) {
             removeFileIfExists(path.resolve(
@@ -71,8 +65,7 @@ export class SubjectsController {
             ));
             return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
         }
-        const alreadyNamed = await subjectRepo.findOne({ name });
-        if (alreadyNamed && alreadyNamed.id !== subject.id) {
+        if (await subjectRepo.alreadyNamedWithoutId(name, subject.id)) {
             removeFileIfExists(path.resolve(
                 __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', icon,
             ));
@@ -81,10 +74,8 @@ export class SubjectsController {
         removeFileIfExists(path.resolve(
             __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', subject.icon,
         ));
-        subject.name = name;
-        subject.icon = icon;
-        subject.active = active;
 
+        subject.update({ name, icon, active });
         const result = await subjectRepo.save(subject);
         await SubjectsElasticSearch.updateIndexes(result);
         return response.status(HTTP_200_OK).json(result);
@@ -97,7 +88,7 @@ export class SubjectsController {
         const { id: idStr } = request.params;
         const id = parseInt(idStr);
 
-        const subjectRepo = getRepository(Subject);
+        const subjectRepo = getCustomRepository(SubjectsRepository);
         const subject = await subjectRepo.findOne({ id });
 
         if (!subject) {
@@ -109,8 +100,7 @@ export class SubjectsController {
             return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
         }
         if (name) {
-            const alreadyNamed = await subjectRepo.findOne({ name });
-            if (alreadyNamed && alreadyNamed.id !== subject.id) {
+            if (await subjectRepo.alreadyNamedWithoutId(name, subject.id)) {
                 if (icon) {
                     removeFileIfExists(path.resolve(
                         __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', icon,
@@ -123,18 +113,11 @@ export class SubjectsController {
             removeFileIfExists(path.resolve(
                 __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', subject.icon,
             ));
-            subject.icon = icon;
-        }
-        if (name) {
-            subject.name = name;
-        }
-        if (active !== undefined) {
-            subject.active = active;
         }
 
+        subject.update({ icon, name, active });
         const result = await subjectRepo.save(subject);
         await SubjectsElasticSearch.updateIndexes(result);
-
         return response.status(HTTP_200_OK).json(result);
     }
 
@@ -143,18 +126,17 @@ export class SubjectsController {
         const id = parseInt(idStr);
 
         await SubjectsElasticSearch.deleteIndexes(idStr);
-
-        const subjectRepo = getRepository(Subject);
-        
+        const subjectRepo = getCustomRepository(SubjectsRepository);
         const subject = await subjectRepo.findOne({ id });
         if (!subject) {
             return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
         }
-        removeFileIfExists(path.resolve(
-            __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', subject.icon,
-        ));
+        removeFileIfExists(
+            path.resolve(
+                __dirname, '..', '..', '..', '..', 'media', 'icons', 'subjects', subject.icon,
+            )
+        );
         await subjectRepo.remove(subject);
-
         return response.status(HTTP_204_NO_CONTENT).send();
     }
 
@@ -162,16 +144,14 @@ export class SubjectsController {
         const { user } = request;
         const { id: idStr } = request.params;
         const id = parseInt(idStr);
-        const subjectRepo = getRepository(Subject);
-        
+
+        const subjectRepo = getCustomRepository(SubjectsRepository);
         const subject = await subjectRepo.findOne({ id });
         if (!subject) {
             return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
         }
-        if (user && user.getUserType() === 'STUDENT') {
-            if (!subject.active) {
-                return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
-            }
+        if (user && user.getUserType() === 'STUDENT' && !subject.active) {
+            return response.status(HTTP_404_NOT_FOUND).json(responses.RESOURCE_NOT_FOUND);
         }
         return response.status(HTTP_200_OK).json(subject.serialize());
     }
@@ -182,7 +162,6 @@ export class SubjectsController {
             search,
         } = request.query;
         const { user } = request;
-
         const pageNumber = parseInt(page || '1', 10);
 
         const result = await SubjectsElasticSearch.search(search || '', pageNumber, user);

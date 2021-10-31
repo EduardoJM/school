@@ -1,4 +1,4 @@
-import { ElasticSearchQueryBuilder } from './elasticsearch';
+import { ElasticSearchQueryBuilder } from '../elasticsearch';
 
 describe('ElasticSearchQueryBuilder', () => {
     it('The static begin() method must be return a new instance of ElasticSearchQueryBuilder', () => {

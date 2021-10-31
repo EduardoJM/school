@@ -9,6 +9,14 @@ import {
 import { Tag } from '../tags/TagsEntity';
 import { buildUrl } from '../../../utils/urls';
 
+export interface SubjectCreateInformation {
+    name: string;
+    icon: string;
+    active: boolean;
+}
+
+export type SubjectUpdateInformation = Partial<SubjectCreateInformation>;
+
 @Entity()
 export class Subject {
     @PrimaryGeneratedColumn()
@@ -48,5 +56,15 @@ export class Subject {
             updatedAt: this.updatedAt,
             active: this.active,
         };
+    }
+
+    update(data: SubjectUpdateInformation): void {
+        Object.assign(this, data);
+    }
+
+    static create(data: SubjectCreateInformation) : Subject {
+        const subject = new Subject();
+        subject.update(data);
+        return subject;
     }
 }

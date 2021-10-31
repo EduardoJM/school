@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { removeFileIfExists } from './files';
+import { removeFileIfExists } from '../files';
 
 describe("File Utils", () => {
     it('The removeFileIfExists must be remove a file if it exists', () => {
