@@ -19,7 +19,7 @@ export interface UserCreateInformation {
     email: string;
     password?: string;
     useGravatar?: boolean;
-    avatar?: boolean;
+    avatar?: string;
 }
 
 export type UserUpdateInformation = Partial<UserCreateInformation>;
