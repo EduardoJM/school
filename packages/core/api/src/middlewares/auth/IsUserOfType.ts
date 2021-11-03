@@ -3,7 +3,7 @@ import {
     HTTP_403_FORBIDDEN,
     responses,
 } from '../../constants';
-import { UserType } from '../../components/Entities';
+import { UserType } from '../../entities';
 
 export function IsUserOfType(allowedTypes: UserType[]) {
     return function (request: Request, response: Response, next: NextFunction) {

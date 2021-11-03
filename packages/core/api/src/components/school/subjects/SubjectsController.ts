@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import path from 'path';
 import { getCustomRepository } from 'typeorm';
 import { ParamsDictionary } from 'express-serve-static-core';
-import { Subject } from './SubjectsEntity';
+import { Subject } from '../../../entities';
 import { SubjectsElasticSearch } from './SubjectsElasticSearch';
 import { SubjectsRepository } from './SubjectsRepository';
 import {

@@ -1,7 +1,6 @@
 import { defaults } from '../../../configs';
 import { getElasticSearchClient } from '../../../integrations';
-import { User } from '../../peoples/PeoplesEntities';
-import { Subject } from './SubjectsEntity';
+import { User, Subject } from '../../../entities';
 import { ElasticSearchQueryBuilder } from '../../../utils/elasticsearch';
 
 export const SubjectsElasticSearch = {

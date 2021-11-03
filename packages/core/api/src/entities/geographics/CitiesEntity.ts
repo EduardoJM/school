@@ -2,20 +2,15 @@ import {
     Entity,
     Column,
     PrimaryColumn,
-    OneToMany,
+    ManyToOne,
 } from 'typeorm';
-import { City } from '../Cities/CitiesEntity';
+import { State } from './StatesEntity';
 
 @Entity()
-export class State {
+export class City {
     @PrimaryColumn()
     code!: number;
     
-    @Column({
-        nullable: false,
-    })
-    uf!: string;
-
     @Column({
         nullable: false,
     })
@@ -35,6 +30,8 @@ export class State {
     })
     long!: number;
 
-    @OneToMany(() => City, (city) => city.state)
-    cities!: City[];
+    @ManyToOne(() => State, (state) => state.cities, {
+        onDelete: 'CASCADE',
+    })
+    state!: State;
 }

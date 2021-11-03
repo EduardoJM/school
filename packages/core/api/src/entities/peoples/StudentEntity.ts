@@ -4,7 +4,7 @@ import {
     OneToOne,
     JoinColumn,
 } from 'typeorm';
-import { User } from '../user/UserEntity';
+import { User } from './UserEntity';
 
 @Entity()
 export class Student {

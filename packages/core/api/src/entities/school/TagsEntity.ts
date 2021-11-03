@@ -6,7 +6,7 @@ import {
     UpdateDateColumn,
     ManyToOne,
 } from 'typeorm';
-import { Subject } from '../subjects/SubjectsEntity';
+import { Subject } from './SubjectsEntity';
 
 @Entity()
 export class Tag {
@@ -20,7 +20,9 @@ export class Tag {
     })
     name!: string;
 
-    @ManyToOne(() => Subject, (subject) => subject.tags)
+    @ManyToOne(() => Subject, (subject) => subject.tags, {
+        onDelete: 'CASCADE',
+    })
     subject!: Subject;
 
     @CreateDateColumn()

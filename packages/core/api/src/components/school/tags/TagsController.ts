@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 import { ParamsDictionary } from 'express-serve-static-core';
-import { Tag } from './TagsEntity';
-import { Subject } from '../subjects/SubjectsEntity';
+import { Tag,  Subject } from '../../../entities';
 import {
     HTTP_200_OK,
     HTTP_201_CREATED,

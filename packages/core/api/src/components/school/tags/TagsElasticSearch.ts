@@ -1,7 +1,6 @@
 import { defaults } from '../../../configs';
 import { getElasticSearchClient } from '../../../integrations';
-import { User } from '../../peoples/PeoplesEntities';
-import { Tag } from './TagsEntity';
+import { User, Tag } from '../../../entities';
 import { ElasticSearchQueryBuilder } from '../../../utils/elasticsearch';
 
 export const TagsElasticSearch = {

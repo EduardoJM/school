@@ -1,13 +1,13 @@
 import { Client } from 'elasticsearch';
-import { getRepository } from 'typeorm';
+import { getConnection, getRepository } from 'typeorm';
 import dotenv from 'dotenv';
-import createConnection from '../../src/connection';
 import { getElasticSearchClient } from '../../src/integrations';
-import { Subject, Tag } from '../../src/components/school/SchoolEntities';
+import { Subject, Tag } from '../../src/entities';
 import { TagsElasticSearch } from '../../src/components/school/tags/TagsElasticSearch';
 import { SubjectsElasticSearch } from '../../src/components/school/subjects/SubjectsElasticSearch';
 import { subjectsCreateIndexData } from './indices/subjects';
 import { tagsCreateIndexData } from './indices/tags';
+import '../../src/database';
 
 async function tryDeleteIndex(client: Client, index: string) {
     try {
@@ -42,21 +42,19 @@ async function recreateTags(client: Client) {
 }
 
 async function recreate() {
-    createConnection().then(async (connection) => {
-        if (!connection) {
-            console.log('no connection provided');
-            return;
-        }
+    dotenv.config();
+    try {
+        const conn = getConnection();
+
         console.log('connected');
         const client = getElasticSearchClient();
         console.log('recreate subjects');
         await recreateSubjects(client);
         console.log('recreate tags');
         await recreateTags(client);
-        
-        await connection.close();
-    });
+    } catch(error) {
+        setTimeout(recreate, 1000);
+    }
 }
 
-dotenv.config();
-recreate();
+setTimeout(recreate, 1000);

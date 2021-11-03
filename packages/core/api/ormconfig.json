@@ -1,0 +1,17 @@
+{
+    "type": "mysql",
+    "host": "database",
+    "port": 3306,
+    "username": "root",
+    "password": "root",
+    "database": "inventare",
+    "migrations": [
+        "src/migrations/**/*.ts"
+    ],
+    "entities": [
+        "src/entities/**/*Entity.ts"
+    ],
+    "cli": {
+        "migrationsDir": "src/migrations"
+    }
+}

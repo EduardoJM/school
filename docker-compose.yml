@@ -47,6 +47,7 @@ services:
       - ./packages/core/api/nodemon.json:/app/packages/core/api/nodemon.json
       - ./packages/core/api/package.json:/app/packages/core/api/package.json
       - ./packages/core/api/tsconfig.json:/app/packages/core/api/tsconfig.json
+      - ./packages/core/api/ormconfig.json:/app/packages/core/api/ormconfig.json
     environment: 
       SQL_HOST: database
       SQL_USER: root

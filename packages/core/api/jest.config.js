@@ -5,4 +5,5 @@ module.exports = {
     name,
     clearMocks: true,
     preset: 'ts-jest',
+    setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
 };

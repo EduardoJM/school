@@ -1,22 +1,14 @@
 import request from 'supertest';
-import { getConnection, getRepository } from 'typeorm';
+import { getConnection, getCustomRepository, getRepository, QueryRunner } from 'typeorm';
 import path from 'path';
-import { User } from '../../user/UserEntity';
-import { Student } from '../StudentEntity';
+import { User, Student } from '../../../../entities';
 import { app } from '../../../../app';
-import createConnection from '../../../../connection';
 import { removeFileIfExists } from '../../../../utils/files';
+import { UserRepository } from '../../user/UserRepository';
 
 describe('Student Controller', () => {
-    beforeAll(async () => {
-        const conn = await createConnection();
-        if (!conn) {
-            return;
-        }
-    });
-
     afterAll(async () => {
-        const userRepo = getRepository(User);
+        const userRepo = getCustomRepository(UserRepository);
         const studentRepo = getRepository(Student);
         const users = await userRepo.find();
         users.forEach((item) => {
@@ -26,8 +18,6 @@ describe('Student Controller', () => {
         });
         await studentRepo.delete({});
         await userRepo.delete({});
-        const conn = getConnection();
-        conn.close();
     });
     
     it('Should be create a new student passing fullName, email and password', async () => {
@@ -76,6 +66,7 @@ describe('Student Controller', () => {
         const userRepo = getRepository(User);
         const user = await userRepo.findOne({ id });
 
+        expect(user).not.toBeUndefined();
         expect(user).not.toBeNull();
         expect(user?.id).toBe(id);
         expect(user?.fullName).toBe(fullName);
@@ -84,5 +75,23 @@ describe('Student Controller', () => {
         expect(user?.displayName).toBe(displayName);
         expect(user?.useGravatar).toBe(useGravatar);
         expect(user?.avatar).not.toBeUndefined();
+    });
+    
+    it('Should be return 409 if email is already used', async () => {
+        const fullName = 'Arthur Dent';
+        const email = 'arthur.dent@email.com.br';
+        const password = 'arthur_12345';
+
+        await request(app)
+            .post('/peoples/students')
+            .send({ fullName, email, password });
+        
+        const response = await request(app)
+            .post('/peoples/students')
+            .send({ fullName, email, password });
+
+        expect(response.statusCode).toBe(409);
+        expect(response.body).toHaveProperty('message');
+        expect(response.body).toHaveProperty('error');
     });
 });

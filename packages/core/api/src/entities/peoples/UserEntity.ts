@@ -7,9 +7,9 @@ import {
     OneToOne,
 } from 'typeorm';
 import bcrypt from 'bcryptjs';
-import { Student } from '../student/StudentEntity';
-import { Admin } from '../admin/AdminEntity';
-import { getGravatarImageUrl, checkIfGravatarExists } from '../../../integrations/gravatar';
+import { Student } from './StudentEntity';
+import { Admin } from './AdminEntity';
+import { getGravatarImageUrl, checkIfGravatarExists } from '../../integrations/gravatar';
 
 export type UserType = 'UNKNOWN' | 'ADMIN' | 'STUDENT' | 'TEACHER';
 

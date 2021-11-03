@@ -1,6 +1,6 @@
 import { User } from '../UserEntity';
-import { Admin } from '../../admin/AdminEntity';
-import { Student } from '../../student/StudentEntity';
+import { Admin } from '../AdminEntity';
+import { Student } from '../StudentEntity';
 
 describe('User Entity', () => {
     it('Create a new user using static method must be set the informations', () => {

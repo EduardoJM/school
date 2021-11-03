@@ -1,11 +1,8 @@
 import request from 'supertest';
-import { getConnection, getRepository } from 'typeorm';
-import { State } from '../StatesEntity';
-import { City } from '../../Cities/CitiesEntity';
-import { User } from '../../../peoples/user/UserEntity';
+import { getRepository } from 'typeorm';
+import { State, City, User } from '../../../../entities';
 import { app } from '../../../../app';
 import { generateToken } from '../../../../utils/jwt';
-import createConnection from '../../../../connection';
 
 describe('Geographics States Controller', () => {
     function createState() : State {
@@ -39,10 +36,6 @@ describe('Geographics States Controller', () => {
     let user = User.create({ fullName: 'User', email: 'user@user.com' });
 
     beforeAll(async () => {
-        const conn = await createConnection();
-        if (!conn) {
-            return;
-        }
         const stateRepo = getRepository(State);
         const cityRepo = getRepository(City);
         const userRepo = getRepository(User);
@@ -57,9 +50,7 @@ describe('Geographics States Controller', () => {
         const userRepo = getRepository(User);
         await cityRepo.delete({});
         await stateRepo.delete({});
-        await userRepo.delete({});
-        const conn = getConnection();
-        conn.close();
+        await userRepo.delete({ id: user.id });
     });
 
     it('Should be list all states', async () => {

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { getRepository } from 'typeorm';
-import { State } from './StatesEntity';
+import { State } from '../../../entities';
 import { HTTP_404_NOT_FOUND, responses } from '../../../constants';
 
 export interface StateParamsDictionary extends ParamsDictionary {

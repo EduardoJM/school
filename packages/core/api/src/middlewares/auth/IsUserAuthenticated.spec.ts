@@ -1,8 +1,8 @@
 import httpMocks from 'node-mocks-http';
-import { createConnection, getRepository } from 'typeorm';
+import { getConnection, getRepository } from 'typeorm';
 import { IsUserAuthenticated } from './IsUserAuthenticated';
 import { generateToken } from '../../utils/jwt';
-import { Entities, User } from '../../components/Entities';
+import { User } from '../../entities';
 
 describe('IsUserAuthenticated', () => {
     it('A request without authorization header, should return http status 401 with error and message', async () => {
@@ -93,6 +93,9 @@ describe('IsUserAuthenticated', () => {
     });
 
     it('A request with valid token in authorization header and no database, should return http status 500 with error and message', async () => {
+        const conn = getConnection();
+        await conn.close();
+
         const request = httpMocks.createRequest({
             method: "GET",
             url: "/any-route",
@@ -109,18 +112,11 @@ describe('IsUserAuthenticated', () => {
         expect(statusCode).toBe(500);
         expect(Object.prototype.hasOwnProperty.call(data, 'error')).toBe(true);
         expect(Object.prototype.hasOwnProperty.call(data, 'message')).toBe(true);
+
+        await conn.connect();
     });
 
     it('A request with valid token in authorization header and database with valid user id, should add user to request and call next function', async () => {
-        const conn = await createConnection({
-            type: 'sqlite',
-            database: ':memory:',
-            dropSchema: true,
-            entities: Entities,
-            synchronize: true,
-            logging: false,
-        });
-
         const repo = getRepository(User);
         const user = new User();
         user.fullName = 'Arthur Dent';
@@ -145,26 +141,15 @@ describe('IsUserAuthenticated', () => {
         expect(request.user).not.toBeNull();
         expect(request.user?.id).toBe(savedUser.id);
         expect(next).toBeCalledTimes(1);
-
-        await conn.close();
     });
 
     it('A request with valid token in authorization header and database with invalid user id, should return http status 404 with error and message', async () => {
-        const conn = await createConnection({
-            type: 'sqlite',
-            database: ':memory:',
-            dropSchema: true,
-            entities: Entities,
-            synchronize: true,
-            logging: false,
-        });
-
         const next = jest.fn();
         const request = httpMocks.createRequest({
             method: "GET",
             url: "/any-route",
             headers: {
-                Authorization: `Bearer ${generateToken({ id: 1 })}`,
+                Authorization: `Bearer ${generateToken({ id: 599997445 })}`,
             }
         });
         const response = httpMocks.createResponse();
@@ -176,7 +161,5 @@ describe('IsUserAuthenticated', () => {
         expect(statusCode).toBe(404);
         expect(Object.prototype.hasOwnProperty.call(data, 'error')).toBe(true);
         expect(Object.prototype.hasOwnProperty.call(data, 'message')).toBe(true);
-
-        await conn.close();
     });
 });

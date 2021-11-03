@@ -1,12 +1,11 @@
 import { Request, Response } from 'express';
-import { getCustomRepository, getRepository, getConnection } from 'typeorm';
-import { Student } from './StudentEntity';
-import { User } from '../user/UserEntity';
+import { getCustomRepository, getConnection } from 'typeorm';
+import { Student, User } from '../../../entities';
+import { UserRepository } from '../user/UserRepository';
 import {
     responses,
     HTTP_201_CREATED,
     HTTP_409_CONFLICT,
-    HTTP_500_INTERNAL_SERVER_ERROR,
 } from '../../../constants';
 
 export interface StudentCreateRequestBody {
@@ -24,17 +23,10 @@ export class StudentController {
         const {
             fullName, email, password, displayName, useGravatar, avatar
         } = request.body;
-        const userRepository = getRepository(User);
-        try {
-            const emailAlreadyUsed = await userRepository.findOne({ email });
-            if (emailAlreadyUsed) {
-                return response
-                    .status(HTTP_409_CONFLICT)
-                    .json(responses.EMAIL_ALREADY_USED);
-            }
-        } catch (err) {
-            console.log(`ERROR: trying to check if a user with determinated e-mail are already registered.\r\n\r\n ${JSON.stringify(err)}`);
-            return response.status(HTTP_500_INTERNAL_SERVER_ERROR).json(responses.UNKNOWN_ERROR);
+
+        const userRepository = getCustomRepository(UserRepository);
+        if (await userRepository.alreadyEmailUsed(email)) {
+            return response.status(HTTP_409_CONFLICT).json(responses.EMAIL_ALREADY_USED);
         }
 
         const user = new User();

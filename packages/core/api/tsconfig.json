@@ -9,6 +9,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "outDir": "build",
+    "resolveJsonModule": true,
     "typeRoots": [
       "./src/@types",
       "./node_modules/@types",

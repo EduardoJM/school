@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
-import { User, UserType } from '../user/UserEntity';
+import { User, UserType } from '../../../entities';
 import {
     responses,
     HTTP_200_OK,

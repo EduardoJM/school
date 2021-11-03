@@ -6,8 +6,8 @@ import {
     UpdateDateColumn,
     OneToMany,
 } from 'typeorm';
-import { Tag } from '../tags/TagsEntity';
-import { buildUrl } from '../../../utils/urls';
+import { Tag } from './TagsEntity';
+import { buildUrl } from '../../utils/urls';
 
 export interface SubjectCreateInformation {
     name: string;

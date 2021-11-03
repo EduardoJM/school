@@ -2,15 +2,20 @@ import {
     Entity,
     Column,
     PrimaryColumn,
-    ManyToOne,
+    OneToMany,
 } from 'typeorm';
-import { State } from '../States/StatesEntity';
+import { City } from './CitiesEntity';
 
 @Entity()
-export class City {
+export class State {
     @PrimaryColumn()
     code!: number;
     
+    @Column({
+        nullable: false,
+    })
+    uf!: string;
+
     @Column({
         nullable: false,
     })
@@ -30,6 +35,6 @@ export class City {
     })
     long!: number;
 
-    @ManyToOne(() => State, (state) => state.cities)
-    state!: State;
+    @OneToMany(() => City, (city) => city.state)
+    cities!: City[];
 }

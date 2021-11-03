@@ -1,17 +1,17 @@
-import { User } from '../../user/UserEntity';
-import { Student } from '../StudentEntity';
+import { User } from '../UserEntity';
+import { Admin } from '../AdminEntity';
 
-describe('Student Entity', () => {
+describe('Admin Entity', () => {
     it('The serialize must be return a type and the parent user properties', async () => {
         const user = User.create({ email: 'email@email.com', fullName: 'Email', useGravatar: false });
-        const student = new Student();
-        student.user = user;
-        user.student = student;
+        const admin = new Admin();
+        admin.user = user;
+        user.admin = admin;
 
         const data1 = await user.serialize();
-        const data2 = await student.serialize();
+        const data2 = await admin.serialize();
         expect(data1).toHaveProperty('type');
-        expect(data1.type).toBe('STUDENT');
+        expect(data1.type).toBe('ADMIN');
         expect(data1).toMatchObject(data2);
     });
 });

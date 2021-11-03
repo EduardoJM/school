@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { IsUserOfType } from './IsUserOfType';
-import { Admin, Student, User } from '../../components/Entities';
+import { Admin, Student, User } from '../../entities';
 
 describe('IsUserOfType', () => {
     it('A request without user, should return http status 403 with error and message', () => {
